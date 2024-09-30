@@ -1,36 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/Login.css">
     <title>Đăng Nhập</title>
 </head>
-<body>
-    <div class="container">
-        <div class="navbar">
-            <box-icon name='left-arrow-alt' class="BackIcon"></box-icon>
-            <h2 class="logo">SGTravel</h2>
-        </div>
 
-        <div class="form-container">
-            <form>
-                <h2>Đăng nhập</h2>
-                <div class="input-box">
-                    <input type="text" placeholder="Tên đăng nhập">
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <box-icon name='left-arrow-alt' class="BackIcon"></box-icon>
+        <h2 class="logo">SGTravel</h2>
+    </div>
+    <div class="container">
+
+        <!-- Login -->
+        <div class="login-container">
+            <form class="login-form">
+                <h2>Đăng Nhập</h2>
+
+                <div class="input-group">
+                    <label for="username">
+                        <box-icon name='user'></box-icon>
+                        <input type="text" id="username" placeholder="Tên đăng nhập hoặc email" required>
+                    </label>
                 </div>
-                <div class="input-box">
-                    <input type="password" placeholder="Mật khẩu">
+
+                <div class="input-group">
+                    <label for="password">
+                        <box-icon name='lock-alt'></box-icon>
+                        <input type="password" id="password" placeholder="Mật khẩu" required>
+                    </label>
                 </div>
-                <div class="remember-forgot">
-                    <label><input type="checkbox"> Nhớ mật khẩu</label>
-                    <a href="#">Quên mật khẩu?</a>
+
+                <div class="options">
+                    <label class="remember">
+                        <input type="checkbox"> Lưu đăng nhập
+                    </label>
+                    <a href="#" class="forgot-password">Quên mật khẩu</a>
                 </div>
-                <button type="submit">Đăng nhập</button>
+
+                <button type="submit" class="login-btn">Đăng nhập</button>
+
+                <p class="register">chưa có tài khoản SGTravel? <a href="#">Đăng kí tại đây</a></p>
             </form>
         </div>
+
+        <!-- policy -->
+        <p class="Policy">Chúng tôi không sử dụng thông tin của bạn với bất kỳ mục đích nào. Bằng cách đăng nhập hoặc
+            đăng ký, bạn đồng ý với chính sách của SGTravel</p>
+
+        <!-- Footer -->    
+        <footer>
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Khám phá</h3>
+                    <ul>
+                        <li><a href="#">Ứng dụng Mobile</a></li>
+                        <li><a href="#">Tạo bộ sưu tập</a></li>
+                        <li><a href="#">Bảo mật thông tin</a></li>
+                        <li><a href="#">Quy định</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Công ty</h3>
+                    <ul>
+                        <li><a href="#">Giới thiệu</a></li>
+                        <li><a href="#">Trợ giúp</a></li>
+                        <li><a href="#">Việc làm</a></li>
+                        <li><a href="#">Quy chế</a></li>
+                        <li><a href="#">Thỏa thuận sử dụng dịch vụ</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Tham gia trên</h3>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Youtube</a></li>
+                        <li><a href="#">Google</a></li>
+                        <li><a href="#">ShopeeFood.vn - Giao đồ ăn tận nơi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Giấy phép</h3>
+                    <ul>
+                        <li><a href="#">ABC 12345</a></li>
+                    </ul>
+                    <img src="images/giayphep.png" alt="Đã đăng ký" class="registration-badge">
+                </div>
+            </div>
+        </footer>
+
     </div>
+
+
 
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
 </body>
+
 </html>
