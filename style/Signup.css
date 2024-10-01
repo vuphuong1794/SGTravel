@@ -1,0 +1,201 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+  }
+  
+  /* container */
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    justify-content: center;
+  }
+  
+  /* Navbar */
+  .navbar {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #00e3ff;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    margin-bottom: 120px;
+  }
+  
+  .navbar .BackIcon {
+    position: absolute;
+    left: 10px;
+    font-size: 30px;
+    cursor: pointer;
+  }
+  
+  .navbar .logo {
+    font-size: 24px;
+    color: #fff;
+    font-weight: bold;
+  }
+  
+  /* Signup Container */
+  .Signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+  }
+  
+  /* signup Form */
+  .Signup-form {
+    background-color: #fff;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    width: 320px;
+    text-align: center;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+    color: #000;
+  }
+  
+  /* Input Styling */
+  .input-group {
+    margin-bottom: 15px;
+    position: relative;
+  }
+  
+  .input-group label {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 10px;
+    padding-left: 40px; 
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    font-size: 14px;
+  }
+  
+  .input-group box-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 24px;
+  }
+  
+  /*options style */
+  .options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 12px;
+  }
+  
+  .options .remember input {
+    margin-right: 5px;
+  }
+  
+  .Signup-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #00e3ff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .Signup-btn:hover {
+    background-color: #00c5e0;
+  }
+  
+  /* Login style */
+  .Login {
+    margin-top: 15px;
+    font-size: 12px;
+  }
+  
+  .Login a {
+    color: #00c5e0;
+    text-decoration: none;
+  }
+  
+  /* Policy style */
+  .Policy{
+    margin: 20px;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    padding: 0 20px;
+    max-width: 400px;
+    line-height: 1.5;
+  }
+  
+  /* Footer */
+  footer {
+    background-color: #fff;
+    padding: 20px 0;
+  margin-top: 50px;
+  }
+  
+  .footer-container {
+    display: flex;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .footer-column {
+    flex: 1;
+    padding: 0 20px;
+  }
+  
+  .footer-column h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .footer-column ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-column ul li {
+    margin-bottom: 8px;
+  }
+  
+  .footer-column ul li a {
+    text-decoration: none;
+    color: #0073e6;
+    font-size: 14px;
+  }
+  
+  .footer-column ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  .registration-badge {
+    margin-top: 10px;
+    width: 120px;
+  }
+  
+  
+  
