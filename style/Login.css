@@ -8,15 +8,18 @@
 body {
   font-family: Arial, sans-serif;
   background-color: #f2f2f2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* container */
-.container {
+.SignIn-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
   justify-content: center;
+  flex: 1;
 }
 
 /* Navbar */
@@ -29,7 +32,7 @@ body {
   background-color: #00e3ff;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
   position: relative;
-  margin-bottom: 50px;
+  margin-bottom: 120px;
 }
 
 .navbar .BackIcon {
@@ -68,7 +71,7 @@ h2 {
   color: #000;
 }
 
-/* Input Styling */
+/* ô nhập thông tin */
 .input-group {
   margin-bottom: 15px;
   position: relative;
@@ -83,7 +86,7 @@ h2 {
 .input-group input {
   width: 100%;
   padding: 10px;
-  padding-left: 40px; 
+  padding-left: 40px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f2f2f2;
@@ -99,7 +102,7 @@ h2 {
   font-size: 24px;
 }
 
-/*options style */
+/* ô nhớ thông tin đăng nhập */
 .options {
   display: flex;
   justify-content: space-between;
@@ -143,7 +146,7 @@ h2 {
 }
 
 /* Policy style */
-.Policy{
+.Policy {
   margin: 20px;
   font-size: 12px;
   color: #666;
@@ -152,54 +155,4 @@ h2 {
   max-width: 400px;
   line-height: 1.5;
 }
-
-/* Footer */
-footer {
-  background-color: #fff;
-  padding: 20px 0;
-margin-top: 80px;
-}
-
-.footer-container {
-  display: flex;
-  justify-content: space-around;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.footer-column {
-  flex: 1;
-  padding: 0 20px;
-}
-
-.footer-column h3 {
-  font-size: 16px;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.footer-column ul {
-  list-style: none;
-  padding: 0;
-}
-
-.footer-column ul li {
-  margin-bottom: 8px;
-}
-
-.footer-column ul li a {
-  text-decoration: none;
-  color: #0073e6;
-  font-size: 14px;
-}
-
-.footer-column ul li a:hover {
-  text-decoration: underline;
-}
-
-.registration-badge {
-  margin-top: 10px;
-  width: 120px;
-}
-
 

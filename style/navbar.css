@@ -1,0 +1,103 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #3DE8FF;
+    text-align: center;
+    padding: 10px 0;
+}
+
+/* các thành phần trong navbar */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    flex-wrap: wrap;
+}
+
+.nav-logo {
+    font-size: 24px;
+    color: #fff;
+}
+
+/* các thành phần thanh tìm kiếm */
+.searchbox-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    max-width: 500px;
+    margin: 10px 0;
+}
+
+/* ô tìm kiếm*/
+.searchbox-container input {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+}
+
+/* icon tìm kiếm */
+.icon {
+    position: absolute;
+    right: 10px;
+}
+
+/* chức năng người dùng (login, signup, thông báo) */
+.user-container {
+    display: flex;
+    align-items: center;
+}
+
+.user-container button {
+    margin-left: 5px;
+    border: none;
+    background-color: #3DE8FF;
+    font-size: medium;
+    padding: 8px 12px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.user-container button:hover {
+    background-color: #2dc3cc;
+}
+
+/* Responsive cho mobile */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .nav-logo {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .searchbox-container input {
+        width: 100%;
+        max-width: none;
+        display: none;
+    }
+
+    .user-container {
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .icon {
+        position: absolute;
+        right: 50px;
+        top: -13px;
+    }
+}
