@@ -1,0 +1,62 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table,
+th,
+td {
+  border: 1px solid #ddd;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.container {
+  max-width: 1260px;
+  margin: auto;
+  float: right;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.action-buttons button {
+  padding: 8px 16px;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.action-buttons .them {
+  background-color: #45a049;
+}
+.action-buttons .sua {
+  background-color: rgb(228, 181, 24);
+}
+.action-buttons .xoa {
+  background-color: red;
+}
+.action-buttons button:hover {
+  background-color: #5a45a0;
+}
