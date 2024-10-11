@@ -235,5 +235,62 @@ input[type="text"]:focus {
         max-width: 310px;
         margin-top: 20px;
     }
+}
 
+.map {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+.mapImg {
+    flex: 1;
+    min-width: 300px;
+}
+
+.mapImg img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.mapInput {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mapInput input,
+.DetailInput input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.DetailInput {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.DetailInput input {
+    width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .map {
+        flex-direction: column;
+    }
+    
+    .mapImg, .mapInput {
+        width: 100%;
+    }
 }

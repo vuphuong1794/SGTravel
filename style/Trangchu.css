@@ -1,0 +1,147 @@
+* {
+    align-content: center;
+  }
+  .slider {
+    width: 300px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .slider-img{
+    width: 30%;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Explore Section */
+.explore {
+    display: flex;
+    margin-top: 20px;    
+}
+
+.sidebar {
+    background-color: white;
+    width: 200px;
+    padding: 20px;
+    margin-left: 10px;
+    margin-right: 20px;
+}
+
+.sidebar h3 {
+    font-size: 18px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+}
+
+.sidebar ul li {
+    margin: 10px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #00BCD4;
+}
+
+/* Main Content */
+.content {
+    flex: 1;
+    padding: 10px;
+}
+
+.filter-bar {
+    display: flex;
+    justify-content: space-between; /* Pushes the groups to opposite sides */
+    align-items: center; /* Aligns both groups vertically */
+    padding: 20px;
+    background-color: rgb(220, 220, 220);
+}
+
+.filter-group-left {
+    display: flex; /* Keeps the buttons in the same row */
+}
+
+.filter-group-right {
+    display: flex;
+    gap: 10px; /* Adds space between dropdowns (if more than one is added) */
+}
+
+.filter-bar button {
+    align-items: baseline;
+    border: none;
+    background-color: #ffffff; /* Example color, customize as needed */
+    padding: 10px;
+    cursor: pointer;
+}
+
+.filter-bar-buttonpress input[type="buttonfilter"]:checked + .filter-bar button{
+    background-color: #4CAF50; /* Change to your desired color */ 
+    border-color: #4CAF50; /* Change to your desired color */ 
+} 
+
+.filter-bar select {
+    border: none;
+    background-color: white;
+    padding: 10px;
+}
+
+/* Grid Layout for Cards */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 20px;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;
+    background-color: white;
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+}
+
+.card-info {
+    padding: 10px;
+}
+
+.card-info h4 {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.card-info p {
+    font-size: 14px;
+    color: #666;
+}
+
+
+
+/* Đảm bảo slider có chiều rộng và chiều cao đúng */
+.swiper-container {
+    width: 100%; /* Slider sẽ chiếm toàn bộ chiều ngang của khung */
+    height: 300px; /* Đặt chiều cao phù hợp cho slider */
+    position: relative;
+}
+
+.swiper-wrapper {
+    display: flex; /* Flexbox để đảm bảo các slide xếp ngang */
+}
+
+.swiper-slide {
+    width: 100%; /* Đảm bảo mỗi slide chiếm 100% chiều ngang */
+    height: 100%; /* Đảm bảo slide chiếm toàn bộ chiều cao của container */
+    display: flex;
+    justify-content: center; /* Căn giữa ảnh trong slide */
+    align-items: center;
+}
+
+.swiper-slide img {
+    width: 100%; /* Đảm bảo ảnh lấp đầy slide theo chiều ngang */
+    height: 100%; /* Đảm bảo ảnh lấp đầy slide theo chiều cao */
+}
