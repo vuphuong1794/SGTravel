@@ -5,22 +5,157 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/Trangchu.css" />
+    <link rel="stylesheet" href="style/ThemeColor.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <title>SGTravel-Trang chủ</title>
 </head>
 
-<body>
-    <!-- Navbar -->
+<body class="light-theme">
     <script src="navbar.js"></script>
     
-    <!-- Body -->
-    <div class="body-content">
-        body
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <img src="images/background1.png" alt="Quảng cáo 1">
+            </div>
+            <div class="swiper-slide">
+                <img src="images/background2.png" alt="Quảng cáo 2">
+            </div>
+            <div class="swiper-slide">
+                <img src="images/background3.png" alt="Quảng cáo 3">
+            </div>
+            <div class="swiper-slide">
+                <img src="images/background4.png" alt="Quảng cáo 4">
+            </div>
+            <div class="swiper-slide">
+                <img src="images/background5.png" alt="Quảng cáo 5">
+            </div>
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script>
+        const swiper = new Swiper('.swiper-container', {
+            loop: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+        });
+    </script>
+
+    <div class="content">
+        <div class="filter-bar">
+            <div class="filter-group-left">
+                <div class="filter-group-left-button">Mới nhất</div>
+                <div class="filter-group-left-button">Gần tôi</div>
+                <div class="filter-group-left-button">Đã lưu</div>
+            </div>
+            <div class="filter-group-right">
+                <select class="filter-bar select">
+                    <option>Danh mục</option>
+                </select>
+                <select class="filter-bar select">
+                    <option>Ẩm Thực</option>
+                </select>
+                <select class="filter-bar select">
+                    <option>Quận / Huyện</option>
+                </select>
+            </div>
+        </div>
+
+        <section class="explore">
+            <div class="sidebar">
+                <h3>Khám phá</h3>
+                <ul>
+                    <li><a href="#">Ở đâu</a></li>
+                    <li><a href="#">Ăn gì</a></li>
+                    <li><a href="#">Sưu tập</a></li>
+                    <li><a href="#">TV</a></li>
+                    <li><a href="#">Bình luận</a></li>
+                    <li><a href="#">Blogs</a></li>
+                    <li><a href="#">Khuyến mãi</a></li>
+                </ul>
+            </div>
+            <div class="grid-container">
+                <!-- Dia chi 1 -->
+                <div class="card">
+                    <img src="images/background1.png" alt="Sushi Tokyo">
+                    <div class="card-info">
+                        <h4>Sushi Tokyo - Xô Viết Nghệ Tĩnh</h4>
+                        <p>215/3 Xô Viết Nghệ Tĩnh</p>
+                    </div>
+                </div>
+               <!-- Dia chi 1 -->
+               <div class="card">
+                <img src="images/background1.png" alt="Sushi Tokyo">
+                <div class="card-info">
+                    <h4>Sushi Tokyo - Xô Viết Nghệ Tĩnh</h4>
+                    <p>215/3 Xô Viết Nghệ Tĩnh</p>
+                </div>
+                </div>
+                <!-- Dia chi 1 -->
+                <div class="card">
+                    <img src="images/background1.png" alt="Sushi Tokyo">
+                    <div class="card-info">
+                        <h4>Sushi Tokyo - Xô Viết Nghệ Tĩnh</h4>
+                        <p>215/3 Xô Viết Nghệ Tĩnh</p>
+                    </div>
+                </div>
+                <!-- Dia chi 1 -->
+                <div class="card">
+                    <img src="images/background1.png" alt="Sushi Tokyo">
+                    <div class="card-info">
+                        <h4>Sushi Tokyo - Xô Viết Nghệ Tĩnh</h4>
+                        <p>215/3 Xô Viết Nghệ Tĩnh</p>
+                    </div>
+                </div>
+                <!-- Dia chi 1 -->
+                <div class="card">
+                    <img src="images/background1.png" alt="Sushi Tokyo">
+                    <div class="card-info">
+                        <h4>Sushi Tokyo - Xô Viết Nghệ Tĩnh</h4>
+                        <p>215/3 Xô Viết Nghệ Tĩnh</p>
+                    </div>
+                </div>
+                <!-- Dia chi 1 -->
+                <div class="card">
+                    <img src="images/background1.png" alt="Sushi Tokyo">
+                    <div class="card-info">
+                        <h4>Sushi Tokyo - Xô Viết Nghệ Tĩnh</h4>
+                        <p>215/3 Xô Viết Nghệ Tĩnh</p>
+                    </div>
+                </div>
+                <!-- Dia chi 1 -->
+                <div class="card">
+                    <img src="images/background1.png" alt="Sushi Tokyo">
+                    <div class="card-info">
+                        <h4>Sushi Tokyo - Xô Viết Nghệ Tĩnh</h4>
+                        <p>215/3 Xô Viết Nghệ Tĩnh</p>
+                    </div>
+                </div>
+            <!-- Dia chi 1 -->
+            <div class="card">
+                <img src="images/background1.png" alt="Sushi Tokyo">
+                <div class="card-info">
+                    <h4>Sushi Tokyo - Xô Viết Nghệ Tĩnh</h4>
+                    <p>215/3 Xô Viết Nghệ Tĩnh</p>
+                </div>
+            </div>
+        </div>
+        </section>
 
     </div>
 
-    <!-- Footer -->
     <script src="footer.js"></script>
-    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script
+    <script src="themeToggle.js"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
 </body>
 
 </html>
