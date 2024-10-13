@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const navbar = `
         <div class="navbar">
             <div class="nav-container">
-                <h2 class="nav-logo"><b>SGTravel</b></h2>
+                <a href="/Trangchu.html" style="text-decoration: none;"><h2 class="nav-logo"><b>SGTravel</b></h2></a>
                 <div class="searchbox-container">
                     <input type="text" id="searchbox" placeholder="Tìm kiếm" />
                     <box-icon name='search-alt-2' class="icon"></box-icon>
