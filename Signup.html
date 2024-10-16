@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/Signup.css">
+    <title>Đăng Ký</title>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <box-icon name='left-arrow-alt' class="BackIcon" onclick="window.location.href='Trangchu.html'"></box-icon>
+        <h2 class="logo">SGTravel</h2>
+    </div>
+    <div class="Register-container">
+
+        <!-- Sign up -->
+        <div class="Signup-container">
+            <form class="Signup-form">
+                <h2>Đăng Ký</h2>
+
+                <div class="input-group">
+                    <label for="username">
+                        <box-icon name='user'></box-icon>
+                        <input type="text" id="username" placeholder="Tên đăng nhập hoặc email" required>
+                    </label>
+                </div>
+
+                <div class="input-group">
+                    <label for="username">
+                        <box-icon name='user'></box-icon>
+                        <input type="text" id="username" placeholder="Tên người dùng" required>
+                    </label>
+                </div>
+
+
+                <div class="input-group">
+                    <label for="password">
+                        <box-icon name='phone'></box-icon>
+                        <input type="number" id="phoneNumber" placeholder="Số điện thoại" required>
+                    </label>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">
+                        <box-icon name='lock-alt'></box-icon>
+                        <input type="password" id="password" placeholder="Mật khẩu" required>
+                    </label>
+                </div>
+
+
+                <div class="input-group">
+                    <label for="password">
+                        <box-icon name='lock-alt'></box-icon>
+                        <input type="password" id="password" placeholder="Nhập lại mật khẩu" required>
+                    </label>
+                </div>
+
+                <div class="options">
+                    <label class="remember">
+                        <input type="checkbox"> Đồng ý với các điều khoản của SGTravel
+                    </label>
+                </div>
+
+                <button type="submit" class="Signup-btn">Đăng ký</button>
+
+                <p class="Login">đã có tài khoản SGTravel? <a href="Login.html">Đăng Nhập tại đây</a></p>
+            </form>
+        </div>
+
+        <!-- policy -->
+        <p class="Policy">Chúng tôi không sử dụng thông tin của bạn với bất kỳ mục đích nào. Bằng cách đăng nhập hoặc
+            đăng ký, bạn đồng ý với chính sách của SGTravel</p>
+    </div>
+
+    <!-- Footer -->
+    <script src="footer.js"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+</body>
+
+</html>

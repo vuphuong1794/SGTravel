@@ -1,0 +1,88 @@
+/* Footer */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+
+footer {
+    width: 100%;
+    padding-top: 20px;
+    margin-top: auto;
+}
+
+/* các thành phần trong footer */
+.footer-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-column {
+    flex: 1;
+    padding: 0 20px;
+    min-width: 200px;
+    margin-bottom: 20px;
+}
+
+.footer-column h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-column ul li {
+    margin-bottom: 8px;
+}
+
+.footer-column ul li a {
+    text-decoration: none;
+    color: #0073e6;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.footer-column ul li a:hover {
+    color: #004c99;
+    text-decoration: underline;
+}
+
+.registration-badge {
+    margin-top: 10px;
+    width: 120px;
+}
+
+/* Responsive cho mobile */
+@media (max-width: 768px) {
+    .footer-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .footer-column {
+        width: 100%;
+        padding: 0 15px;
+        text-align: center;
+    }
+
+    .footer-column h3 {
+        font-size: 13px;
+    }
+
+    .footer-column ul li a {
+        font-size: 10px;
+    }
+
+    .registration-badge {
+        width: 100px;
+    }
+}

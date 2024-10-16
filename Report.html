@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style/report.css" />
+    <link rel="stylesheet" href="/style/sidebardash.css" />
+    <title>Bảng quản lý báo cáo bài viết</title>
+  </head>
+  <body>
+    <div class="sidebar">
+      <h2>SGTravel</h2>
+      <div class="menu-section">
+        <a href="Dashboard.html">
+          <i class="fas fa-home"> </i>
+          Dashboard
+        </a>
+      </div>
+      <div class="menu-section">
+        <h3>Người dùng</h3>
+        <a href="/User.html">
+          <i class="fas fa-users"> </i>
+          Người dùng
+        </a>
+      </div>
+      <div class="menu-section">
+        <h3>Địa điểm</h3>
+        <a href="/Diadiem.html">
+          <i class="fas fa-map-marker-alt"> </i>
+          Địa điểm
+        </a>
+      </div>
+
+      <div class="menu-section">
+        <h3>Bình luận</h3>
+        <a href="/comment.html">
+          <i class="fas fa-comments"> </i>
+          Bình luận
+        </a>
+      </div>
+      <div class="menu-section">
+        <h3>Đánh giá</h3>
+        <a href="/Danhgia.html">
+          <i class="fas fa-thumbs-up"> </i>
+          Đánh giá
+        </a>
+      </div>
+
+      <div class="menu-section">
+        <h3>Report</h3>
+        <a href="/Report.html">
+          <i class="fas fa-file-alt"> </i>
+          Report
+        </a>
+      </div>
+    </div>
+    <div class="container">
+      <h2>Bảng quản lý báo cáo bài viết</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>ID địa điểm</th>
+            <th>Nội dung báo cáo</th>
+            <th>ID người dùng</th>
+            <th>Người báo cáo</th>
+            <th>Ngày báo cáo</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>Bài viết chứa nội dung không phù hợp</td>
+            <td>2</td>
+            <td>user123</td>
+            <td>2023-10-26</td>
+            <td>Đang xử lý</td>
+            <td>
+              <button class="xem">Xem chi tiết</button>
+              <button class="xoa">Xóa báo cáo</button>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>3</td>
+            <td>Bài viết spam</td>
+            <td>1</td>
+            <td>nguyenvanA</td>
+            <td>2023-10-25</td>
+            <td>Đã xử lý</td>
+            <td>
+              <button class="xem">Xem chi tiết</button>
+              <button class="xoa">Xóa báo cáo</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

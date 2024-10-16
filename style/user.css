@@ -1,0 +1,132 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+/* Sidebar cột bên trái */
+.sidebar {
+  width: 250px;
+  background-color: #00bcd4;
+  height: 200vh;
+  position: fixed;
+  padding-top: 20px;
+  color: white;
+}
+/* Nhã hiệu SGTravel */
+.sidebar h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+/* Các lựa chọn bên sidebar */
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 10px;
+  text-decoration: none;
+  font-size: 18px;
+}
+.sidebar a:hover {
+  background-color: #0097a7;
+}
+.sidebar .menu-section {
+  margin-bottom: 20px;
+}
+.sidebar .menu-section h3 {
+  margin-left: 15px;
+  font-size: 16px;
+}
+.sidebar .menu-section a {
+  padding-left: 30px;
+}
+
+/* Định dạng chung cho bảng */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Định dạng cho hàng tiêu đề */
+th {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+/* Định dạng cho hàng dữ liệu */
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+/* Định dạng cho nút xem, sửa, khóa, xóa */
+button {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #3e8e41;
+}
+
+/* Định dạng cho nút xem */
+button.xem {
+  background-color: #03a9f4;
+}
+
+button.xem:hover {
+  background-color: #039be5;
+}
+
+/* Định dạng cho nút sửa */
+button.sua {
+  background-color: #ff9800;
+}
+
+button.sua:hover {
+  background-color: #ffa07a;
+}
+
+/* Định dạng cho nút khóa */
+button.khoa {
+  background-color: #ff0000;
+}
+
+button.khoa:hover {
+  background-color: #ff3737;
+}
+
+/* Định dạng cho nút xóa */
+button.xoa {
+  background-color: #ff0000;
+}
+
+button.xoa:hover {
+  background-color: #ff3737;
+}
+
+/* Định dạng cho trang */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
