@@ -1,87 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style/ThemSp.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style/ThemSp.css" />
     <title>Thêm Sản Phẩm</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <!-- Navbar  -->
     <div class="nav-container">
-        <h2 class="nav-logo"><b>SGTravel</b></h2>
-        <div class="nav-right">
-            <a href="#"><box-icon name="bell"></box-icon></a>
-            <span class="userName">Khoa</span>
-        </div>
+      <h2 class="nav-logo"><b>SGTravel</b></h2>
+      <div class="nav-right">
+        <a href="#"><box-icon name="bell"></box-icon></a>
+        <span class="userName">Khoa</span>
+      </div>
     </div>
 
     <!-- Body -->
     <div class="body">
-        <div class="body-content">
-            <div class="body-left">
-                <h3 class="left-title">Hình ảnh địa điểm</h3>
-                <div class="image-container">
-                    <div class="anhMinhHoa">
-                        <h4 class="left MH-title">*Ảnh minh họa địa điểm</h4>
-                        <label for="minh-hoa-upload" class="content">
-                            <box-icon name='image-add'></box-icon>
-                            <p>thêm hình ảnh</p>
-                            <input type="file" id="minh-hoa-upload" accept="image/*" style="display:none;">
-                        </label>
-                    </div>
-                    <div class="anhTrungBay">
-                        <h4 class="left TB-title">*Ảnh trưng bày</h4>
-                        <label for="trung-bay-upload" class="content">
-                            <box-icon name='image-add'></box-icon>
-                            <p>thêm hình ảnh</p>
-                            <input type="file" id="trung-bay-upload" accept="image/*" style="display:none;">
-                        </label>
-                    </div>
-                </div>
+      <div class="body-content">
+        <div class="body-left">
+          <h3 class="left-title">Hình ảnh địa điểm</h3>
+          <div class="image-container">
+            <div class="anhMinhHoa">
+              <h4 class="left MH-title">*Ảnh minh họa địa điểm</h4>
+              <label for="minh-hoa-upload" class="content">
+                <box-icon name="image-add"></box-icon>
+                <p>thêm hình ảnh</p>
+                <input
+                  type="file"
+                  id="minh-hoa-upload"
+                  accept="image/*"
+                  style="display: none"
+                />
+              </label>
             </div>
-            <div class="body-mid">
-                <div class="TenDiaDiem">
-                    <h3 class="mid-title">*Tên địa điểm</h3>
-                    <div class="ten-content">
-                        <input type="text" placeholder="Nhập tên địa điểm">
-                    </div>
-                </div>
-                <div class="MoTa">
-                    <h3 class="mid-title">*Mô tả</h3>
-                    <div class="moTa-content">
-                        <input type="text" placeholder="Nhập mô tả">
-                    </div>
-                </div>
+            <div class="anhTrungBay">
+              <h4 class="left TB-title">*Ảnh trưng bày</h4>
+              <label for="trung-bay-upload" class="content">
+                <box-icon name="image-add"></box-icon>
+                <p>thêm hình ảnh</p>
+                <input
+                  type="file"
+                  id="trung-bay-upload"
+                  accept="image/*"
+                  style="display: none"
+                />
+              </label>
             </div>
+          </div>
+        </div>
+        <div class="body-mid">
+          <div class="TenDiaDiem">
+            <h3 class="mid-title">*Tên địa điểm</h3>
+            <div class="ten-content">
+              <input type="text" placeholder="Nhập tên địa điểm" />
+            </div>
+          </div>
+          <div class="MoTa">
+            <h3 class="mid-title">*Mô tả</h3>
+            <div class="moTa-content">
+              <input type="text" placeholder="Nhập mô tả" />
+            </div>
+          </div>
+        </div>
 
-            <div class="body-right">
-                <div class="GiaDaoDong">
-                    <h3 class="right-title">Giá dao động</h3>
-                    <div class="gia-content">
-                        <input type="text" placeholder="Giá nhỏ nhất">
-                        <input type="text" placeholder="Giá lớn nhất">
-                    </div>
-                </div>
-                <div class="GioHoatDong">
-                    <h3 class="right-title">Giờ hoạt động</h3>
-                    <div class="gio-content">
-                        <input type="text" placeholder="Bắt đầu từ">
-                        <input type="text" placeholder="Kết thúc vào">
-                    </div>
-                </div>
+        <div class="body-right">
+          <div class="GiaDaoDong">
+            <h3 class="right-title">Giá dao động</h3>
+            <div class="gia-content">
+              <input type="text" placeholder="Giá nhỏ nhất" />
+              <input type="text" placeholder="Giá lớn nhất" />
             </div>
+          </div>
+          <div class="GioHoatDong">
+            <h3 class="right-title">Giờ hoạt động</h3>
+            <div class="gio-content">
+              <input type="text" placeholder="Bắt đầu từ" />
+              <input type="text" placeholder="Kết thúc vào" />
+            </div>
+          </div>
         </div>
-        <div class="map-content">
-            map
-        </div>
+      </div>
+      <div class="map-content">map</div>
     </div>
-
-
-
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-</body>
-
+  </body>
 </html>
