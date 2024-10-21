@@ -1,6 +1,6 @@
-﻿drop table tai_khoan
+﻿DROP TABLE IF EXISTS tai_khoan;
 CREATE TABLE tai_khoan (
-    id INT IDENTITY(1,1) PRIMARY KEY, 
+    id INT AUTO_INCREMENT PRIMARY KEY, 
     ten_dang_nhap VARCHAR(50) NOT NULL UNIQUE,
     mat_khau VARCHAR(15) NOT NULL,
     phan_quyen INT NOT NULL,  -- 'Admin là 1, user là 2'
@@ -61,31 +61,10 @@ VALUES
 ('duonghuong', 'duonghuong', 2, 'duonghuong@example.com', '0912345723', 'hoạt động'),
 ('trucdo', 'trucdo', 2, 'trucdo@example.com', '0912345724', 'hoạt động'),
 ('namthanh', 'namthanh', 2, 'namthanh@example.com', '0912345725', 'hoạt động');
-select * from tai_khoan
--- DROP TRIGGER IF EXISTS trg_InsertNguoiDung;
 
--- CREATE TRIGGER trg_InsertNguoiDung
--- ON nguoi_dung
--- INSTEAD OF INSERT
--- AS
--- BEGIN
---     DECLARE @newID VARCHAR(10);
---     DECLARE @count INT;
---     SELECT @count = COALESCE(MAX(CAST(SUBSTRING(id, 3, LEN(id) - 2) AS INT)), 0) FROM nguoi_dung;
-
---     INSERT INTO nguoi_dung (id, ten_nguoi_dung, email, so_dien_thoai, trang_thai)
---     SELECT 
---         'ND' + RIGHT('0' + CAST(@count + ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS VARCHAR), 2), 
---         ten_nguoi_dung, 
---         email, 
---         so_dien_thoai, 
---         trang_thai
---     FROM inserted;
--- END;
-drop table dia_diem
 
 CREATE TABLE dia_diem (
-    id INT IDENTITY(1,1) PRIMARY KEY,        
+    id INT AUTO_INCREMENT PRIMARY KEY,        
     ten_dia_diem VARCHAR(255),                
     dia_chi VARCHAR(255),                     
     so_dien_thoai VARCHAR(20),               -- Số điện thoại
@@ -99,10 +78,9 @@ CREATE TABLE dia_diem (
     hinh_anh2 TEXT DEFAULT NULL ,
     hinh_anh3 TEXT DEFAULT NULL,
     so_luot_danh_gia INT DEFAULT 0,          -- Số lượt đánh giá
-    link_dia_diem VARCHAR(500),               -- Link địa điểm
+    link_dia_diem VARCHAR(500)               -- Link địa điểm
 );
 
-select * from dia_diem
 INSERT INTO dia_diem (
     ten_dia_diem, 
     dia_chi, 
@@ -316,11 +294,8 @@ INSERT INTO dia_diem (
 ('Beefsteak 100g CN Quận 12', '206 Đông Bắc, Tân Hưng Thuận, Quận 12, Hồ Chí Minh, Việt Nam', '0818331378', 'beefsteak 100g chất lượng tuyệt vời', '08:00', '22:00', 'Ăn uống', 9.6, '1-100000đ', '/images/diadiem190/hinhanh1.jpg', '/images/diadiem190/hinhanh2.jpg', '/images/diadiem190/hinhanh3.jpg', 42, 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d489.79903428344653!2d106.62875179999999!3d10.857739299999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752b00483a8a17%3A0x3c261d681e905ce0!2sBeefsteak%20100g%20CN%20Qu%E1%BA%ADn%2012!5e0!3m2!1svi!2s!4v1729009820548!5m2!1svi!2s'),
 ('Nhà hàng Hội Ngộ | Cơm Niêu Văn Phòng Quận 12 | Cơm Niêu Đông Bắc', '248/C7 Đông Bắc, Tân Hưng Thuận, Quận 12, Hồ Chí Minh, Việt Nam', '', '', '06:00', '23:59', 'Ăn uống', 9.9, '200000đ-500000đ', '/images/diadiem191/hinhanh1.jpg', '/images/diadiem191/hinhanh2.jpg', '/images/diadiem191/hinhanh3.jpg', 16, 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.4142991718586!2d106.62114047934568!3d10.856060100000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752bc030be14a9%3A0xf95b330792523784!2zTmjDoCBow6BuZyBI4buZaSBOZ-G7mSB8IEPGoW0gTmnDqnUgVsSDbiBQaMOybmcgUXXhuq1uIDEyIHwgQ8ahbSBOacOqdSDEkMO0bmcgQuG6r2M!5e0!3m2!1svi!2s!4v1729010440717!5m2!1svi!2s');
 
-
-select * from dia_diem
-drop table binh_luan
 CREATE TABLE binh_luan (
-    id INT IDENTITY(1,1) PRIMARY KEY, 
+    id INT AUTO_INCREMENT PRIMARY KEY, 
     noi_dung TEXT NOT NULL,
     id_dia_diem int,
 	id_nguoi_dung int,
@@ -531,12 +506,9 @@ INSERT INTO binh_luan (noi_dung, id_dia_diem, id_nguoi_dung, ten_dang_nhap, ngay
 ('Phục vụ nhanh chóng, nhưng không gian chưa tốt lắm.', 75, 27, 'tranquocbinh', '2021-02-17'),
 ('Không gian quán rất rộng rãi, nhưng đồ uống chưa ngon.', 76, 28, 'hoangcuong', '2021-01-05');
 
-select * from binh_luan
 
-
-drop table danh_gia
 CREATE TABLE danh_gia (
-    id INT IDENTITY(1,1) PRIMARY KEY,  
+    id INT AUTO_INCREMENT PRIMARY KEY,  
     id_dia_diem int NOT NULL, 
     phuc_vu DECIMAL(3,1) NOT NULL, 
     khong_gian DECIMAL(3,1) NOT NULL, 
@@ -738,10 +710,10 @@ VALUES
 (189, 7.6, 7.5, 7.7, 7.8, 7.6),
 (190, 6.8, 6.9, 6.7, 6.8, 6.8),
 (191, 9.9, 9.9, 9.9, 9.9, 9.9);
-select * from danh_gia
+
 
 CREATE TABLE bao_cao (
-    id INT IDENTITY(1,1) PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_dia_diem INT NOT NULL,
     noi_dung_bao_cao TEXT NOT NULL,
     id_tai_khoan int NOT NULL,
@@ -763,7 +735,7 @@ VALUES
 (153, 'Thiếu vệ sinh', 33, '2024-10-11', 'Đã xử lý'),
 (178, 'Dịch vụ không đáp ứng mong đợi', 45, '2024-10-12', 'Đang xử lý'),
 (190, 'Thái độ nhân viên không tốt', 12, '2024-10-13', 'Đã xử lý');
-select * from bao_cao
+
 
 
 CREATE TABLE ls_tk (
@@ -784,4 +756,3 @@ VALUES
 ('tranlethu', 'Quán trà sữa'),
 ('leminhcuong', 'khách sạn giá rẻ');
 
-select * from ls_tk
