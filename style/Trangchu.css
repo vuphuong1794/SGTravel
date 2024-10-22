@@ -21,7 +21,7 @@
 
 .sidebar {
     background-color: white;
-    width: 200px;
+    width: 300px;
     padding: 20px;
     margin-left: 10px;
     margin-right: 20px;
@@ -98,11 +98,15 @@
     border-radius: 10px;
     overflow: hidden;
     text-align: center;
+    display: flex;
     background-color: white;
+    flex-direction: column;
+    max-width: 200px;
+    max-height: 300px;
 }
 
 .card img {
-    width: 100%;
+    max-height: 100px;
     height: auto;
 }
 
