@@ -1,14 +1,42 @@
 body {
-  font-family: Arial, sans-serif;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-.darktheme{
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  /* Chế độ tối */
+  .dark-theme  {
     background-color: #313131;
-    color:#f2f2f2;
-}
-.whitetheme{
+    color: #eeeeee;
+  }
+  
+  .dark-theme button,
+  .dark-theme select,
+  .dark-theme input {
+    background-color: #5c5c5c;
+    color: #eeeeee;
+  }
+  
+  .dark-theme footer {
+    background-color: #262626;
+  }
+  
+  /* Chế độ sáng */
+  .light-theme {
+    background-color: #e2e2e2;
+    color: #000000;
+  }
+  
+  .light-theme button,
+  .light-theme select,
+  .light-theme input {
+    background-color: #ffffff;
+    color: #000000;
+  }
+  
+  .light-theme footer {
     background-color: #f2f2f2;
-    color:black;
-}
+  }
