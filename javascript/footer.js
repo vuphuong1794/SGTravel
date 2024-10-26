@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const footerCSS = document.createElement('link');
     footerCSS.rel = 'stylesheet';
-    footerCSS.href = 'style/footer.css';
+    footerCSS.href = '../style/footer.css';
     document.head.appendChild(footerCSS);
     const footer = `
 <footer>
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <ul>
                 <li><a href="#">ABC 12345</a></li>
             </ul>
-            <img src="images/giayphep.png" alt="Đã đăng ký" class="registration-badge">
+            <img src="../images/giayphep.png" alt="Đã đăng ký" class="registration-badge">
         </div>
     </div>
 </footer>`;

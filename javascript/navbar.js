@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     const navbarCSS = document.createElement('link');
     navbarCSS.rel = 'stylesheet';
-    navbarCSS.href = 'style/navbar.css';
+    navbarCSS.href = '../style/navbar.css';
     document.head.appendChild(navbarCSS);
     const navbar = `
         <div class="navbar" id="navbar">
             <div class="nav-container">
-                <a href="/Trangchu.html" style="text-decoration: none;"><h2 class="nav-logo"><b>SGTravel</b></h2></a>
+                <h2 class="nav-logo" onclick="window.location.href='Trangchu.php'"><b>SGTravel</b></h2></a>
                 <div class="searchbox-container">
                     <input type="text" id="searchbox" placeholder="Tìm kiếm" />
                     <box-icon name='search-alt-2' class="icon"></box-icon>

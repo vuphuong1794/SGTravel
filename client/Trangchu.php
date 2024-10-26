@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style/Trangchu.css">
-    <link rel="stylesheet" href="style/ThemeColor.css">
+    <link rel="stylesheet" href="../style/client/Trangchu.css">
+    <link rel="stylesheet" href="../style/ThemeColor.css">
+    <link rel="stylesheet" href="../style/provinces.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <title>SGTravel - Trang chủ</title>
 </head>
 
 <body class="light-theme">
     <!-- Navbar -->
-    <script src="navbar.js"></script>
+    <script src="../javascript/navbar.js"></script>
 
     <!-- Swiper for advertisement images -->
     <div class="swiper-container">
         <div class="swiper-wrapper">
             <div class="swiper-slide">
-                <img src="images/background1.png" alt="Quảng cáo 1">
+                <img src="../images/background1.png" alt="Quảng cáo 1">
             </div>
             <div class="swiper-slide">
-                <img src="images/background2.png" alt="Quảng cáo 2">
+                <img src="../images/background2.png" alt="Quảng cáo 2">
             </div>
             <div class="swiper-slide">
-                <img src="images/background3.png" alt="Quảng cáo 3">
+                <img src="../images/background3.png" alt="Quảng cáo 3">
             </div>
             <div class="swiper-slide">
-                <img src="images/background4.png" alt="Quảng cáo 4">
+                <img src="../images/background4.png" alt="Quảng cáo 4">
             </div>
             <div class="swiper-slide">
-                <img src="images/background5.png" alt="Quảng cáo 5">
+                <img src="../images/background5.png" alt="Quảng cáo 5">
             </div>
         </div>
         <!-- Slider buttons -->
@@ -70,42 +72,21 @@
                     <option value="">Khách Sạn</option>
                     <option value="">Vui Chơi</option>
                 </select>
-                <select class="filter-bar select" id="citySelect">
-                    <option value="">Thành phố</option>
-                    <option value="HCM">TP. Hồ Chí Minh</option>
-                    <option value="HN">TP. Hà Nội</option>
-                    <option value="DN">TP. Đà Nẵng</option>
-                    <option value="CT">TP. Cần Thơ</option>
-                    <option value="HP">TP. Hải Phòng</option>
-                    <!-- Có thể thêm các thành phố khác -->
-                </select>
-                <select class="filter-bar select">
-                    <option value="" selected>Quận / Huyện</option>
-                    <option value="quận 1">Quận 1</option>
-                    <option value="Quận 2">Quận 2</option>
-                    <option value="quận 3">Quận 3</option>
-                    <option value="quận 4">Quận 4</option>
-                    <option value="quận 5">Quận 5</option>S
-                    <option value="quận 6">Quận 6</option>
-                    <option value="quận 7">Quận 7</option>
-                    <option value="quận 8">Quận 8</option>
-                    <option value="quận 9">Quận 9</option>
-                    <option value="quận 10">Quận 10</option>
-                    <option value="quận 11">Quận 11</option>
-                    <option value="quận 12">Quận 12</option>
-                    <option value="bình tân">Quận Bình Tân</option>
-                    <option value="Bình thạnh">Quận Bình Thạnh</option>
-                    <option value="Gò Vấp">Quận Gò Vấp</option>
-                    <option value="phú nhuận">Quận Phú Nhuận</option>
-                    <option value="tân bình">Quận Tân Bình</option>
-                    <option value="Tân phú">Quận Tân Phú</option>
-                    <option value="thủ đức">Quận Thủ Đức</option>
-                    <option value="bình chánh">Huyện Bình Chánh</option>
-                    <option value="cần giòw">Huyện Cần Giờ</option>
-                    <option value="củ chi">Huyện Củ Chi</option>
-                    <option value="hóc môn">Huyện Hóc Môn</option>
-                    <option value="nhà bè">Huyện Nhà Bè</option>
-                </select>
+                <div class="location-selectors">
+                    <div class="select-group">
+                        <input type="text" id="provinceSearch" class="search-input" placeholder="Tìm tỉnh/thành phố...">
+                        <select id="provinceSelect" class="filter-bar select">
+                            <option value="">Chọn Tỉnh/Thành phố</option>
+                        </select>
+                    </div>
+
+                    <div class="select-group">
+                        <input type="text" id="districtSearch" class="search-input" placeholder="Tìm quận/huyện..." disabled>
+                        <select id="districtSelect" class="filter-bar select" disabled>
+                            <option value="">Chọn Quận/Huyện</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -173,8 +154,9 @@
 
     </div>
     <!-- Footer -->
-    <script src="footer.js"></script>
-    <script src="themeToggle.js"></script>
+    <script src="../javascript/footer.js"></script>
+    <script src="../javascript/themeToggle.js"></script>
+    <script src="../javascript/provinces.js"></script>
 
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <script>
