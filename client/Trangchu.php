@@ -73,16 +73,18 @@
                     <option value="">Vui Chơi</option>
                 </select>
                 <div class="location-selectors">
+                    <!-- Select for Provinces -->
                     <div class="select-group">
-                        <input type="text" id="provinceSearch" class="search-input" placeholder="Tìm tỉnh/thành phố...">
-                        <select id="provinceSelect" class="filter-bar select">
+                        <label for="provinceSelect">Tỉnh/Thành phố</label>
+                        <select id="provinceSelect" onchange="getProvinces(event)" >
                             <option value="">Chọn Tỉnh/Thành phố</option>
                         </select>
                     </div>
 
+                    <!-- Select for Districts -->
                     <div class="select-group">
-                        <input type="text" id="districtSearch" class="search-input" placeholder="Tìm quận/huyện..." disabled>
-                        <select id="districtSelect" class="filter-bar select" disabled>
+                        <label for="districtSelect">Quận/Huyện</label>
+                        <select id="districtSelect" onchange="">
                             <option value="">Chọn Quận/Huyện</option>
                         </select>
                     </div>
@@ -160,15 +162,22 @@
 
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('.filter-group-right select:last-child').addEventListener('change', function() {
-                const selectedDistrict = this.value;
-                if (selectedDistrict) {
-                    window.location.href = '?district=' + selectedDistrict;
-                }
-            });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the district select element
+        const districtSelect = document.getElementById('districtSelect');
+        
+        // Add change event listener to the district select
+        districtSelect.addEventListener('change', function() {
+            const selectedDistrict = this.value;
+            console.log(selectedDistrict);
+            if (selectedDistrict) {
+                // Reload the page with the selected district as a query parameter
+                window.location.href = '?district=' + encodeURIComponent(selectedDistrict);
+            }
         });
-    </script>
+    });
+</script>
+
 </body>
 
 </html>
