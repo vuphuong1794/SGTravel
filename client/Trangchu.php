@@ -63,35 +63,36 @@
                 <button>Gần tôi</button>
                 <button>Đã lưu</button>
             </div>
-            <div class=" filter-group-right">
+            <div class="filter-group-right">
                 <select class="filter-bar select">
                     <option value="">Danh mục</option>
                 </select>
                 <select class="filter-bar select">
-                    <option value="">Ẩm Thực</option>
-                    <option value="">Khách Sạn</option>
-                    <option value="">Vui Chơi</option>
+                    <option value="ăn uống">Ẩm Thực</option>
+                    <option value="khách sạn">Khách Sạn</option>
+                    <option value="vui chơi">Vui Chơi</option>
                 </select>
                 <div class="location-selectors">
                     <!-- Select for Provinces -->
                     <div class="select-group">
                         <label for="provinceSelect">Tỉnh/Thành phố</label>
-                        <select id="provinceSelect" onchange="getProvinces(event)" >
-                            <option value="">Chọn Tỉnh/Thành phố</option>
+                        <select id="provinceSelect" onchange="getProvinces(event)">
+                            <a href="./Trangchu.php">
+                                <option value="">Tỉnh/Thành phố </option>
+                            </a>
                         </select>
                     </div>
 
                     <!-- Select for Districts -->
                     <div class="select-group">
                         <label for="districtSelect">Quận/Huyện</label>
-                        <select id="districtSelect" onchange="">
+                        <select id="districtSelect">
                             <option value="">Chọn Quận/Huyện</option>
                         </select>
                     </div>
                 </div>
             </div>
         </div>
-
 
         <!-- Explore section -->
         <section class="explore">
@@ -116,30 +117,72 @@
                 $dbname = "sgtravel";
                 $port = '3306';
 
-                // Tạo kết nối
                 $conn = new mysqli($servername, $username, $password, $dbname, $port);
 
-                // Kiểm tra kết nối
+             
                 if ($conn->connect_error) {
-                    die("Kết nối thất bại: " . $conn->connect_error);
+                    die("Connection failed: " . $conn->connect_error);
                 }
 
-                // MySQL query to fetch location data
                 $sql = "SELECT ten_dia_diem, dia_chi, hinh_anh1 FROM dia_diem";
+                $conditions = []; // Mảng để lưu các điều kiện lọc
 
+                // Kiểm tra xem có tham số 'district' trong URL hay không
                 if (isset($_GET['district']) && !empty($_GET['district'])) {
+
+                    // Làm sạch tham số để tránh SQL injection
                     $district = $conn->real_escape_string($_GET['district']);
-                    $sql .= " WHERE dia_chi LIKE '%$district%'";
+                    
+                    // Tách chuỗi district thành các từ, chỉ giữ lại các từ có độ dài lớn hơn 1
+                    $district_conditions = array_filter(explode(' ', $district), function ($word) {
+                        return strlen($word) > 1;
+                    });
+                    // Nếu có từ hợp lệ, tạo điều kiện cho câu truy vấn
+                    if (!empty($district_conditions)) {
+                        $conditions[] = "(" . implode(" AND ", array_map(function ($word) {
+                            return "LOWER(dia_chi) LIKE LOWER('%$word%')";
+                        }, $district_conditions)) . ")";
+                    }
                 }
+                
+                // Kiểm tra xem có tham số 'province' trong URL hay không
+                if (isset($_GET['province']) && !empty($_GET['province'])) {
+                    $province = $conn->real_escape_string($_GET['province']);
+                    // Làm sạch tham số
+                    // Thêm điều kiện kiểm tra cho province
+                    $conditions[] = "LOWER(dia_chi) LIKE LOWER('%" . strtolower($province) . "%')";
+                }
+
+                
+                // Kiểm tra xem có tham số 'category' trong URL hay không
+                if (isset($_GET['category']) && !empty($_GET['category'])) {
+                    $category = $conn->real_escape_string($_GET['category']);
+                    // Làm sạch tham số
+                    // Tách chuỗi category thành các từ, chỉ giữ lại các từ có độ dài lớn hơn 1
+                    $category_conditions = array_filter(explode(' ', $category), function ($word) {
+                        return strlen($word) > 1;
+                    });
+                    if (!empty($category_conditions)) {
+                        $conditions[] = "(" . implode(" AND ", array_map(function ($word) {
+                            return "LOWER(loai_hinh) LIKE LOWER('%$word%')";
+                        }, $category_conditions)) . ")";
+                    }
+                }
+
+                // Nếu có bất kỳ điều kiện nào được tạo, thêm chúng vào câu truy vấn
+                if (!empty($conditions)) {
+                    $sql .= " WHERE " . implode(" AND ", $conditions); // Kết hợp các điều kiện với nhau
+                }
+
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<div class='card'>";
-                        echo "<img src='" . $row["hinh_anh1"] . "' alt='" . $row["ten_dia_diem"] . "'>";
+                        echo "<img src='" . htmlspecialchars($row["hinh_anh1"]) . "' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
                         echo "<div class='card-info'>";
-                        echo "<h4>" . $row["ten_dia_diem"] . "</h4>";
-                        echo "<p>" . $row["dia_chi"] . "</p>";
+                        echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
+                        echo "<p>" . htmlspecialchars($row["dia_chi"]) . "</p>";
                         echo "<button>Lưu vào yêu thích</button>";
                         echo "</div></div>";
                     }
@@ -147,36 +190,68 @@
                     echo "<p>Không có kết quả nào để hiển thị</p>";
                 }
 
-                // Close the connection
                 $conn->close();
                 ?>
-
             </div>
         </section>
-
     </div>
+
     <!-- Footer -->
     <script src="../javascript/footer.js"></script>
     <script src="../javascript/themeToggle.js"></script>
     <script src="../javascript/provinces.js"></script>
-
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get the district select element
-        const districtSelect = document.getElementById('districtSelect');
-        
-        // Add change event listener to the district select
-        districtSelect.addEventListener('change', function() {
-            const selectedDistrict = this.value;
-            console.log(selectedDistrict);
-            if (selectedDistrict) {
-                // Reload the page with the selected district as a query parameter
-                window.location.href = '?district=' + encodeURIComponent(selectedDistrict);
+        document.addEventListener('DOMContentLoaded', function() {
+            const districtSelect = document.getElementById('districtSelect');
+            const categorySelect = document.querySelector('.filter-bar select:nth-of-type(2)');
+            const provinceSelect = document.getElementById('provinceSelect');
+
+            const savedCategory = localStorage.getItem('selectedCategory');
+            const savedProvince = localStorage.getItem('selectedProvince');
+            const savedDistrict = localStorage.getItem('selectedDistrict');
+
+            if (savedCategory) {
+                categorySelect.value = savedCategory;
             }
+            if (savedProvince) {
+                provinceSelect.value = savedProvince;
+            }
+            if (savedDistrict) {
+                districtSelect.value = savedDistrict;
+            }
+
+            // Hàm cập nhật URL
+            function updateURLParams() {
+                const currentParams = new URLSearchParams(window.location.search);
+                currentParams.set('category', categorySelect.value);
+                //currentParams.set('province', provinceSelect.value);
+                currentParams.set('district', districtSelect.value);
+                window.location.href = '?' + currentParams.toString();
+            }
+
+            // Xử lý thay đổi loại hình
+            categorySelect.addEventListener('change', function() {
+                localStorage.setItem('selectedCategory', this.value);
+                updateURLParams();
+            });
+
+            // Xử lý thay đổi tỉnh
+            provinceSelect.addEventListener('change', function() {
+                localStorage.setItem('selectedProvince', this.value);
+                districtSelect.value = ''; // Đặt lại quận
+                localStorage.removeItem('selectedDistrict'); // Xóa quận khỏi local storage
+                //updateURLParams();
+            });
+
+            // Xử lý thay đổi quận
+            districtSelect.addEventListener('change', function() {
+                localStorage.setItem('selectedDistrict', this.value);
+                updateURLParams();
+            });
         });
-    });
-</script>
+    </script>
 
 </body>
 
