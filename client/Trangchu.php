@@ -73,7 +73,6 @@
                     <option value="vui chơi">Vui Chơi</option>
                 </select>
                 <div class="location-selectors">
-                    <!-- Select for Provinces -->
                     <div class="select-group">
                         <label for="provinceSelect">Tỉnh/Thành phố</label>
                         <select id="provinceSelect" onchange="getProvinces(event)">
@@ -83,7 +82,6 @@
                         </select>
                     </div>
 
-                    <!-- Select for Districts -->
                     <div class="select-group">
                         <label for="districtSelect">Quận/Huyện</label>
                         <select id="districtSelect">
@@ -94,7 +92,6 @@
             </div>
         </div>
 
-        <!-- Explore section -->
         <section class="explore">
             <div class="sidebar">
                 <h3>Khám phá</h3>

@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </label>
                 <div class="user-container">
                     <button class="signUp-btn"><a href="Signup.html" style="text-decoration: none; color: black">Đăng ký</a></button>
-                    <button class="login-btn"><a href="Login.html" style="text-decoration: none; color: black">Đăng nhập</a></button>
+                    <button class="login-btn"><a href="Login.php" style="text-decoration: none; color: black">Đăng nhập</a></button>
                     <box-icon name='bell'></box-icon>
                 </div>
             </div>
