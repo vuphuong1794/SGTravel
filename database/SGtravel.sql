@@ -756,3 +756,12 @@ VALUES
 ('tranlethu', 'Quán trà sữa'),
 ('leminhcuong', 'khách sạn giá rẻ');
 
+CREATE TABLE yeu_thich (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,       
+    dia_diem_id INT NOT NULL,   
+    FOREIGN KEY (user_id) REFERENCES tai_khoan(id) ON DELETE CASCADE,
+    FOREIGN KEY (dia_diem_id) REFERENCES dia_diem(id) ON DELETE CASCADE,
+    UNIQUE(user_id, dia_diem_id)  -- Đảm bảo không trùng lặp yêu thích cho cùng một user và địa điểm
+);
+

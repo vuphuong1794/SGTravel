@@ -61,7 +61,7 @@
             <div class="filter-group-left">
                 <button>Mới nhất</button>
                 <button>Gần tôi</button>
-                <button>Đã lưu</button>
+                <button  onclick="showFavorites()">Đã lưu</button>
             </div>
             <div class="filter-group-right">
                 <select class="filter-bar select">
@@ -106,7 +106,7 @@
                 </ul>
             </div>
 
-            <div class="grid-container">
+            <div class="grid-container" id=locationGrid>
                 <?php
                 $servername = "localhost";
                 $username = "root";
@@ -116,12 +116,11 @@
 
                 $conn = new mysqli($servername, $username, $password, $dbname, $port);
 
-             
                 if ($conn->connect_error) {
                     die("Connection failed: " . $conn->connect_error);
                 }
 
-                $sql = "SELECT ten_dia_diem, dia_chi, hinh_anh1 FROM dia_diem";
+                $sql = "SELECT id, ten_dia_diem, dia_chi, hinh_anh1 FROM dia_diem";
                 $conditions = []; // Mảng để lưu các điều kiện lọc
 
                 // Kiểm tra xem có tham số 'district' trong URL hay không
@@ -180,7 +179,7 @@
                         echo "<div class='card-info'>";
                         echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
                         echo "<p>" . htmlspecialchars($row["dia_chi"]) . "</p>";
-                        echo "<button>Lưu vào yêu thích</button>";
+                        echo "<button  onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
                         echo "</div></div>";
                     }
                 } else {
@@ -248,6 +247,33 @@
                 updateURLParams();
             });
         });
+
+
+        // Function to save favorite location
+        function saveFavorite(diaDiemId) {
+            fetch('yeuthich.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `dia_diem_id=${diaDiemId}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data); // Hiển thị kết quả
+            })
+            .catch(error => console.error('Lỗi:', error));
+        }
+
+        // Function to show favorite locations
+        function showFavorites() {
+            fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
+                })
+                .catch(error => console.error('Lỗi:', error));
+        }
     </script>
 
 </body>

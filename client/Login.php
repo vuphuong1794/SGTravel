@@ -54,7 +54,7 @@ function logout() {
        setcookie(COOKIE_NAME, '', time() - 3600, '/');
    }
    
-   header("Location: login.php");
+   header("Location: Login.php");
    exit();
 }
 

@@ -26,6 +26,7 @@ body {
     font-size: 24px;
     color: #fff;
     margin-right:20px;
+    cursor: pointer;
 }
 
 /* các thành phần thanh tìm kiếm */
