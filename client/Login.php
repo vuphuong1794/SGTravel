@@ -102,6 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                        'role' => $user['phan_quyen']
                    ]);
                    
+                   // update lưu trong database
                    setcookie(
                        COOKIE_NAME,
                        $cookie_value,  
