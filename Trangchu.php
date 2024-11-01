@@ -101,7 +101,7 @@
                     <option value="Tân phú">Quận Tân Phú</option>
                     <option value="thủ đức">Quận Thủ Đức</option>
                     <option value="bình chánh">Huyện Bình Chánh</option>
-                    <option value="cần giòw">Huyện Cần Giờ</option>
+                    <option value="cần giờ">Huyện Cần Giờ</option>
                     <option value="củ chi">Huyện Củ Chi</option>
                     <option value="hóc môn">Huyện Hóc Môn</option>
                     <option value="nhà bè">Huyện Nhà Bè</option>
@@ -110,7 +110,19 @@
         </div>
 
 
-        <!-- Explore section -->
+        <?php
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "sgtravel";
+        $conn = new mysqli($servername, $username, $password, $dbname);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        ?>
+
+        <!-- Khám phá section -->
         <section class="explore">
             <div class="sidebar">
                 <h3>Khám phá</h3>
@@ -127,30 +139,17 @@
 
             <div class="grid-container">
                 <?php
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $dbname = "sgtravel";
-                $port = '3306';
-
-                // Tạo kết nối
-                $conn = new mysqli($servername, $username, $password, $dbname, $port);
-
-                // Kiểm tra kết nối
-                if ($conn->connect_error) {
-                    die("Kết nối thất bại: " . $conn->connect_error);
-                }
-
-                // MySQL query to fetch location data
                 $sql = "SELECT ten_dia_diem, dia_chi, hinh_anh1 FROM dia_diem";
 
-                if (isset($_GET['district']) && !empty($_GET['district'])) {
-                    $district = $conn->real_escape_string($_GET['district']);
-                    $sql .= " WHERE dia_chi LIKE '%$district%'";
+                // Kiểm tra nếu có từ khóa tìm kiếm
+                if (isset($_GET['search']) && !empty($_GET['search'])) {
+                    $search = $conn->real_escape_string($_GET['search']);
+                    $sql .= " WHERE ten_dia_diem LIKE '%$search%' OR dia_chi LIKE '%$search%' OR mo_ta LIKE '%$search%'";
                 }
+
                 $result = $conn->query($sql);
 
-                if ($result->num_rows > 0) {
+                if ($result && $result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<div class='card'>";
                         echo "<img src='" . $row["hinh_anh1"] . "' alt='" . $row["ten_dia_diem"] . "'>";
@@ -164,12 +163,12 @@
                     echo "<p>Không có kết quả nào để hiển thị</p>";
                 }
 
-                // Close the connection
+                // Đóng kết nối
                 $conn->close();
                 ?>
-
             </div>
         </section>
+
 
     </div>
     <!-- Footer -->

@@ -30,7 +30,7 @@ body {
 
 /* các thành phần thanh tìm kiếm */
 .searchbox-container {
-    display: flex;
+    display: inline;
     align-items: center;
     position: relative;
     flex: 1;
@@ -44,6 +44,17 @@ body {
     border: none;
     border-radius: 5px;
     width: 100%;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 8px; /* Khoảng cách giữa ô tìm kiếm và icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* icon tìm kiếm */
