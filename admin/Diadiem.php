@@ -241,7 +241,7 @@ body {
       $username = "root";
       $password = "";
       $dbname = "sgtravel";
-      $port = '3306';
+      $port = '3307';
       
       // Tạo kết nối
       $conn = new mysqli($servername, $username, $password, $dbname, $port);
@@ -271,6 +271,7 @@ body {
                   <th>Hình ảnh</th>
                   <th>Số lượt đánh giá</th>
                   <th>Link địa điểm</th>
+                  <th>Số lượt tìm kiếm</th>
                   <th>Thao tác</th>
                 </tr>";
           while ($row = $result->fetch_assoc()) {
@@ -298,11 +299,11 @@ body {
               echo "</td>
                       <td>" . htmlspecialchars($row["so_luot_danh_gia"]) . "</td>
                       <td><a href='" . htmlspecialchars($row["link_dia_diem"]) . "' target='_blank'>Link</a></td>
+                       <td>" . htmlspecialchars($row["so_luot_tk"]) . "</td>
                         <td>
-                          <button onclick=\"window.location.href='edit.php?id=" . htmlspecialchars($row["id"]) . "'\">Sửa</button>
-                          <button onclick=\"if(confirm('Bạn có chắc chắn muốn xóa tài khoản này?')) { window.location.href='delete.php?id=" . htmlspecialchars($row["id"]) . "'; }\">Xóa</button>
-                      </td>
-
+                          <button onclick=\"if(confirm('Bạn có chắc chắn muốn duyệt địa điểm này?')) { window.location.href='approve.php?id=" . htmlspecialchars($row['id']) . "'; }\">Duyệt</button>
+                          <button onclick=\"if(confirm('Bạn có chắc chắn muốn không duyệt địa điểm này?')) { window.location.href='disapprove.php?id=" . htmlspecialchars($row['id']) . "'; }\">Không Duyệt</button>
+                        </td>
                     </tr>";
           }
           echo "</table>";

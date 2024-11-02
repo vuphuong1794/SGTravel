@@ -1,34 +1,41 @@
 <?php
+session_start();
+
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "sgtravel";
-$port = '3306';
+$port = '3307';
 
-// Tạo kết nối
 $conn = new mysqli($servername, $username, $password, $dbname, $port);
 
-// Kiểm tra kết nối
 if ($conn->connect_error) {
     die("Kết nối thất bại: " . $conn->connect_error);
 }
 
-// Giả sử ID người dùng là 1 (có thể thay đổi theo nhu cầu)
-$user_id = 1;
+if (isset($_POST['dia_diem_id']) && isset($_SESSION['user_id'])) {
+    $diaDiemId = $conn->real_escape_string($_POST['dia_diem_id']);
+    $userId = $_SESSION['user_id'];
 
-if (isset($_POST['dia_diem_id'])) {
-    $dia_diem_id = $conn->real_escape_string($_POST['dia_diem_id']);
+    // Kiểm tra xem địa điểm đã lưu trước đó chưa
+    $checkQuery = "SELECT * FROM yeu_thich WHERE user_id = '$userId' AND dia_diem_id = '$diaDiemId'";
+    $checkResult = $conn->query($checkQuery);
 
-    // Thực hiện truy vấn để lưu vào bảng yêu thích
-    $sql = "INSERT INTO yeu_thich (user_id, dia_diem_id) VALUES ('$user_id', '$dia_diem_id')";
-
-    if ($conn->query($sql) === TRUE) {
-        echo "Đã lưu vào yêu thích thành công!";
+    if ($checkResult->num_rows == 0) {
+        // Chưa lưu, thực hiện lưu địa điểm
+        $insertQuery = "INSERT INTO yeu_thich (user_id, dia_diem_id) VALUES ('$userId', '$diaDiemId')";
+        if ($conn->query($insertQuery) === TRUE) {
+            echo "Đã lưu địa điểm vào danh sách yêu thích!";
+        } else {
+            echo "Lỗi: " . $conn->error;
+        }
     } else {
-        echo "Lỗi: " . $conn->error;
+        echo "Địa điểm đã được lưu trước đó.";
     }
+} else {
+    echo "Lỗi: Không tìm thấy ID địa điểm hoặc người dùng chưa đăng nhập.";
 }
 
-// Đóng kết nối
 $conn->close();
+
 ?>

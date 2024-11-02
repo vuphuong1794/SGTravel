@@ -1,41 +1,54 @@
 <?php
+session_start();
+
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "sgtravel";
-$port = '3306';
+$port = '3307';
 
 $conn = new mysqli($servername, $username, $password, $dbname, $port);
+
+// Kiểm tra kết nối
 if ($conn->connect_error) {
     die("Kết nối thất bại: " . $conn->connect_error);
 }
 
-// Giả sử ID người dùng là 1 (có thể thay đổi theo nhu cầu)
-$user_id = 1;
+// Kiểm tra nếu người dùng đã đăng nhập
+if (isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
 
-// Truy vấn để lấy danh sách địa điểm yêu thích
-$sql = "SELECT dia_diem.id, dia_diem.ten_dia_diem, dia_diem.dia_chi, dia_diem.hinh_anh1 
-        FROM dia_diem 
-        JOIN yeu_thich ON dia_diem.id = yeu_thich.dia_diem_id 
-        WHERE yeu_thich.user_id = '$user_id'";
+    // Sử dụng prepared statements để tránh SQL Injection
+    $sql = "SELECT d.id, d.ten_dia_diem, d.dia_chi, d.hinh_anh1 
+            FROM dia_diem d 
+            JOIN yeu_thich y ON d.id = y.dia_diem_id 
+            WHERE y.user_id = ?";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-$result = $conn->query($sql);
-
-if ($result) {
+    // Kiểm tra số lượng địa điểm yêu thích
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo "<div class='card'>";
-            echo "<img src='" . $row["hinh_anh1"] . "' alt='" . $row["ten_dia_diem"] . "'>";
+            $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]); 
+            echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
             echo "<div class='card-info'>";
-            echo "<h4>" . $row["ten_dia_diem"] . "</h4>";
-            echo "<p>" . $row["dia_chi"] . "</p>";
+            echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
+            echo "<p>" . htmlspecialchars($row["dia_chi"]) . "</p>";
+            echo "<button onclick='removeFavorite(" . $row["id"] . ")'>Xóa yêu thích</button>";
             echo "</div></div>";
         }
     } else {
-        echo "<p>Chưa có địa điểm nào trong danh sách yêu thích.</p>";
+        echo "<p>Không có địa điểm yêu thích nào được lưu.</p>";
     }
 } else {
-    echo "<p>Lỗi truy vấn: " . $conn->error . "</p>";
+    echo "<p>Bạn cần đăng nhập để xem địa điểm yêu thích.</p>";
 }
+
+// Đóng kết nối
+$stmt->close();
 $conn->close();
 ?>

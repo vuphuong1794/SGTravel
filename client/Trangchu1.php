@@ -23,11 +23,11 @@ if (isset($_SESSION['user_id'])) {
 
     if ($result && mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
-        $userNameFromDB = $user['ten_dang_nhap']; // Lưu tên người dùng
+        $userNameFromDB = $user['ten_dang_nhap']; 
     }
 }
 
-$conn->close(); // Đóng kết nối
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -241,7 +241,8 @@ $conn->close(); // Đóng kết nối
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<div class='card'>";
-                        echo "<img src='" . htmlspecialchars($row["hinh_anh1"]) . "' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
+                        $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]); 
+                        echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
                         echo "<div class='card-info'>";
                         echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
                         echo "<p>" . htmlspecialchars($row["dia_chi"]) . "</p>";
@@ -331,17 +332,43 @@ $conn->close(); // Đóng kết nối
             .catch(error => console.error('Lỗi:', error));
         }
 
+
         // Function to show favorite locations
         function showFavorites() {
-            fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
+        // Kiểm tra xem người dùng đã đăng nhập hay chưa
+        const isLoggedIn = "<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>";
+
+        if (isLoggedIn === 'false') {
+            alert("Bạn cần đăng nhập để xem địa điểm yêu thích.");
+            return; // Ngừng thực hiện hàm nếu chưa đăng nhập
+        }
+
+        fetch('favorite.php') // favorite.php hiển thị địa điểm yêu thích
+            .then(response => response.text())
+            .then(data => {
+                document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
+            })
+            .catch(error => console.error('Lỗi:', error));
+        }
+    // Xóa địa điểm đã lưu
+        function removeFavorite(diaDiemId) {
+            if (confirm('Bạn có chắc chắn muốn xóa địa điểm này khỏi yêu thích không?')) {
+                fetch('remove_favorite.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `dia_diem_id=${diaDiemId}`
+                })
                 .then(response => response.text())
                 .then(data => {
-                    document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
+                    alert(data); // Hiển thị kết quả
+                    showFavorites(); // Cập nhật danh sách địa điểm yêu thích
                 })
                 .catch(error => console.error('Lỗi:', error));
+            }
         }
     </script>
 
 </body>
-
 </html>

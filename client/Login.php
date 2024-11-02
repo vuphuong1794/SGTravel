@@ -4,7 +4,7 @@ define('DB_HOST', 'localhost');
 define('DB_USER', 'root'); 
 define('DB_PASS', '');
 define('DB_NAME', 'sgtravel');
-define('DB_PORT', '3306');
+define('DB_PORT', '3307');
 
 // Cấu hình Cookie 
 define('COOKIE_NAME', 'sgtravel_login');
@@ -18,10 +18,10 @@ define('ROLE_ADMIN', 1);
 function redirectBasedOnRole($role) {
    switch ($role) {
        case ROLE_USER:
-           header("Location: Trangchu.php");
+           header("Location: Trangchu1.php");
            break;
        case ROLE_ADMIN:
-           header("Location: ../admin/Dashboard.html"); 
+           header("Location: ../admin/Dashboard.php"); 
            break;
        default:
            logout();

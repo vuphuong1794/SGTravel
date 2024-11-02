@@ -758,10 +758,53 @@ VALUES
 
 CREATE TABLE yeu_thich (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,       
-    dia_diem_id INT NOT NULL,   
-    FOREIGN KEY (user_id) REFERENCES tai_khoan(id) ON DELETE CASCADE,
-    FOREIGN KEY (dia_diem_id) REFERENCES dia_diem(id) ON DELETE CASCADE,
-    UNIQUE(user_id, dia_diem_id)  -- Đảm bảo không trùng lặp yêu thích cho cùng một user và địa điểm
+    user_id INT NOT NULL,
+    dia_diem_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES tai_khoan(id),
+    FOREIGN KEY (dia_diem_id) REFERENCES dia_diem(id),
+    UNIQUE (user_id, dia_diem_id) -- Đảm bảo mỗi người dùng chỉ có một bản ghi cho một địa điểm
 );
+
+ALTER TABLE dia_diem
+ADD COLUMN so_luot_tk INT DEFAULT 0;
+
+
+
+-- Cập nhật một vài địa điểm nổi bật với so_luot_tk từ 1000 đến 2000
+UPDATE dia_diem
+SET so_luot_tk = FLOOR(1000 + (RAND() * 1001))
+WHERE id IN (1, 5, 10, 12, 15, 20, 25, 50, 65, 91, 120, 145, 190);
+
+
+-- Cập nhật các địa điểm còn lại với so_luot_tk từ 50 đến 100
+UPDATE dia_diem
+SET so_luot_tk = FLOOR(50 + (RAND() * 51))
+WHERE id BETWEEN 1 AND 191
+AND id NOT IN (1, 5, 10, 12, 15, 20, 25, 50, 65, 91, 120, 145, 190);
+
+-- Thêm vào data dia_diem
+ALTER TABLE dia_diem 
+ADD COLUMN id_nguoi_dang INT NOT NULL DEFAULT 1, 
+ADD COLUMN ngay_dang DATETIME NOT NULL DEFAULT NOW();
+
+ALTER TABLE dia_diem 
+ADD CONSTRAINT fk_id_nguoi_dang 
+FOREIGN KEY (id_nguoi_dang) REFERENCES tai_khoan(id)
+ON DELETE CASCADE;
+
+UPDATE dia_diem d
+SET d.id_nguoi_dang= (
+    SELECT t.id 
+    FROM tai_khoan t 
+    ORDER BY RAND() 
+    LIMIT 1
+)
+WHERE d.id BETWEEN 1 AND 191;
+
+
+UPDATE dia_diem
+SET ngay_dang = DATE_ADD('2016-01-01', INTERVAL FLOOR(RAND() * DATEDIFF('2024-11-02', '2016-01-01')) DAY)
+WHERE id BETWEEN 1 AND 191;
+
+
 

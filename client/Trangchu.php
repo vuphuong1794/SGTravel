@@ -112,7 +112,7 @@
                 $username = "root";
                 $password = "";
                 $dbname = "sgtravel";
-                $port = '3306';
+                $port = '3307';
 
                 $conn = new mysqli($servername, $username, $password, $dbname, $port);
 
@@ -175,7 +175,8 @@
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<div class='card'>";
-                        echo "<img src='" . htmlspecialchars($row["hinh_anh1"]) . "' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
+                        $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]); 
+                        echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
                         echo "<div class='card-info'>";
                         echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
                         echo "<p>" . htmlspecialchars($row["dia_chi"]) . "</p>";
@@ -247,10 +248,16 @@
                 updateURLParams();
             });
         });
-
-
         // Function to save favorite location
         function saveFavorite(diaDiemId) {
+            // Kiểm tra xem người dùng đã đăng nhập hay chưa
+            const isLoggedIn = Boolean(localStorage.getItem('userLoggedIn')); // Giả sử bạn lưu trạng thái đăng nhập
+
+            if (!isLoggedIn) {
+                alert("Bạn cần đăng nhập để lưu địa điểm vào yêu thích.");
+                return;
+            }
+
             fetch('yeuthich.php', {
                 method: 'POST',
                 headers: {
@@ -265,17 +272,24 @@
             .catch(error => console.error('Lỗi:', error));
         }
 
-        // Function to show favorite locations
         function showFavorites() {
-            fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
-                .then(response => response.text())
-                .then(data => {
-                    document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
-                })
-                .catch(error => console.error('Lỗi:', error));
-        }
-    </script>
+    // Kiểm tra xem người dùng đã đăng nhập hay chưa
+    const isLoggedIn = "<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>";
 
+    if (isLoggedIn === 'false') {
+        alert("Bạn cần đăng nhập để xem địa điểm yêu thích.");
+        return; // Ngừng thực hiện hàm nếu chưa đăng nhập
+    }
+
+    fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
+        .then(response => response.text())
+        .then(data => {
+            document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
+        })
+        .catch(error => console.error('Lỗi:', error));
+}
+
+    </script>
 </body>
 
 </html>

@@ -13,7 +13,7 @@
     $username = "root";
     $password = "";
     $dbname = "sgtravel"; 
-    $port = '3306'; 
+    $port = '3307'; 
 
 
     // Tạo kết nối
