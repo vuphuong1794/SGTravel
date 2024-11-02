@@ -43,7 +43,7 @@
     ?>
 
     <div class="sidebar">
-        <h2>SGTravel</h2>
+        <a href="./Dashboard.php"><h2>SGTravel</h2></a>
         <div class="menu-section">
             <a href="../admin/Dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
             <h3>Người dùng</h3>

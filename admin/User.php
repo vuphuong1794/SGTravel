@@ -144,7 +144,7 @@ h1 {
   </head>
   <body>
     <div class="sidebar">
-      <h2>SGTravel</h2>
+    <a href="./Dashboard.php"><h2>SGTravel</h2></a>
       <div class="menu-section">
         <a href="../admin/Dashboard.php">
           <i class="fas fa-home"> </i>
@@ -190,59 +190,6 @@ h1 {
     </div>
     <div class="container">
       <h1>Quản lý người dùng</h1>
-      <!-- <table>
-        <thead>
-          <tr>
-            <th>STT</th>
-            <th>Tên người dùng</th>
-            <th>Email</th>
-            <th>Số điện thoại</th>
-            <th>Trạng thái</th>
-            <th>Thao tác</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>Nguyễn Văn A</td>
-            <td>userA@example.com</td>
-            <td>0123456789</td>
-            <td>Hoạt động</td>
-            <td>
-              <button class="xem">Xem</button>
-              <button class="sua">Sửa</button>
-              <button class="khoa">Khóa</button>
-              <button class="xoa">Xóa</button>
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Nguyễn Văn B</td>
-            <td>userB@example.com</td>
-            <td>0123456789</td>
-            <td>Khóa</td>
-            <td>
-              <button class="xem">Xem</button>
-              <button class="sua">Sửa</button>
-              <button class="khoa">Mở khóa</button>
-              <button class="xoa">Xóa</button>
-            </td>
-            <tr>
-              <td>2</td>
-              <td>Nguyễn Văn C</td>
-              <td>userC@example.com</td>
-              <td>01234562323</td>
-              <td>Khóa</td>
-              <td>
-                <button class="xem">Xem</button>
-                <button class="sua">Sửa</button>
-                <button class="khoa">Mở khóa</button>
-                <button class="xoa">Xóa</button>
-              </td>
-            </tr>
-          </tr>
-        </tbody>
-      </table> -->
       <?php
 $servername = "localhost";
 $username = "root";
