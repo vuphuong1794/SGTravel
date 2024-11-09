@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+/* Sidebar cột bên trái */
+.sidebar {
+  width: 250px;
+  background-color: #00bcd4;
+  height: 200vh;
+  position: fixed;
+  padding-top: 20px;
+  color: white;
+}
+/* Nhã hiệu SGTravel */
+.sidebar h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+/* Các lựa chọn bên sidebar */
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 10px;
+  text-decoration: none;
+  font-size: 18px;
+}
+.sidebar a:hover {
+  background-color: #0097a7;
+}
+.sidebar .menu-section {
+  margin-bottom: 20px;
+}
+.sidebar .menu-section h3 {
+  margin-left: 15px;
+  font-size: 16px;
+}
+.sidebar .menu-section a {
+  padding-left: 30px;
+}

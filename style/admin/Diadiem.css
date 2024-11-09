@@ -1,0 +1,137 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Sidebar cột bên trái */
+.sidebar {
+  width: 250px;
+  background-color: #00bcd4;
+  height: 100vh;
+  position: fixed;
+  padding-top: 20px;
+  color: white;
+  left: 0; /* Đảm bảo sidebar luôn nằm bên trái */
+  top: 0;
+}
+
+/* Container chính (nội dung chính bên phải) */
+.container {
+  max-width: calc(
+    100% - 250px
+  ); /* Tự động điều chỉnh kích thước container dựa trên chiều rộng của sidebar */
+  margin-left: 250px; /* Đẩy container sang bên phải để không bị che bởi sidebar */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Bảng */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table,
+th,
+td {
+  border: 1px solid #ddd;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+/* Tiêu đề */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Các nút hành động */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.action-buttons button {
+  padding: 8px 16px;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.action-buttons .them {
+  background-color: #45a049;
+}
+.action-buttons .sua {
+  background-color: rgb(228, 181, 24);
+}
+.action-buttons .xoa {
+  background-color: red;
+}
+.action-buttons button:hover {
+  background-color: #5a45a0;
+}
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .container {
+    margin-left: 0;
+    padding: 10px;
+  }
+  table,
+  th,
+  td {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .sidebar a {
+    font-size: 16px;
+    padding: 8px;
+  }
+
+  .action-buttons button {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+.xem_them {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  background-color: #f9f9f9;
+}
+
+.xem_them1 {
+  background-color: #00bcd4;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 20px;
+  transition: background-color 0.3s;
+}
+
+.xem_them1:hover {
+  background-color: #0097a7;
+}
