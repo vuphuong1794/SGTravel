@@ -3,7 +3,7 @@ $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "sgtravel"; 
-$port = '3307'; 
+$port = '3306'; 
 
 
 // Tạo kết nối

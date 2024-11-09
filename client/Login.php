@@ -4,7 +4,7 @@ define('DB_HOST', 'localhost');
 define('DB_USER', 'root'); 
 define('DB_PASS', '');
 define('DB_NAME', 'sgtravel');
-define('DB_PORT', '3307');
+define('DB_PORT', '3306');
 
 // Cấu hình Cookie 
 define('COOKIE_NAME', 'sgtravel_login');
@@ -75,59 +75,84 @@ if (!isset($_SESSION['user_id']) && isset($_COOKIE[COOKIE_NAME])) {
 
 // xử lý login
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-   $conn = connectDB();
-   
-   $username = $conn->real_escape_string($_POST['username']);
-   $password = $_POST['password'];
-   
-   $sql = "SELECT * FROM tai_khoan WHERE (ten_dang_nhap = ? OR email = ?) AND trang_thai = 'hoạt động'";
-   
-   if ($stmt = $conn->prepare($sql)) {
-       $stmt->bind_param("ss", $username, $username);
-       $stmt->execute();
-       $result = $stmt->get_result();
-       
-       if ($user = $result->fetch_assoc()) {
-           if ($password == $user['mat_khau']) {
-               // tạo session
-               $_SESSION['user_id'] = $user['id'];
-               $_SESSION['username'] = $user['ten_dang_nhap'];
-               $_SESSION['role'] = $user['phan_quyen'];
-               
-               // nếu ấn lưu đăng nhập thì mới lưu cookie
-               if (isset($_POST['remember']) && $_POST['remember'] == 'on') {
-                   $cookie_value = json_encode([
-                       'user_id' => $user['id'],
-                       'username' => $user['ten_dang_nhap'],
-                       'role' => $user['phan_quyen']
-                   ]);
-                   
-                   // update lưu trong database
-                   setcookie(
-                       COOKIE_NAME,
-                       $cookie_value,  
-                       time() + COOKIE_DURATION,
-                       '/',
-                       '',
-                       false,
-                       true
-                   );
-               }
-               
-               redirectBasedOnRole($user['phan_quyen']);
-           } else {
-               $error = "Tên đăng nhập hoặc mật khẩu không đúng";
-           }
-       } else {
-           $error = "Tên đăng nhập hoặc mật khẩu không đúng";
-       }
-       
-       $stmt->close();
-   } else {
-       $error = "Lỗi hệ thống, vui lòng thử lại sau";
-   }
-   
-   $conn->close();
+    $conn = connectDB();
+    
+    $username = $conn->real_escape_string($_POST['username']);
+    $password = $_POST['password']; // password gốc từ form
+
+    $sql = "SELECT * FROM tai_khoan WHERE (ten_dang_nhap = ? OR email = ?) AND trang_thai = 'hoạt động'";
+    
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("ss", $username, $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($user = $result->fetch_assoc()) {
+            // Kiểm tra xem mật khẩu trong DB có được hash chưa
+            if (password_verify($password, $user['mat_khau'])) {
+                // Mật khẩu đã hash - đăng nhập thành công
+                initializeSession($user);
+                setLoginCookie($user);
+                redirectBasedOnRole($user['phan_quyen']);
+            } 
+            else if ($password === $user['mat_khau']) {
+                // Mật khẩu chưa hash - đăng nhập thành công và update hash
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                updatePasswordHash($conn, $user['id'], $hashed_password);
+                
+                initializeSession($user);
+                setLoginCookie($user);
+                redirectBasedOnRole($user['phan_quyen']);
+            }
+            else {
+                $error = "Tên đăng nhập hoặc mật khẩu không đúng";
+            }
+        } else {
+            $error = "Tên đăng nhập hoặc mật khẩu không đúng";
+        }
+        
+        $stmt->close();
+    } else {
+        $error = "Lỗi hệ thống, vui lòng thử lại sau";
+    }
+    
+    $conn->close();
+}
+
+// Hàm hỗ trợ
+function initializeSession($user) {
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['username'] = $user['ten_dang_nhap'];
+    $_SESSION['role'] = $user['phan_quyen'];
+}
+
+function setLoginCookie($user) {
+    if (isset($_POST['remember']) && $_POST['remember'] == 'on') {
+        $cookie_value = json_encode([
+            'user_id' => $user['id'],
+            'username' => $user['ten_dang_nhap'],
+            'role' => $user['phan_quyen']
+        ]);
+        
+        setcookie(
+            COOKIE_NAME,
+            $cookie_value,
+            time() + COOKIE_DURATION,
+            '/',
+            '',
+            false,
+            true
+        );
+    }
+}
+
+function updatePasswordHash($conn, $user_id, $hashed_password) {
+    $update_sql = "UPDATE tai_khoan SET mat_khau = ? WHERE id = ?";
+    if ($update_stmt = $conn->prepare($update_sql)) {
+        $update_stmt->bind_param("si", $hashed_password, $user_id);
+        $update_stmt->execute();
+        $update_stmt->close();
+    }
 }
 ?>
 

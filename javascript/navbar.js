@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span class="slider-navbar" for="theme-toggle"></span>
                 </label>
                 <div class="user-container">
-                    <button class="signUp-btn"><a href="Signup.html" style="text-decoration: none; color: black">Đăng ký</a></button>
+                    <button class="signUp-btn"><a href="Signup.php" style="text-decoration: none; color: black">Đăng ký</a></button>
                     <button class="login-btn"><a href="Login.php" style="text-decoration: none; color: black">Đăng nhập</a></button>
                     <box-icon name='bell'></box-icon>
                 </div>

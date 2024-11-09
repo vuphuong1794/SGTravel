@@ -61,7 +61,7 @@
             <div class="filter-group-left">
                 <button>Mới nhất</button>
                 <button>Gần tôi</button>
-                <button  onclick="showFavorites()">Đã lưu</button>
+                <button onclick="showFavorites()">Đã lưu</button>
             </div>
             <div class="filter-group-right">
                 <select class="filter-bar select">
@@ -112,7 +112,7 @@
                 $username = "root";
                 $password = "";
                 $dbname = "sgtravel";
-                $port = '3307';
+                $port = '3306';
 
                 $conn = new mysqli($servername, $username, $password, $dbname, $port);
 
@@ -128,7 +128,7 @@
 
                     // Làm sạch tham số để tránh SQL injection
                     $district = $conn->real_escape_string($_GET['district']);
-                    
+
                     // Tách chuỗi district thành các từ, chỉ giữ lại các từ có độ dài lớn hơn 1
                     $district_conditions = array_filter(explode(' ', $district), function ($word) {
                         return strlen($word) > 1;
@@ -140,7 +140,7 @@
                         }, $district_conditions)) . ")";
                     }
                 }
-                
+
                 // Kiểm tra xem có tham số 'province' trong URL hay không
                 if (isset($_GET['province']) && !empty($_GET['province'])) {
                     $province = $conn->real_escape_string($_GET['province']);
@@ -149,7 +149,7 @@
                     $conditions[] = "LOWER(dia_chi) LIKE LOWER('%" . strtolower($province) . "%')";
                 }
 
-                
+
                 // Kiểm tra xem có tham số 'category' trong URL hay không
                 if (isset($_GET['category']) && !empty($_GET['category'])) {
                     $category = $conn->real_escape_string($_GET['category']);
@@ -175,7 +175,7 @@
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<div class='card'>";
-                        $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]); 
+                        $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
                         echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
                         echo "<div class='card-info'>";
                         echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
@@ -189,6 +189,8 @@
 
                 $conn->close();
                 ?>
+                <box-icon id="scrollToTopBtn" name='up-arrow-alt' onclick="scrollToTop()"></box-icon>
+                <button id="loadMoreBtn" onclick="loadMoreLocations()">Xem Thêm</button>
             </div>
         </section>
     </div>
@@ -259,36 +261,87 @@
             }
 
             fetch('yeuthich.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `dia_diem_id=${diaDiemId}`
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert(data); // Hiển thị kết quả
-            })
-            .catch(error => console.error('Lỗi:', error));
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `dia_diem_id=${diaDiemId}`
+                })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data); // Hiển thị kết quả
+                })
+                .catch(error => console.error('Lỗi:', error));
         }
 
         function showFavorites() {
-    // Kiểm tra xem người dùng đã đăng nhập hay chưa
-    const isLoggedIn = "<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>";
+            // Kiểm tra xem người dùng đã đăng nhập hay chưa
+            const isLoggedIn = "<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>";
 
-    if (isLoggedIn === 'false') {
-        alert("Bạn cần đăng nhập để xem địa điểm yêu thích.");
-        return; // Ngừng thực hiện hàm nếu chưa đăng nhập
-    }
+            if (isLoggedIn === 'false') {
+                alert("Bạn cần đăng nhập để xem địa điểm yêu thích.");
+                return; // Ngừng thực hiện hàm nếu chưa đăng nhập
+            }
 
-    fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
-        .then(response => response.text())
-        .then(data => {
-            document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
-        })
-        .catch(error => console.error('Lỗi:', error));
-}
+            fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
+                })
+                .catch(error => console.error('Lỗi:', error));
+        }
+    </script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+            window.onscroll = function() {
+                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                    scrollToTopBtn.style.display = "block";
+                } else {
+                    scrollToTopBtn.style.display = "none";
+                }
+            };
+
+            window.scrollToTop = function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            };
+        });
+    </script>
+
+<script>
+        let offset = 20; // Bắt đầu từ sau 30 địa điểm đầu tiên
+        const limit = 20;
+
+        function loadMoreLocations() {
+
+            document.getElementById('loadMoreBtn').style.display = 'none';
+            // Tạo URL với offset mới
+            const url = `Trangchu.php?offset=${offset}`;
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    // Thêm kết quả vào cuối danh sách
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const newLocations = doc.querySelectorAll('#locationGrid .card');
+
+                    if (newLocations.length > 0) {
+                        newLocations.forEach(location => {
+                            document.getElementById('locationGrid').appendChild(location);
+                        });
+                        offset += limit; // Cập nhật offset cho lần tải tiếp theo
+                    } else {
+                        // Ẩn nút nếu không còn địa điểm nào để tải
+                        document.getElementById('loadMoreBtn').style.display = 'none';
+                    }
+                })
+                .catch(error => console.error('Lỗi tải thêm địa điểm:', error));
+        }
     </script>
 </body>
 

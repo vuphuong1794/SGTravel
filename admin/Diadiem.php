@@ -241,7 +241,7 @@ body {
       $username = "root";
       $password = "";
       $dbname = "sgtravel";
-      $port = '3307';
+      $port = '3306';
       
       // Tạo kết nối
       $conn = new mysqli($servername, $username, $password, $dbname, $port);
