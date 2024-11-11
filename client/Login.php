@@ -1,130 +1,50 @@
 <?php
-//sử dụng cookie cho lưu đăng nhập
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'sgtravel');
-define('DB_PORT', '3306');
+// Kết nối cơ sở dữ liệu
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "sgtravel";
+$port = '3306';
 
-// Cấu hình Cookie 
-define('COOKIE_NAME', 'sgtravel_login');
-define('COOKIE_DURATION',  20); // test 20 giây
+$conn = new mysqli($servername, $username, $password, $dbname, $port);
 
-// Cấu hình Role 
-define('ROLE_USER', 2);
-define('ROLE_ADMIN', 1);
-
-// chuyển trang phụ thuộc vào Role
-function redirectBasedOnRole($role)
-{
-    switch ($role) {
-        case ROLE_USER:
-            header("Location: Trangchu1.php");
-            break;
-        case ROLE_ADMIN:
-            header("Location: ../admin/Dashboard.php");
-            break;
-        default:
-            logout();
-            break;
-    }
-    exit();
-}
-
-function connectDB()
-{
-    try {
-        $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
-
-        if ($conn->connect_error) {
-            throw new Exception("Connection failed: " . $conn->connect_error);
-        }
-
-        $conn->set_charset("utf8mb4");
-        return $conn;
-    } catch (Exception $e) {
-        error_log($e->getMessage());
-        die("Không thể kết nối đến database.");
-    }
-}
-
-function logout()
-{
-    session_start();
-    session_destroy();
-
-    if (isset($_COOKIE[COOKIE_NAME])) {
-        setcookie(COOKIE_NAME, '', time() - 3600, '/');
-    }
-
-    header("Location: Login.php");
-    exit();
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
 session_start();
 
-// kiểm tra cookie có tồn tại
-if (!isset($_SESSION['user_id']) && isset($_COOKIE[COOKIE_NAME])) {
-    $cookie_data = json_decode($_COOKIE[COOKIE_NAME], true);
-
-    if ($cookie_data) {
-        $_SESSION['user_id'] = $cookie_data['user_id'];
-        $_SESSION['username'] = $cookie_data['username'];
-        $_SESSION['role'] = $cookie_data['role'];
-
-        redirectBasedOnRole($cookie_data['role']);
-    }
-}
-
-// xử lý login
+// Xử lý đăng nhập
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conn = connectDB();
-
     $username = $conn->real_escape_string($_POST['username']);
     $password = $_POST['password'];
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    // Log hashedPassword to the console
-    echo "<script>console.log('Hashed Password: " . $hashedPassword . "');</script>";
+
+    // Tìm người dùng trong cơ sở dữ liệu
     $sql = "SELECT * FROM tai_khoan WHERE (ten_dang_nhap = ? OR email = ?) AND trang_thai = 'hoạt động'";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $username, $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("ss", $username, $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
+    if ($user = $result->fetch_assoc()) {
+        $storedPassword = $user['mat_khau'];
 
-        if ($user = $result->fetch_assoc()) {
-            $storedPassword = $user['mat_khau'];
-
-            if (password_verify($password, $storedPassword)) {
-                // Password is hashed and valid
-                initializeSession($user);
-                setLoginCookie($user);
-                redirectBasedOnRole($user['phan_quyen']);
-            } elseif ($storedPassword === $hashedPassword) {
-                // Password is stored as plaintext
-                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                updatePasswordHash($conn, $user['id'], $hashedPassword); // Update with hashed password
-
-                initializeSession($user);
-                setLoginCookie($user);
-                redirectBasedOnRole($user['phan_quyen']);
-            } else {
-                $error = "Mật khẩu không đúng";
-            }
+        // Kiểm tra mật khẩu
+        if (password_verify($password, $storedPassword)) {
+            // Mật khẩu hợp lệ, khởi tạo phiên đăng nhập
+            initializeSession($user);
+            setLoginCookie($user);
+            redirectBasedOnRole($user['phan_quyen']);
         } else {
-            $error = "Tên đăng nhập hoặc mật khẩu không đúng";
+            $error = "Mật khẩu không đúng";
         }
-
-        $stmt->close();
     } else {
-        $error = "Lỗi hệ thống, vui lòng thử lại sau";
+        $error = "Tên đăng nhập hoặc mật khẩu không đúng";
     }
 
+    $stmt->close();
     $conn->close();
 }
-
-
-
 
 // Hàm hỗ trợ
 function initializeSession($user)
@@ -138,15 +58,14 @@ function setLoginCookie($user)
 {
     if (isset($_POST['remember']) && $_POST['remember'] == 'on') {
         $cookie_value = json_encode([
-            'user_id' => $user['id'],
             'username' => $user['ten_dang_nhap'],
             'role' => $user['phan_quyen']
         ]);
 
         setcookie(
-            COOKIE_NAME,
+            'user_login',
             $cookie_value,
-            time() + COOKIE_DURATION,
+            time() + 3600 * 24 * 30, // Có hiệu lực trong 30 ngày
             '/',
             '',
             false,
@@ -155,14 +74,33 @@ function setLoginCookie($user)
     }
 }
 
-function updatePasswordHash($conn, $user_id, $hashed_password)
+function redirectBasedOnRole($role)
 {
-    $update_sql = "UPDATE tai_khoan SET mat_khau = ? WHERE id = ?";
-    if ($update_stmt = $conn->prepare($update_sql)) {
-        $update_stmt->bind_param("si", $hashed_password, $user_id);
-        $update_stmt->execute();
-        $update_stmt->close();
+    switch ($role) {
+        case 2: // Người dùng
+            header("Location: Trangchu1.php");
+            break;
+        case 1: // Quản trị viên
+            header("Location: ../admin/Dashboard.php");
+            break;
+        default:
+            logout();
+            break;
     }
+    exit();
+}
+
+function logout()
+{
+    session_start();
+    session_destroy();
+
+    if (isset($_COOKIE['sgtravel_login'])) {
+        setcookie('sgtravel_login', '', time() - 3600, '/');
+    }
+
+    header("Location: Login.php");
+    exit();
 }
 ?>
 

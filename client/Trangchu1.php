@@ -14,6 +14,7 @@ if ($conn->connect_error) {
 }
 // Khởi tạo tên người dùng mặc định
 $userNameFromDB = 'Khách';
+$userLoggedIn = false;
 
 if (isset($_SESSION['user_id'])) {
     // Lấy tên người dùng từ cơ sở dữ liệu
@@ -24,6 +25,7 @@ if (isset($_SESSION['user_id'])) {
     if ($result && mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
         $userNameFromDB = $user['ten_dang_nhap']; 
+        $userLoggedIn = true; // Cập nhật trạng thái đăng nhập
     }
 }
 
@@ -42,6 +44,7 @@ $conn->close();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <title>SGTravel - Trang chủ</title>
 </head>
+
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
         const navbarCSS = document.createElement('link');
@@ -51,6 +54,7 @@ $conn->close();
 
         // Đưa tên người dùng vào JavaScript từ PHP
         const username = "<?php echo $userNameFromDB; ?>"; // Lấy tên người dùng từ PHP
+        const userLoggedIn = "<?php echo $userLoggedIn ? 'true' : 'false'; ?>";
 
         const navbar = `
             <div class="navbar" id="navbar">
@@ -66,7 +70,8 @@ $conn->close();
                     </label>
                     
                     <div class="user-container">
-                        <span class="hello-message">Hello, ${username} !</span> 
+                        <span class="hello-message">Hello, ${username}!</span>
+                        ${userLoggedIn === 'true' ? `<button class="create-btn"><a href="ThemDiaDiem.php" style="text-decoration: none; color: black">Tạo địa điểm</a></button>` : ''}
                         <button class="login-btn"><a href="Logout.php" style="text-decoration: none; color: black">Đăng Xuất</a></button>
                         <box-icon name='bell'></box-icon>
                     </div>
@@ -255,6 +260,7 @@ $conn->close();
 
                 $conn->close();
                 ?>
+                <box-icon id="scrollToTopBtn" name='up-arrow-alt' onclick="scrollToTop()"></box-icon>
             </div>
         </section>
     </div>
@@ -314,46 +320,17 @@ $conn->close();
                 updateURLParams();
             });
         });
-
-
         // Function to save favorite location
         function saveFavorite(diaDiemId) {
+            // Kiểm tra xem người dùng đã đăng nhập hay chưa
+            const isLoggedIn = Boolean(localStorage.getItem('userLoggedIn')); // Giả sử bạn lưu trạng thái đăng nhập
+
+            if (!isLoggedIn) {
+                alert("Bạn cần đăng nhập để lưu địa điểm vào yêu thích.");
+                return;
+            }
+
             fetch('yeuthich.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `dia_diem_id=${diaDiemId}`
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert(data); // Hiển thị kết quả
-            })
-            .catch(error => console.error('Lỗi:', error));
-        }
-
-
-        // Function to show favorite locations
-        function showFavorites() {
-        // Kiểm tra xem người dùng đã đăng nhập hay chưa
-        const isLoggedIn = "<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>";
-
-        if (isLoggedIn === 'false') {
-            alert("Bạn cần đăng nhập để xem địa điểm yêu thích.");
-            return; // Ngừng thực hiện hàm nếu chưa đăng nhập
-        }
-
-        fetch('favorite.php') // favorite.php hiển thị địa điểm yêu thích
-            .then(response => response.text())
-            .then(data => {
-                document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
-            })
-            .catch(error => console.error('Lỗi:', error));
-        }
-    // Xóa địa điểm đã lưu
-        function removeFavorite(diaDiemId) {
-            if (confirm('Bạn có chắc chắn muốn xóa địa điểm này khỏi yêu thích không?')) {
-                fetch('remove_favorite.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
@@ -363,10 +340,77 @@ $conn->close();
                 .then(response => response.text())
                 .then(data => {
                     alert(data); // Hiển thị kết quả
-                    showFavorites(); // Cập nhật danh sách địa điểm yêu thích
                 })
                 .catch(error => console.error('Lỗi:', error));
+        }
+
+        function showFavorites() {
+            // Kiểm tra xem người dùng đã đăng nhập hay chưa
+            const isLoggedIn = "<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>";
+
+            if (isLoggedIn === 'false') {
+                alert("Bạn cần đăng nhập để xem địa điểm yêu thích.");
+                return; // Ngừng thực hiện hàm nếu chưa đăng nhập
             }
+
+            fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
+                })
+                .catch(error => console.error('Lỗi:', error));
+        }
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+            window.onscroll = function() {
+                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                    scrollToTopBtn.style.display = "block";
+                } else {
+                    scrollToTopBtn.style.display = "none";
+                }
+            };
+
+            window.scrollToTop = function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            };
+        });
+    </script>
+
+<script>
+        let offset = 20; // Bắt đầu từ sau 30 địa điểm đầu tiên
+        const limit = 20;
+
+        function loadMoreLocations() {
+
+            document.getElementById('loadMoreBtn').style.display = 'none';
+            // Tạo URL với offset mới
+            const url = `Trangchu.php?offset=${offset}`;
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    // Thêm kết quả vào cuối danh sách
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const newLocations = doc.querySelectorAll('#locationGrid .card');
+
+                    if (newLocations.length > 0) {
+                        newLocations.forEach(location => {
+                            document.getElementById('locationGrid').appendChild(location);
+                        });
+                        offset += limit; // Cập nhật offset cho lần tải tiếp theo
+                    } else {
+                        // Ẩn nút nếu không còn địa điểm nào để tải
+                        document.getElementById('loadMoreBtn').style.display = 'none';
+                    }
+                })
+                .catch(error => console.error('Lỗi tải thêm địa điểm:', error));
         }
     </script>
 

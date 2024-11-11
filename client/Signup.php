@@ -14,18 +14,18 @@ if ($conn->connect_error) {
 $error = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validate and sanitize input
+    //kiem tra thong tin
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $phoneNumber = filter_input(INPUT_POST, 'phoneNumber', FILTER_SANITIZE_STRING);
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
     
-    // Set default values
+    // dat gia tri mac dinh
     $phanQuyen = 2;
     $trangThai = 'hoạt động';
 
-    // Validation
+    // kiem tra input
     if (empty($username) || empty($email) || empty($phoneNumber) || empty($password) || empty($confirmPassword)) {
         $error = "Vui lòng điền đầy đủ thông tin";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (!preg_match('/^[0-9]{10,15}$/', $phoneNumber)) {
         $error = "Số điện thoại không hợp lệ";
     } else {
-        // Check if username already exists
+        // neu user ton tai
         $stmt = $conn->prepare("SELECT ten_dang_nhap FROM tai_khoan WHERE ten_dang_nhap = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
@@ -49,11 +49,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error = "Tên đăng nhập đã tồn tại";
         } else {
             // Hash password
-            //$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            
-            // Prepare and bind
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        
             $stmt = $conn->prepare("INSERT INTO tai_khoan (ten_dang_nhap, mat_khau, phan_quyen, email, so_dien_thoai, trang_thai) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssisss", $username, $password, $phanQuyen, $email, $phoneNumber, $trangThai);
+            $stmt->bind_param("ssisss", $username, $hashedPassword, $phanQuyen, $email, $phoneNumber, $trangThai);
             
             if ($stmt->execute()) {
                 header("Location: Login.php");
