@@ -34,6 +34,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Mật khẩu không khớp";
     } elseif (strlen($password) < 8) {
         $error = "Mật khẩu phải có ít nhất 8 ký tự";
+    } elseif (!preg_match('/^[a-zA-Z0-9]+$/', $username)) {
+        $error = "Tên đăng nhập chỉ được chứa chữ cái và số";
+    } elseif (!preg_match('/^[0-9]{10,15}$/', $phoneNumber)) {
+        $error = "Số điện thoại không hợp lệ";
     } else {
         // Check if username already exists
         $stmt = $conn->prepare("SELECT ten_dang_nhap FROM tai_khoan WHERE ten_dang_nhap = ?");
@@ -45,11 +49,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error = "Tên đăng nhập đã tồn tại";
         } else {
             // Hash password
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            //$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             
             // Prepare and bind
             $stmt = $conn->prepare("INSERT INTO tai_khoan (ten_dang_nhap, mat_khau, phan_quyen, email, so_dien_thoai, trang_thai) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssisss", $username, $hashedPassword, $phanQuyen, $email, $phoneNumber, $trangThai);
+            $stmt->bind_param("ssisss", $username, $password, $phanQuyen, $email, $phoneNumber, $trangThai);
             
             if ($stmt->execute()) {
                 header("Location: Login.php");
