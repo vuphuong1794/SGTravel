@@ -202,18 +202,19 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    display: none;
-    background-color: white; /* Adjust color as needed */
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
+    z-index: 99;
     cursor: pointer;
-    z-index: 1000;
+    padding: 10px;
+    background-color: whitesmoke;
+    color: black;
+    border-radius: 50%;
+    display: none; 
+    width: 40px;
+    height: 40px;
+    transition: all 0.3s ease;
 }
 
 #scrollToTopBtn:hover {
-    background-color: #2980b9; /* Hover color */
+    background-color: #0056b3;
+    transform: translateY(-3px);
 }

@@ -1,5 +1,5 @@
 <?php
-session_start(); 
+session_start();
 
 $servername = "localhost";
 $username = "root";
@@ -24,12 +24,10 @@ if (isset($_SESSION['user_id'])) {
 
     if ($result && mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
-        $userNameFromDB = $user['ten_dang_nhap']; 
+        $userNameFromDB = $user['ten_dang_nhap'];
         $userLoggedIn = true; // Cập nhật trạng thái đăng nhập
     }
 }
-
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +42,78 @@ $conn->close();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <title>SGTravel - Trang chủ</title>
 </head>
+<style>
+    .swiper-container {
+        width: 100%;
+        height: 500px;
+        margin-bottom: 30px;
+    }
 
+    .swiper-slide {
+        position: relative;
+    }
+
+    .slide-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .slide-content img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .slide-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 20px;
+    }
+
+    .slide-info h3 {
+        margin: 0 0 10px 0;
+        font-size: 24px;
+    }
+
+    .slide-info p {
+        margin: 0 0 15px 0;
+        font-size: 16px;
+        max-height: 60px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .explore-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white !important;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .explore-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev {
+        color: white;
+    }
+
+    .swiper-pagination-bullet {
+        background: white;
+    }
+</style>
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
         const navbarCSS = document.createElement('link');
@@ -89,21 +158,26 @@ $conn->close();
     <!-- Swiper for advertisement images -->
     <div class="swiper-container">
         <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <img src="../images/background1.png" alt="Quảng cáo 1">
-            </div>
-            <div class="swiper-slide">
-                <img src="../images/background2.png" alt="Quảng cáo 2">
-            </div>
-            <div class="swiper-slide">
-                <img src="../images/background3.png" alt="Quảng cáo 3">
-            </div>
-            <div class="swiper-slide">
-                <img src="../images/background4.png" alt="Quảng cáo 4">
-            </div>
-            <div class="swiper-slide">
-                <img src="../images/background5.png" alt="Quảng cáo 5">
-            </div>
+            <?php
+            // Truy vấn để lấy các địa điểm nổi bật
+            $sql = "SELECT ten_dia_diem, hinh_anh1, mo_ta FROM dia_diem ORDER BY RAND() LIMIT 5";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="swiper-slide">';
+                    echo '<div class="slide-content">';
+                    echo '<img src="../' . htmlspecialchars($row["hinh_anh1"]) . '" alt="' . htmlspecialchars($row["ten_dia_diem"]) . '">';
+                    echo '<div class="slide-info">';
+                    echo '<h3>' . htmlspecialchars($row["ten_dia_diem"]) . '</h3>';
+                    echo '<p>' . htmlspecialchars($row["mo_ta"]) . '</p>';
+                    echo '<a href="ProductDeatail.html" class="explore-btn">Khám phá ngay</a>';
+                    echo '</div>'; // .slide-info
+                    echo '</div>'; // .slide-content
+                    echo '</div>'; // .swiper-slide
+                }
+            }
+            ?>
         </div>
         <!-- Slider buttons -->
         <div class="swiper-button-next"></div>
@@ -132,7 +206,7 @@ $conn->close();
             <div class="filter-group-left">
                 <button>Mới nhất</button>
                 <button>Gần tôi</button>
-                <button  onclick="showFavorites()">Đã lưu</button>
+                <button onclick="showFavorites()">Đã lưu</button>
             </div>
             <div class="filter-group-right">
                 <select class="filter-bar select">
@@ -199,7 +273,7 @@ $conn->close();
 
                     // Làm sạch tham số để tránh SQL injection
                     $district = $conn->real_escape_string($_GET['district']);
-                    
+
                     // Tách chuỗi district thành các từ, chỉ giữ lại các từ có độ dài lớn hơn 1
                     $district_conditions = array_filter(explode(' ', $district), function ($word) {
                         return strlen($word) > 1;
@@ -211,16 +285,15 @@ $conn->close();
                         }, $district_conditions)) . ")";
                     }
                 }
-                
+
                 // Kiểm tra xem có tham số 'province' trong URL hay không
                 if (isset($_GET['province']) && !empty($_GET['province'])) {
                     $province = $conn->real_escape_string($_GET['province']);
-                    // Làm sạch tham số
                     // Thêm điều kiện kiểm tra cho province
                     $conditions[] = "LOWER(dia_chi) LIKE LOWER('%" . strtolower($province) . "%')";
                 }
 
-                
+
                 // Kiểm tra xem có tham số 'category' trong URL hay không
                 if (isset($_GET['category']) && !empty($_GET['category'])) {
                     $category = $conn->real_escape_string($_GET['category']);
@@ -246,8 +319,16 @@ $conn->close();
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<div class='card'>";
-                        $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]); 
+                        $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+                        $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                        // Check if the image exists
+                        if (!file_exists($imagePath)) {
+                            $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                        }
+
                         echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
+
                         echo "<div class='card-info'>";
                         echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
                         echo "<p>" . htmlspecialchars($row["dia_chi"]) . "</p>";
@@ -260,10 +341,11 @@ $conn->close();
 
                 $conn->close();
                 ?>
-                <box-icon id="scrollToTopBtn" name='up-arrow-alt' onclick="scrollToTop()"></box-icon>
+                <button id="scrollToTopBtn" onclick="scrollToTop()">↑</button>
             </div>
         </section>
     </div>
+
 
     <!-- Footer -->
     <script src="../javascript/footer.js"></script>
@@ -320,7 +402,7 @@ $conn->close();
                 updateURLParams();
             });
         });
-        // Function to save favorite location
+
         function saveFavorite(diaDiemId) {
             // Kiểm tra xem người dùng đã đăng nhập hay chưa
             const isLoggedIn = Boolean(localStorage.getItem('userLoggedIn')); // Giả sử bạn lưu trạng thái đăng nhập
@@ -363,27 +445,30 @@ $conn->close();
     </script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        // Show or hide the button based on scroll position
+        window.onscroll = function() {
+            toggleScrollToTopButton();
+        };
+
+        function toggleScrollToTopButton() {
             const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                scrollToTopBtn.style.display = "block"; // Show button
+            } else {
+                scrollToTopBtn.style.display = "none"; // Hide button
+            }
+        }
 
-            window.onscroll = function() {
-                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-                    scrollToTopBtn.style.display = "block";
-                } else {
-                    scrollToTopBtn.style.display = "none";
-                }
-            };
-
-            window.scrollToTop = function() {
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth"
-                });
-            };
-        });
+        // Function to scroll to the top
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
     </script>
 
-<script>
+    <script>
         let offset = 20; // Bắt đầu từ sau 30 địa điểm đầu tiên
         const limit = 20;
 
@@ -415,4 +500,5 @@ $conn->close();
     </script>
 
 </body>
+
 </html>

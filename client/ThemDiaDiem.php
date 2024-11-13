@@ -41,9 +41,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hinh_anh2 = $_FILES['hinh_anh2']['name'];
     $hinh_anh3 = $_FILES['hinh_anh3']['name'];
 
-    move_uploaded_file($_FILES['hinh_anh1']['tmp_name'], "../images/" . $hinh_anh1);
-    move_uploaded_file($_FILES['hinh_anh2']['tmp_name'], "../images/" . $hinh_anh2);
-    move_uploaded_file($_FILES['hinh_anh3']['tmp_name'], "../images/" . $hinh_anh3);
+    move_uploaded_file($_FILES['hinh_anh1']['tmp_name'], "../images/locations/" . $hinh_anh1);
+    move_uploaded_file($_FILES['hinh_anh2']['tmp_name'], "../images/locations/" . $hinh_anh2);
+    move_uploaded_file($_FILES['hinh_anh3']['tmp_name'], "../images/locations/" . $hinh_anh3);
 
     $sql = "INSERT INTO dia_diem (ten_dia_diem, dia_chi, so_dien_thoai, mo_ta, gio_mo_cua, gio_dong_cua, gia_ca_giao_dong, hinh_anh1, hinh_anh2, hinh_anh3)
             VALUES ('$ten_dia_diem', '$dia_chi', '$so_dien_thoai', '$mo_ta', '$gio_mo_cua', '$gio_dong_cua', '$gia_nho_nhat - $gia_lon_nhat', '$hinh_anh1', '$hinh_anh2', '$hinh_anh3')";
@@ -68,7 +68,7 @@ $conn->close();
 </head>
 <body>
     <div class="nav-container">
-        <a href="Trangchu.php" style="text-decoration: none; color: black"><h2 class="nav-logo"><b>SGTravel</b></h2></a>
+        <a href="Trangchu1.php" style="text-decoration: none; color: black"><h2 class="nav-logo"><b>SGTravel</b></h2></a>
         <div class="nav-right">
             <a href="#"><box-icon name="bell"></box-icon></a>
             <span class="userName"><?php echo htmlspecialchars($userNameFromDB); ?></span>

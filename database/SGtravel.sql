@@ -768,8 +768,6 @@ CREATE TABLE yeu_thich (
 ALTER TABLE dia_diem
 ADD COLUMN so_luot_tk INT DEFAULT 0;
 
-
-
 -- Cập nhật một vài địa điểm nổi bật với so_luot_tk từ 1000 đến 2000
 UPDATE dia_diem
 SET so_luot_tk = FLOOR(1000 + (RAND() * 1001))
@@ -809,5 +807,8 @@ WHERE id BETWEEN 1 AND 191;
 ALTER TABLE tai_khoan 
 MODIFY COLUMN mat_khau VARCHAR(255) NOT NULL;
 
-
+ALTER TABLE dia_diem 
+MODIFY COLUMN hinh_anh1 LONGTEXT,
+MODIFY COLUMN hinh_anh2 LONGTEXT,
+MODIFY COLUMN hinh_anh3 LONGTEXT;
 
