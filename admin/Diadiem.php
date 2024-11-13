@@ -221,7 +221,6 @@
       .Trang a, .pnow {
           display: inline-block;
       }
-
     </style>
   </head>
   <body>
@@ -354,7 +353,7 @@
                       <td><a href='" . htmlspecialchars($row["link_dia_diem"]) . "' target='_blank'>Link</a></td>
                       <td>" . htmlspecialchars($row["so_luot_tk"]) . "</td>
                       <td>
-                        <button onclick='xoa(" . $row['id'] . ")'>Xóa địa điểm</button>
+                             <button onclick=\"if(confirm('Bạn có chắc chắn muốn xóa địa điểm này?')) { window.location.href='xoa_dia_diem.php?id=" . urlencode($row["id"]) . "'; }\">Xóa địa điểm</button>
                       </td>
                     </tr>";
           }
