@@ -9,6 +9,41 @@
     <link rel="stylesheet" href="../style/provinces.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <title>SGTravel - Trang chủ</title>
+    <style>
+        .trang{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 8px; /* Khoảng cách giữa các nút */
+        }
+
+        .trang a {
+            color: #007bff;
+            padding: 8px 12px; /* Kích thước padding đều nhau */
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .trang a:hover {
+            background-color: #007bff;
+            color: white;
+            border-color: #0056b3;
+        }
+
+        .trang a.active {
+            background-color: #007bff;
+            color: white;
+            pointer-events: none; /* Vô hiệu hoá khi trang hiện tại đang được chọn */
+        }
+
+        .trang a:first-child, .trang a:last-child {
+            font-weight: bold;
+        }
+</style>
 </head>
 
 <body class="light-theme">
@@ -159,6 +194,24 @@
                 if (!empty($conditions)) {
                     $sql .= " WHERE " . implode(" AND ", $conditions); // Kết hợp các điều kiện với nhau
                 }
+                // Phân trang
+                // Tổng số dòng dựa vào các điều kiện đã lọc
+                $sql_count = "SELECT COUNT(*) AS total FROM dia_diem";
+                if (!empty($conditions)) {
+                    $sql_count .= " WHERE " . implode(" AND ", $conditions);
+                }
+                $result_count = $conn->query($sql_count);
+                $tdd = $result_count->fetch_assoc()['total'];
+
+                $sd = 20;
+                $tst = ceil($tdd / $sd);
+                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                $vt = ($page - 1) * $sd;
+
+          
+                // Truy vấn chính với phân trang
+                $sql = "SELECT * FROM dia_diem";
+                $sql .= " LIMIT $vt, $sd";
 
                 $result = $conn->query($sql);
 
@@ -277,9 +330,23 @@
             document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
         })
         .catch(error => console.error('Lỗi:', error));
-}
-
+    }
     </script>
+    <div class="trang">
+            <?php if ($page > 1) { ?>
+                <a href="Trangchu1.php?page=<?php echo $page - 1; ?>">Trang trước</a>
+            <?php } ?>
+            
+            <?php for ($i = 1; $i <= $tst; $i++) { ?>
+                <a href="Trangchu1.php?page=<?php echo $i; ?>" <?php if ($page == $i) echo 'class="active"'; ?>>
+                    <?php echo $i; ?>
+                </a>
+            <?php } ?>
+            
+            <?php if ($page < $tst) { ?>
+                <a href="Trangchu1.php?page=<?php echo $page + 1; ?>">Trang sau</a>
+            <?php } ?>
+    </div>
 </body>
 
 </html>

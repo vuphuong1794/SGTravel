@@ -33,35 +33,38 @@ $conn->close();
     <title>SGTravel - Trang chủ</title>
     <style>
         .trang {
-    text-align: center;
-    margin-top: 20px;
-    }
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 8px; /* Khoảng cách giữa các nút */
+        }
 
-    .trang a {
-        color: #007bff;
-        padding: 8px 16px;
-        margin: 0 5px;
-        border: 1px solid #007bff;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: bold;
-    }
+        .trang a {
+            color: #007bff;
+            padding: 8px 12px; /* Kích thước padding đều nhau */
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
 
-    .trang a:hover {
-        background-color: #007bff;
-        color: white;
-        border-color: #0056b3;
-    }
+        .trang a:hover {
+            background-color: #007bff;
+            color: white;
+            border-color: #0056b3;
+        }
 
-    .trang a.active {
-        background-color: #007bff;
-        color: white;
-        pointer-events: none;
-    }
+        .trang a.active {
+            background-color: #007bff;
+            color: white;
+            pointer-events: none; /* Vô hiệu hoá khi trang hiện tại đang được chọn */
+        }
 
-    .trang a:first-child, .trang a:last-child {
-        font-weight: bold;
-    }
+        .trang a:first-child, .trang a:last-child {
+            font-weight: bold;
+        }
     </style>
 </head>
 <script type="text/javascript">
@@ -247,13 +250,19 @@ $conn->close();
                     $sql .= " WHERE " . implode(" AND ", $conditions); // Kết hợp các điều kiện với nhau
                 }
                 // Phân trang
+                // Tổng số dòng dựa vào các điều kiện đã lọc
                 $sql_count = "SELECT COUNT(*) AS total FROM dia_diem";
+                if (!empty($conditions)) {
+                    $sql_count .= " WHERE " . implode(" AND ", $conditions);
+                }
                 $result_count = $conn->query($sql_count);
                 $tdd = $result_count->fetch_assoc()['total'];
+
                 $sd = 20;
                 $tst = ceil($tdd / $sd);
                 $page = isset($_GET['page']) ? $_GET['page'] : 1;
                 $vt = ($page - 1) * $sd;
+
           
                 // Truy vấn chính với phân trang
                 $sql = "SELECT * FROM dia_diem";
@@ -393,17 +402,17 @@ $conn->close();
     </script>
         <div class="trang">
             <?php if ($page > 1) { ?>
-                <a href="Trangchu1.php?page=<?php echo $page - 1; ?>&id_dia_diem=<?php echo $id_DD; ?>">Trang trước</a>
+                <a href="Trangchu1.php?page=<?php echo $page - 1; ?>">Trang trước</a>
             <?php } ?>
             
             <?php for ($i = 1; $i <= $tst; $i++) { ?>
-                <a href="Trangchu1.php?page=<?php echo $i; ?>&id_dia_diem=<?php echo $id_DD; ?>" <?php if ($page == $i) echo 'class="active"'; ?>>
+                <a href="Trangchu1.php?page=<?php echo $i; ?>" <?php if ($page == $i) echo 'class="active"'; ?>>
                     <?php echo $i; ?>
                 </a>
             <?php } ?>
             
             <?php if ($page < $tst) { ?>
-                <a href="Trangchu1.php?page=<?php echo $page + 1; ?>&id_dia_diem=<?php echo $id_DD; ?>">Trang sau</a>
+                <a href="Trangchu1.php?page=<?php echo $page + 1; ?>">Trang sau</a>
             <?php } ?>
         </div>
 </body>
