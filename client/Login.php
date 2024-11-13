@@ -68,7 +68,6 @@ if (!isset($_SESSION['user_id']) && isset($_COOKIE[COOKIE_NAME])) {
        $_SESSION['user_id'] = $cookie_data['user_id'];
        $_SESSION['username'] = $cookie_data['username']; 
        $_SESSION['role'] = $cookie_data['role'];
-       
        redirectBasedOnRole($cookie_data['role']);
    }
 }
@@ -78,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
    $conn = connectDB();
    
    $username = $conn->real_escape_string($_POST['username']);
-   $password = $_POST['password'];
+   $password = md5($_POST['password']); // Mã hóa mật khẩu người dùng nhập bằng MD5
    
    $sql = "SELECT * FROM tai_khoan WHERE (ten_dang_nhap = ? OR email = ?) AND trang_thai = 'hoạt động'";
    
@@ -172,7 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                    <a href="forgot-password.php" class="forgot-password">Quên mật khẩu</a>
                </div>
                <button type="submit" class="login-btn">Đăng nhập</button>
-               <p class="register">Chưa có tài khoản SGTravel? <a href="Signup.html">Đăng kí tại đây</a></p>
+               <p class="register">Chưa có tài khoản SGTravel? <a href="Signup.php">Đăng kí tại đây</a></p>
            </form>
        </div>
        

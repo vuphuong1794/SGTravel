@@ -31,6 +31,38 @@ $conn->close();
     <link rel="stylesheet" href="../style/provinces.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <title>SGTravel - Trang chủ</title>
+    <style>
+        .trang {
+    text-align: center;
+    margin-top: 20px;
+    }
+
+    .trang a {
+        color: #007bff;
+        padding: 8px 16px;
+        margin: 0 5px;
+        border: 1px solid #007bff;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .trang a:hover {
+        background-color: #007bff;
+        color: white;
+        border-color: #0056b3;
+    }
+
+    .trang a.active {
+        background-color: #007bff;
+        color: white;
+        pointer-events: none;
+    }
+
+    .trang a:first-child, .trang a:last-child {
+        font-weight: bold;
+    }
+    </style>
 </head>
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
@@ -214,7 +246,18 @@ $conn->close();
                 if (!empty($conditions)) {
                     $sql .= " WHERE " . implode(" AND ", $conditions); // Kết hợp các điều kiện với nhau
                 }
-
+                // Phân trang
+                $sql_count = "SELECT COUNT(*) AS total FROM dia_diem";
+                $result_count = $conn->query($sql_count);
+                $tdd = $result_count->fetch_assoc()['total'];
+                $sd = 20;
+                $tst = ceil($tdd / $sd);
+                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                $vt = ($page - 1) * $sd;
+          
+                // Truy vấn chính với phân trang
+                $sql = "SELECT * FROM dia_diem";
+                $sql .= " LIMIT $vt, $sd";
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
@@ -348,6 +391,20 @@ $conn->close();
             }
         }
     </script>
-
+        <div class="trang">
+            <?php if ($page > 1) { ?>
+                <a href="Trangchu1.php?page=<?php echo $page - 1; ?>&id_dia_diem=<?php echo $id_DD; ?>">Trang trước</a>
+            <?php } ?>
+            
+            <?php for ($i = 1; $i <= $tst; $i++) { ?>
+                <a href="Trangchu1.php?page=<?php echo $i; ?>&id_dia_diem=<?php echo $id_DD; ?>" <?php if ($page == $i) echo 'class="active"'; ?>>
+                    <?php echo $i; ?>
+                </a>
+            <?php } ?>
+            
+            <?php if ($page < $tst) { ?>
+                <a href="Trangchu1.php?page=<?php echo $page + 1; ?>&id_dia_diem=<?php echo $id_DD; ?>">Trang sau</a>
+            <?php } ?>
+        </div>
 </body>
 </html>

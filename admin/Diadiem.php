@@ -354,8 +354,7 @@
                       <td><a href='" . htmlspecialchars($row["link_dia_diem"]) . "' target='_blank'>Link</a></td>
                       <td>" . htmlspecialchars($row["so_luot_tk"]) . "</td>
                       <td>
-                        <button onclick='duyet(" . $row['id'] . ")'>Duyệt</button>
-                        <button onclick='khongDuyet(" . $row['id'] . ")'>Không duyệt</button>
+                        <button onclick='xoa(" . $row['id'] . ")'>Xóa địa điểm</button>
                       </td>
                     </tr>";
           }

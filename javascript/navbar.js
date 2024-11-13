@@ -1,9 +1,9 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const navbarCSS = document.createElement('link');
-    navbarCSS.rel = 'stylesheet';
-    navbarCSS.href = '../style/navbar.css';
-    document.head.appendChild(navbarCSS);
-    const navbar = `
+document.addEventListener("DOMContentLoaded", function () {
+  const navbarCSS = document.createElement("link");
+  navbarCSS.rel = "stylesheet";
+  navbarCSS.href = "../style/navbar.css";
+  document.head.appendChild(navbarCSS);
+  const navbar = `
         <div class="navbar" id="navbar">
             <div class="nav-container">
                 <h2 class="nav-logo" onclick="window.location.href='Trangchu.php'"><b>SGTravel</b></h2></a>
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span class="slider-navbar" for="theme-toggle"></span>
                 </label>
                 <div class="user-container">
-                    <button class="signUp-btn"><a href="Signup.html" style="text-decoration: none; color: black">Đăng ký</a></button>
+                    <button class="signUp-btn"><a href="Signup.php" style="text-decoration: none; color: black">Đăng ký</a></button>
                     <button class="login-btn"><a href="Login.php" style="text-decoration: none; color: black">Đăng nhập</a></button>
                     <box-icon name='bell'></box-icon>
                 </div>
@@ -24,5 +24,5 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     `;
 
-    document.body.insertAdjacentHTML('afterbegin', navbar);
+  document.body.insertAdjacentHTML("afterbegin", navbar);
 });
