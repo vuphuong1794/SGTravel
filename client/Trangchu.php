@@ -10,17 +10,19 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <title>SGTravel - Trang chủ</title>
     <style>
-        .trang{
+        .trang {
             display: flex;
             justify-content: center;
             align-items: center;
             margin-top: 20px;
-            gap: 8px; /* Khoảng cách giữa các nút */
+            gap: 8px;
+            /* Khoảng cách giữa các nút */
         }
 
         .trang a {
             color: #007bff;
-            padding: 8px 12px; /* Kích thước padding đều nhau */
+            padding: 8px 12px;
+            /* Kích thước padding đều nhau */
             border: 1px solid #007bff;
             border-radius: 4px;
             text-decoration: none;
@@ -37,13 +39,15 @@
         .trang a.active {
             background-color: #007bff;
             color: white;
-            pointer-events: none; /* Vô hiệu hoá khi trang hiện tại đang được chọn */
+            pointer-events: none;
+            /* Vô hiệu hoá khi trang hiện tại đang được chọn */
         }
 
-        .trang a:first-child, .trang a:last-child {
+        .trang a:first-child,
+        .trang a:last-child {
             font-weight: bold;
         }
-</style>
+    </style>
 </head>
 
 <body class="light-theme">
@@ -96,7 +100,7 @@
             <div class="filter-group-left">
                 <button>Mới nhất</button>
                 <button>Gần tôi</button>
-                <button  onclick="showFavorites()">Đã lưu</button>
+                <button onclick="showFavorites()">Đã lưu</button>
             </div>
             <div class="filter-group-right">
                 <select class="filter-bar select">
@@ -153,7 +157,7 @@
 
                     // Làm sạch tham số để tránh SQL injection
                     $district = $conn->real_escape_string($_GET['district']);
-                    
+
                     // Tách chuỗi district thành các từ, chỉ giữ lại các từ có độ dài lớn hơn 1
                     $district_conditions = array_filter(explode(' ', $district), function ($word) {
                         return strlen($word) > 1;
@@ -165,7 +169,7 @@
                         }, $district_conditions)) . ")";
                     }
                 }
-                
+
                 // Kiểm tra xem có tham số 'province' trong URL hay không
                 if (isset($_GET['province']) && !empty($_GET['province'])) {
                     $province = $conn->real_escape_string($_GET['province']);
@@ -174,7 +178,7 @@
                     $conditions[] = "LOWER(dia_chi) LIKE LOWER('%" . strtolower($province) . "%')";
                 }
 
-                
+
                 // Kiểm tra xem có tham số 'category' trong URL hay không
                 if (isset($_GET['category']) && !empty($_GET['category'])) {
                     $category = $conn->real_escape_string($_GET['category']);
@@ -208,7 +212,7 @@
                 $page = isset($_GET['page']) ? $_GET['page'] : 1;
                 $vt = ($page - 1) * $sd;
 
-          
+
                 // Truy vấn chính với phân trang
                 $sql = "SELECT * FROM dia_diem";
                 $sql .= " LIMIT $vt, $sd";
@@ -218,7 +222,7 @@
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<div class='card'>";
-                        $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]); 
+                        $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
                         echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
                         echo "<div class='card-info'>";
                         echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
@@ -232,6 +236,7 @@
 
                 $conn->close();
                 ?>
+                <button id="scrollToTopBtn" onclick="scrollToTop()">↑</button>
             </div>
         </section>
     </div>
@@ -302,50 +307,74 @@
             }
 
             fetch('yeuthich.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `dia_diem_id=${diaDiemId}`
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert(data); // Hiển thị kết quả
-            })
-            .catch(error => console.error('Lỗi:', error));
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `dia_diem_id=${diaDiemId}`
+                })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data); // Hiển thị kết quả
+                })
+                .catch(error => console.error('Lỗi:', error));
         }
 
         function showFavorites() {
-    // Kiểm tra xem người dùng đã đăng nhập hay chưa
-    const isLoggedIn = "<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>";
+            // Kiểm tra xem người dùng đã đăng nhập hay chưa
+            const isLoggedIn = "<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>";
 
-    if (isLoggedIn === 'false') {
-        alert("Bạn cần đăng nhập để xem địa điểm yêu thích.");
-        return; // Ngừng thực hiện hàm nếu chưa đăng nhập
-    }
+            if (isLoggedIn === 'false') {
+                alert("Bạn cần đăng nhập để xem địa điểm yêu thích.");
+                return; // Ngừng thực hiện hàm nếu chưa đăng nhập
+            }
 
-    fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
-        .then(response => response.text())
-        .then(data => {
-            document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
-        })
-        .catch(error => console.error('Lỗi:', error));
-    }
+            fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
+                })
+                .catch(error => console.error('Lỗi:', error));
+        }
+    </script>
+
+    <script>
+        // Show or hide the button based on scroll position
+        window.onscroll = function() {
+            toggleScrollToTopButton();
+        };
+
+        function toggleScrollToTopButton() {
+            const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                scrollToTopBtn.style.display = "block"; // Show button
+            } else {
+                scrollToTopBtn.style.display = "none"; // Hide button
+            }
+        }
+
+        // Function to scroll to the top
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
     </script>
     <div class="trang">
-            <?php if ($page > 1) { ?>
-                <a href="Trangchu1.php?page=<?php echo $page - 1; ?>">Trang trước</a>
-            <?php } ?>
-            
-            <?php for ($i = 1; $i <= $tst; $i++) { ?>
-                <a href="Trangchu1.php?page=<?php echo $i; ?>" <?php if ($page == $i) echo 'class="active"'; ?>>
-                    <?php echo $i; ?>
-                </a>
-            <?php } ?>
-            
-            <?php if ($page < $tst) { ?>
-                <a href="Trangchu1.php?page=<?php echo $page + 1; ?>">Trang sau</a>
-            <?php } ?>
+        <?php if ($page > 1) { ?>
+            <a href="Trangchu1.php?page=<?php echo $page - 1; ?>">Trang trước</a>
+        <?php } ?>
+
+        <?php for ($i = 1; $i <= $tst; $i++) { ?>
+            <a href="Trangchu1.php?page=<?php echo $i; ?>" <?php if ($page == $i) echo 'class="active"'; ?>>
+                <?php echo $i; ?>
+            </a>
+        <?php } ?>
+
+        <?php if ($page < $tst) { ?>
+            <a href="Trangchu1.php?page=<?php echo $page + 1; ?>">Trang sau</a>
+        <?php } ?>
     </div>
 </body>
 
