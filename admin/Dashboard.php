@@ -1,17 +1,7 @@
 <?php
 session_start(); 
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sgtravel";
-$port = '3306';
-
-$conn = new mysqli($servername, $username, $password, $dbname, $port);
-
-if ($conn->connect_error) {
-    die("Kết nối thất bại: " . $conn->connect_error);
-}
+include '../connect.php';
 // Lấy số lượng bài đăng hôm nay
 $sql = "SELECT COUNT(*) as so_luong_bai_dang_d FROM dia_diem WHERE DATE(ngay_dang) = CURDATE()";
 $result = $conn->query($sql);

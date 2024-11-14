@@ -1,18 +1,7 @@
 <?php
 session_start();
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sgtravel";
-$port = '3306';
-
-$conn = new mysqli($servername, $username, $password, $dbname, $port);
-
-// Kiểm tra kết nối
-if ($conn->connect_error) {
-    die("Kết nối thất bại: " . $conn->connect_error);
-}
+include '../connect.php';
 
 // Kiểm tra nếu người dùng đã đăng nhập
 if (isset($_SESSION['user_id'])) {
@@ -23,7 +12,7 @@ if (isset($_SESSION['user_id'])) {
             FROM dia_diem d 
             JOIN yeu_thich y ON d.id = y.dia_diem_id 
             WHERE y.user_id = ?";
-    
+
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $userId);
     $stmt->execute();
@@ -33,7 +22,13 @@ if (isset($_SESSION['user_id'])) {
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo "<div class='card'>";
-            $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]); 
+            $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+            $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+            // Check if the image exists
+            if (!file_exists($imagePath)) {
+                $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+            }
             echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
             echo "<div class='card-info'>";
             echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
@@ -51,4 +46,3 @@ if (isset($_SESSION['user_id'])) {
 // Đóng kết nối
 $stmt->close();
 $conn->close();
-?>

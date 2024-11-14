@@ -1,22 +1,41 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sgtravel";
-$port = '3306';
+include '../connect.php';
 
-// Tạo kết nối
-$conn = new mysqli($servername, $username, $password, $dbname, $port);
+$sd = 10; // Số đánh giá trên mỗi trang
 
-// Kiểm tra kết nối
-if ($conn->connect_error) {
-  die("Kết nối thất bại: " . $conn->connect_error);
+// Lấy giá trị lọc từ URL (nếu có)
+$diem_trung_binh = isset($_GET['diem_trung_binh']) ? $_GET['diem_trung_binh'] : '';
+
+// Xây dựng phần câu lệnh WHERE để lọc theo điểm trung bình
+$whereCondition = '';
+if ($diem_trung_binh) {
+    // Tách khoảng điểm trung bình thành 2 giá trị min và max
+    list($min, $max) = explode('-', $diem_trung_binh);
+    $whereCondition = "WHERE dg.diem_trung_binh BETWEEN $min AND $max";
 }
 
-// Câu lệnh SQL để lấy dữ liệu đánh giá
+// Tính tổng số đánh giá
+$sql_count = "SELECT COUNT(*) AS total FROM danh_gia dg JOIN dia_diem dd ON dg.id_dia_diem = dd.id $whereCondition";
+$result_count = $conn->query($sql_count);
+$row_count = $result_count->fetch_assoc();
+$tsp = $row_count['total'];
+
+// Tính tổng số trang
+$tst = ceil($tsp / $sd);
+
+// Kiểm tra nếu có tham số 'page' trong URL, nếu không, gán mặc định là trang 1
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+// Tính vị trí bắt đầu của sản phẩm trên trang hiện tại
+$vt = ($page - 1) * $sd;
+
+// Câu lệnh SQL để lấy dữ liệu đánh giá với điều kiện lọc và phân trang
 $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dg.phuc_vu, dg.khong_gian, dg.chat_luong, dg.gia_ca, dg.diem_trung_binh
         FROM danh_gia dg
-        JOIN dia_diem dd ON dg.id_dia_diem = dd.id";
+        JOIN dia_diem dd ON dg.id_dia_diem = dd.id
+        $whereCondition
+        LIMIT $vt, $sd";
+
 $result = $conn->query($sql);
 ?>
 
@@ -29,11 +48,6 @@ $result = $conn->query($sql);
   <link rel="stylesheet" href="../style/admin/sidebardash.css" />
   <title>Quản lý đánh giá địa điểm</title>
   <style>
-    /* .container {
-  width: 1600px;
-  float: right;
-} */
-
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -139,6 +153,38 @@ $result = $conn->query($sql);
     .sidebar .menu-section a {
       padding-left: 30px;
     }
+    .Trang {
+    text-align: center;
+    margin-top: 20px;
+    }
+
+    .Trang a {
+        color: #007bff;
+        padding: 8px 16px;
+        margin: 0 5px;
+        border: 1px solid #007bff;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .Trang a:hover {
+        background-color: #007bff;
+        color: white;
+        border-color: #0056b3;
+    }
+
+    .Trang a.active {
+        background-color: #007bff;
+        color: white;
+        pointer-events: none;
+    }
+
+    .Trang a:first-child, .Trang a:last-child {
+        font-weight: bold;
+    }
+
   </style>
 </head>
 
@@ -172,10 +218,27 @@ $result = $conn->query($sql);
 
   <div class="container">
     <h2>Quản lý đánh giá địa điểm</h2>
+    <form id="form_loc" name="form_loc" method="get">
+      <label for="diem_trung_binh">Lọc theo điểm trung bình:</label>
+      <select name="diem_trung_binh" id="diem_trung_binh" onChange="form_loc.submit()">
+      <option value="">Chọn điểm trung bình</option>
+          <option value="0-1" <?php if (isset($_GET['diem_trung_binh']) && $_GET['diem_trung_binh'] == '0-1') echo 'selected'; ?>>0 - 1</option>
+          <option value="1-2" <?php if (isset($_GET['diem_trung_binh']) && $_GET['diem_trung_binh'] == '1-2') echo 'selected'; ?>>1 - 2</option>
+          <option value="2-3" <?php if (isset($_GET['diem_trung_binh']) && $_GET['diem_trung_binh'] == '2-3') echo 'selected'; ?>>2 - 3</option>
+          <option value="3-4" <?php if (isset($_GET['diem_trung_binh']) && $_GET['diem_trung_binh'] == '3-4') echo 'selected'; ?>>3 - 4</option>
+          <option value="4-5" <?php if (isset($_GET['diem_trung_binh']) && $_GET['diem_trung_binh'] == '4-5') echo 'selected'; ?>>4 - 5</option>
+          <option value="5-6" <?php if (isset($_GET['diem_trung_binh']) && $_GET['diem_trung_binh'] == '5-6') echo 'selected'; ?>>5 - 6</option>
+          <option value="6-7" <?php if (isset($_GET['diem_trung_binh']) && $_GET['diem_trung_binh'] == '6-7') echo 'selected'; ?>>6 - 7</option>
+          <option value="7-8" <?php if (isset($_GET['diem_trung_binh']) && $_GET['diem_trung_binh'] == '7-8') echo 'selected'; ?>>7 - 8</option>
+          <option value="8-9" <?php if (isset($_GET['diem_trung_binh']) && $_GET['diem_trung_binh'] == '8-9') echo 'selected'; ?>>8 - 9</option>
+          <option value="9-10" <?php if (isset($_GET['diem_trung_binh']) && $_GET['diem_trung_binh'] == '9-10') echo 'selected'; ?>>9 - 10</option>
+      </select>
+    </form>
+
+
     <table>
       <thead>
         <tr>
-          <th>STT</th>
           <th>ID địa điểm</th>
           <th>Tên địa điểm</th>
           <th>Phục vụ</th>
@@ -188,10 +251,8 @@ $result = $conn->query($sql);
       <tbody>
         <?php
         if ($result->num_rows > 0) {
-          $stt = 1; // Biến đếm thứ tự
           while ($row = $result->fetch_assoc()) {
             echo "<tr>
-                                <td>{$stt}</td>
                                 <td>{$row['id_dia_diem']}</td>
                                 <td>{$row['ten_dia_diem']}</td>
                                 <td>{$row['phuc_vu']}</td>
@@ -200,7 +261,6 @@ $result = $conn->query($sql);
                                 <td>{$row['gia_ca']}</td>
                                 <td>{$row['diem_trung_binh']}</td>
                               </tr>";
-            $stt++; // Tăng biến đếm
           }
         } else {
           echo "<tr><td colspan='8'>Không có dữ liệu</td></tr>";
@@ -208,6 +268,16 @@ $result = $conn->query($sql);
         ?>
       </tbody>
     </table>
+    <p>Trang</p>
+    <div class="Trang">
+      <?php
+      for ($i = 1; $i <= $tst; $i++) {
+        echo "<a href='Danhgia.php?page=$i&diem_trung_binh=$diem_trung_binh'";
+        if ($i == $page) echo " class='active'";
+        echo ">$i</a> ";
+      }
+      ?>
+    </div>
   </div>
   <?php
   $conn->close();

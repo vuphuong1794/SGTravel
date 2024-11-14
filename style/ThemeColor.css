@@ -63,3 +63,6 @@ body {
 .dark-theme .card {
   border: #eeeeee 1px solid;
 }
+.dark-theme .explore .sidebar h3 {
+  color: red;
+}

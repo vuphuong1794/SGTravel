@@ -2,7 +2,7 @@
 CREATE TABLE tai_khoan (
     id INT AUTO_INCREMENT PRIMARY KEY, 
     ten_dang_nhap VARCHAR(50) NOT NULL UNIQUE,
-    mat_khau VARCHAR(15) NOT NULL,
+    mat_khau VARCHAR(50) NOT NULL,
     phan_quyen INT NOT NULL,  -- 'Admin là 1, user là 2'
     email VARCHAR(50) NOT NULL UNIQUE, 
     so_dien_thoai VARCHAR(20), 
@@ -11,56 +11,56 @@ CREATE TABLE tai_khoan (
 
 INSERT INTO tai_khoan (ten_dang_nhap, mat_khau, phan_quyen, email, so_dien_thoai, trang_thai)
 VALUES 
-('Admin', 'Admin123', 1, 'Admin@gmail.com', '0901234567', 'hoạt động'),
-('Tester', '12345678', 1, 'tester@example.com', '0901234568', 'khóa'),
-('tranthithuy', 'tranthithuy11', 2, 'tranthithuy@example.com', '0912345678', 'khóa'),
-('leminhcuong', 'leminhcuong2', 2, 'leminhcuong@example.com', '0912345679', 'hoạt động'),
-('phamquanghuy', 'phamquanghuy@', 2, 'phamquanghuy@example.com', '0912345680', 'hoạt động'),
-('hoangngoclan', 'ngoclan1993', 2, 'hoangngoclan@example.com', '0912345681', 'khóa'),
-('vuongthanhdat', 'thanhdat', 2, 'vuongthanhdat@example.com', '0912345682', 'hoạt động'),
-('dangquangdai', 'dangquang', 2, 'dangquangdai@example.com', '0912345683', 'hoạt động'),
-('nguyentuananh', 'nguyentuananh12', 2, 'nguyentuananh@example.com', '0912345684', 'khóa'),
-('tranlethu', 'tranlethu2004', 2, 'tranlethu@example.com', '0912345685', 'hoạt động'),
-('phamminhthang', 'phamminhthang', 2, 'phamminhthang@example.com', '0912345686', 'hoạt động'),
-('nguyenlan', 'nguyenlan111', 2, 'nguyenlan@example.com', '0912345687', 'hoạt động'),
-('lethanhhoang', 'thanhhoangle', 2, 'lethanhhoang@example.com', '0912345688', 'hoạt động'),
-('trinhthihanh', 'trinhthihanh', 2, 'trinhthihanh@example.com', '0912345689', 'khóa'),
-('vuongdinhkhoa', 'vuongdinhkhoa', 2, 'vuongdinhkhoa@example.com', '0912345690', 'hoạt động'),
-('hoangtrongdat', 'hoangtrongdat', 2, 'hoangtrongdat@example.com', '0912345691', 'hoạt động'),
-('phamthanhcong', 'phamthanhcong', 2, 'phamthanhcong@example.com', '0912345692', 'khóa'),
-('dangthanhha', 'dangthanhha', 2, 'dangthanhha@example.com', '0912345693', 'hoạt động'),
-('tranthehuong', 'tranthehuong', 2, 'tranthehuong@example.com', '0912345694', 'hoạt động'),
-('nguyenhuy', 'nguyenhuy', 2, 'nguyenhuy@example.com', '0912345695', 'khóa'),
-('vuthanh', 'vuthanh', 2, 'vuthanh@example.com', '0912345696', 'hoạt động'),
-('phamnhut', 'phamnhut', 2, 'phamnhut@example.com', '0912345697', 'hoạt động'),
-('lethanhtruong', 'lethanhtruong', 2, 'lethanhtruong@example.com', '0912345698', 'hoạt động'),
-('tranhongson', 'tranhongson', 2, 'tranhongson@example.com', '0912345699', 'hoạt động'),
-('vuonghong', 'vuonghong', 2, 'vuonghong@example.com', '0912345700', 'Khóa'),
-('nguyenquocdat', 'nguyenquocdat', 2, 'nguyenquocdat@example.com', '0912345701', 'hoạt động'),
-('tranquocbinh', 'tranquocbinh', 2, 'tranquocbinh@example.com', '0912345702', 'hoạt động'),
-('hoangcuong', 'hoangcuong', 2, 'hoangcuong@example.com', '0912345703', 'hoạt động'),
-('dangquynh', 'dangquynh', 2, 'dangquynh@example.com', '0912345704', 'hoạt động'),
-('vuthikim', 'vuthikim', 2, 'vuthikim@example.com', '0912345705', 'hoạt động'),
-('trangvan', 'trangvan', 2, 'trangvan@example.com', '0912345706', 'hoạt động'),
-('minhthuy', 'minhthuy', 2, 'minhthuy@example.com', '0912345707', 'hoạt động'),
-('huyentran', 'huyentran', 2, 'huyentran@example.com', '0912345708', 'hoạt động'),
-('thanhnhan', 'thanhnhan', 2, 'thanhnhan@example.com', '0912345709', 'hoạt động'),
-('vananh', 'vananh', 2, 'vananh@example.com', '0912345710', 'hoạt động'),
-('trangnhat', 'trangnhat', 2, 'trangnhat@example.com', '0912345711', 'hoạt động'),
-('lanhuong', 'lanhuong', 2, 'lanhuong@example.com', '0912345712', 'khóa'),
-('thaithuy', 'thaithuy', 2, 'thaithuy@example.com', '0912345713', 'hoạt động'),
-('lindang', 'lindang', 2, 'lindang@example.com', '0912345714', 'hoạt động'),
-('thanhha', 'thanhha', 2, 'thanhha@example.com', '0912345715', 'hoạt động'),
-('kimngoc', 'kimngoc', 2, 'kimngoc@example.com', '0912345716', 'hoạt động'),
-('thuynhi', 'thuynhi', 2, 'thuynhi@example.com', '0912345717', 'khóa'),
-('vanchau', 'vanchau', 2, 'vanchau@example.com', '0912345718', 'hoạt động'),
-('hongsang', 'hongsang', 2, 'hongsang@example.com', '0912345719', 'hoạt động'),
-('hoangson', 'hoangson', 2, 'hoangson@example.com', '0912345720', 'hoạt động'),
-('nhatminh', 'nhatminh', 2, 'nhatminh@example.com', '0912345721', 'hoạt động'),
-('thanhkhoan', 'thanhkhoan', 2, 'thanhkhoan@example.com', '0912345722', 'hoạt động'),
-('duonghuong', 'duonghuong', 2, 'duonghuong@example.com', '0912345723', 'hoạt động'),
-('trucdo', 'trucdo', 2, 'trucdo@example.com', '0912345724', 'hoạt động'),
-('namthanh', 'namthanh', 2, 'namthanh@example.com', '0912345725', 'hoạt động');
+('Admin', 'e64b78fc3bc91bcbc7dc232ba8ec59e0', 1, 'Admin@gmail.com', '0901234567', 'hoạt động'),
+('Tester', '25d55ad283aa400af464c76d713c07ad', 1, 'tester@example.com', '0901234568', 'khóa'),
+('tranthithuy', '0344f8af71760118078a14a419e458d7', 2, 'tranthithuy@example.com', '0912345678', 'khóa'),
+('leminhcuong', 'ef265e2ebcca1e216116e66ff1d9f3a4', 2, 'leminhcuong@example.com', '0912345679', 'hoạt động'),
+('phamquanghuy', '638aab7c222f878b7ad0371ee42d4e22', 2, 'phamquanghuy@example.com', '0912345680', 'hoạt động'), 
+('hoangngoclan', 'dfb18cd1749697c94b45b9c381c2050e', 2, 'hoangngoclan@example.com', '0912345681', 'khóa'), 
+('vuongthanhdat', 'be647fe53c3532b9c04fa4960b719977', 2, 'vuongthanhdat@example.com', '0912345682', 'hoạt động'), 
+('dangquangdai', '28a75eeae3f8070222f5db2c9890d66f', 2, 'dangquangdai@example.com', '0912345683', 'hoạt động'),
+('nguyentuananh', '32af6edf4674a2b61d68ab49ab68ac06', 2, 'nguyentuananh@example.com', '0912345684', 'khóa'), 
+('tranlethu', 'ffe4260391de85076f88dc586ce87b5d', 2, 'tranlethu@example.com', '0912345685', 'hoạt động'),  
+('phamminhthang', '58d4cabecfd3f15c3615e5ff4ba6370b', 2, 'phamminhthang@example.com', '0912345686', 'hoạt động'), 
+('nguyenlan', 'e6af8fec5fd3c4fb09aad5b039a97bf6', 2, 'nguyenlan@example.com', '0912345687', 'hoạt động'),
+('lethanhhoang', 'e9c3bb5c23c4cc40c94eb0eda5ada472', 2, 'lethanhhoang@example.com', '0912345688', 'hoạt động'),
+('trinhthihanh', 'a7418a10cbe0e06ec38db65c4320f436', 2, 'trinhthihanh@example.com', '0912345689', 'khóa'),
+('vuongdinhkhoa', '98b9303c228818f9d46f7377422a58c5', 2, 'vuongdinhkhoa@example.com', '0912345690', 'hoạt động'), 
+('hoangtrongdat', '2a0d853b704186c608aa4d950c5980c0', 2, 'hoangtrongdat@example.com', '0912345691', 'hoạt động'),  
+('phamthanhcong', '68f3d99e69854e20bd4808eb05bc9c6f', 2, 'phamthanhcong@example.com', '0912345692', 'khóa'), 
+('dangthanhha', 'e7da3e04a7d37432d1a33139b9be317e', 2, 'dangthanhha@example.com', '0912345693', 'hoạt động'),
+('tranthehuong', 'd0c074290303c95ae372bcb861900063', 2, 'tranthehuong@example.com', '0912345694', 'hoạt động'),
+('nguyenhuy', '09aba41e25f7f5c6317f70051a1ea6c4', 2, 'nguyenhuy@example.com', '0912345695', 'khóa'), 
+('vuthanh', '7f43c15533388a688377bd69db8e724e', 2, 'vuthanh@example.com', '0912345696', 'hoạt động'),
+('phamnhut', '1074c40b2d6b22302bb43d0f51b1f35b', 2, 'phamnhut@example.com', '0912345697', 'hoạt động'), 
+('lethanhtruong', '6de6a6e2ff810f13d534436a9a21ace9', 2, 'lethanhtruong@example.com', '0912345698', 'hoạt động'), 
+('tranhongson', '8ed85d213a282dec32f71386061bd5d0', 2, 'tranhongson@example.com', '0912345699', 'hoạt động'),
+('vuonghong', '87ce60680b83a1952286739393a9f68a', 2, 'vuonghong@example.com', '0912345700', 'Khóa'), 
+('nguyenquocdat', '727ae7fec3a92eaeb2ab45e178cc58a6', 2, 'nguyenquocdat@example.com', '0912345701', 'hoạt động'), 
+('tranquocbinh', '2969a9707bf5cdaedc03c1e316bc5a31', 2, 'tranquocbinh@example.com', '0912345702', 'hoạt động'), 
+('hoangcuong', '72e927becf646ef51d01b1baa1950aba', 2, 'hoangcuong@example.com', '0912345703', 'hoạt động'),  
+('dangquynh', '1e4ec1d59b46cba66c14816aa0db2925', 2, 'dangquynh@example.com', '0912345704', 'hoạt động'),  
+('vuthikim', '130f18982a4cd6404a59ad1c0e4730e1', 2, 'vuthikim@example.com', '0912345705', 'hoạt động'), 
+('trangvan', '7f6601f90585f48c63817d8d5d37bcb1', 2, 'trangvan@example.com', '0912345706', 'hoạt động'), 
+('minhthuy', 'f9c42da4dc68314cd80d32f1c7da6ba0', 2, 'minhthuy@example.com', '0912345707', 'hoạt động'),  
+('huyentran', '9ee363c9dfbc5fe5bde4411969a1c5c6', 2, 'huyentran@example.com', '0912345708', 'hoạt động'), 
+('thanhnhan', '6796496f00a2dad1482c947d49e9bf65', 2, 'thanhnhan@example.com', '0912345709', 'hoạt động'),  
+('vananh', 'aa2b6726c763b5571d4abea9e20689f0', 2, 'vananh@example.com', '0912345710', 'hoạt động'),
+('trangnhat', '76d7ebe73e8e91047359d88469f266e9', 2, 'trangnhat@example.com', '0912345711', 'hoạt động'),  
+('lanhuong', 'f1be70cb5f5fb2a4b08c67fb7e9afa54', 2, 'lanhuong@example.com', '0912345712', 'khóa'),  
+('thaithuy', 'f461493bd803438ac553031d75b24d86', 2, 'thaithuy@example.com', '0912345713', 'hoạt động'),  
+('lindang', '1df96cd0330ff69142ad4c5e6e85fef3', 2, 'lindang@example.com', '0912345714', 'hoạt động'), 
+('thanhha', 'a38e6d826ba998fb384535075bed6743', 2, 'thanhha@example.com', '0912345715', 'hoạt động'), 
+('kimngoc', 'c7f0ba70275b88758820b4d8b79dd5d4', 2, 'kimngoc@example.com', '0912345716', 'hoạt động'), 
+('thuynhi', '4e8295c98912b506b063631170faae7b', 2, 'thuynhi@example.com', '0912345717', 'khóa'), 
+('vanchau', '2dd1a2a33c60a3f29674b2c953eae451', 2, 'vanchau@example.com', '0912345718', 'hoạt động'), 
+('hongsang', '28b50c16adab4928240bcf778ab30e3c', 2, 'hongsang@example.com', '0912345719', 'hoạt động'),  
+('hoangson', '24ca43c7f02d50e1b0882485e9859a31', 2, 'hoangson@example.com', '0912345720', 'hoạt động'),  
+('nhatminh', '5067b3cf972a5dd6b344959a7174eb5d', 2, 'nhatminh@example.com', '0912345721', 'hoạt động'),  
+('thanhkhoan', 'f71cd3b484c51791e668b67008167b1d', 2, 'thanhkhoan@example.com', '0912345722', 'hoạt động'), 
+('duonghuong', 'b300616f5a24392f6367501e110838e9', 2, 'duonghuong@example.com', '0912345723', 'hoạt động'), 
+('trucdo', 'efbe50bcccd2fb9b4c6aab10fd048ea8', 2, 'trucdo@example.com', '0912345724', 'hoạt động'),
+('namthanh', 'e49f0f3821172c8542139537134008d9', 2, 'namthanh@example.com', '0912345725', 'hoạt động');  
 
 
 CREATE TABLE dia_diem (
@@ -301,14 +301,14 @@ CREATE TABLE binh_luan (
 	id_nguoi_dung int,
     ten_dang_nhap VARCHAR(100) NOT NULL, 
     ngay_binh_luan DATE NOT NULL,
-	FOREIGN KEY (id_nguoi_dung) REFERENCES tai_khoan(id), 
-    FOREIGN KEY (id_dia_diem) REFERENCES dia_diem(id) 
+	FOREIGN KEY (id_nguoi_dung) REFERENCES tai_khoan(id) ON DELETE CASCADE, 
+    FOREIGN KEY (id_dia_diem) REFERENCES dia_diem(id) ON DELETE CASCADE 
 );
 
 INSERT INTO binh_luan (noi_dung, id_dia_diem, id_nguoi_dung, ten_dang_nhap, ngay_binh_luan) VALUES 
-('Bún đậu Minh Châu ngon. Giá cực kì đắt. Phần nhân k như mong muốn. Phục vụ kém, chờ siêu lâu mà còn chảy hết cả mồ hôi. Tiết kiệm điện quá mức, nóng như cái lò. KHÔNG NÊN MUA:(', 1,  9, 'nguyentuananh', '2024-01-01'),
+('Giá cực kì đắt. Phần nhân k như mong muốn. Phục vụ kém, chờ siêu lâu mà còn chảy hết cả mồ hôi. Tiết kiệm điện quá mức, nóng như cái lò. KHÔNG NÊN MUA:(', 1,  9, 'nguyentuananh', '2024-01-01'),
 ('Có rất nhiều món mới bò nướng, tôm nướng, cá đuối, bạch tuộc, bò nhúng ớt có mặt ở quán. Ăn xong free chè lun nha các chế 😋😋😋😋 vote vote', 1,  9, 'nguyentuananh', '2024-01-02'),
-('Tớ thích ăn Jollibee cực kì. Khi nào đi học về tớ cũng ăn. Ở đây mát gà rán ngon giòn. Nhưng có điều tớ không thích là cách phục vụ :(. Khi tớ order thì đáng nhẽ là lượt của tớ nhưng nhân viên lại order cho khách khác mặc dù tớ đứng rất lâu. Bỏ qua chuyện này đi. Thì đến cái lúc mà tớ đc order rồi í. Thì nhân viên kiểu kiểu thái độ không vui vẻ cho lắm ăn nói thì kiểu trống không mặt mày thì nhăn nhó. Chả lịch sự tí nào. Nhân viên nữ thì đã đành ai ngờ nhân viên nam cũng vậy :(. Mình đang ngồi ăn thì nhân viên quét dọn lại lấy cái chổi quét dưới chân mình làm như muốn đuổi í :( Bực không tả nổi :).', 2, 3, 'tranthithuy', '2024-01-03'),
+('Tớ thích ăn Jollibee cực kì. Khi nào đi học về tớ cũng ăn. Ở đây mát gà rán ngon giòn. Nhưng có điều tớ không thích là cách phục vụ :(. Khi tớ order thì đáng nhẽ là lượt của tớ nhưng nhân viên lại order cho khách khác mặc dù tớ đứng rất lâu. Bỏ qua chuyện này đi. Thì đến cái lúc mà tớ đc order rồi í. Thì nhân viên kiểu kiểu thái độ không vui vẻ cho lắm ăn nói thì kiểu trống không mặt mày thì nhăn nhó. Chả lịch sự tí nào. Nhân viên nữ thì đã đành ai ngờ nhân viên nam cũng vậy :(. Mình đang ngồi ăn thì nhân viên quét dọn lại lấy cái chổi quét dưới chân mình làm như muốn đuổi í :( Bực không tả nổi :).', 7, 3, 'tranthithuy', '2024-01-03'),
 ('Quán này không biết mở được lâu chưa, cơ mà mình giờ mới có cơ hội ăn thử :)). Quán khá rộng, được bố trí sạch sẽ, thoáng mát. Cũng như cơm tấm ở những chỗ khác thì đâu cũng có giá muối chua, 1 ít cá bống, thêm ít lát dưa chuột, trứng cộng với món chủ lực là sườn nướng.. Đi tới gần quán là mùi sườn nướng đã bay nồng khắp rồi, mình cùng tụi bạn còn đùa không lẽ dân cư quanh đây ngày nào cũng được thưởng thức không mất tiền sao? :)) Đồ ăn quán khá ngon, mua cơm hộp thì có khay khá lịch sự. Giá cả từ 35-55 tùy món.', 3, 4, 'leminhcuong', '2024-01-04'),
 ('Lần đầu tiên mình đưa gia đình vào Nhật Lệ, cảm nhận đầu tiên là con người ở đây rất mến và quý khách. Dạo quanh một vòng mình thấy quán hải sản Minh Lưu, được mọi người đánh giá rất cao nên mình đã đưa gia đình đến trải nghiệm. Cảm nhận đầu tiên là không gian quán ở đây rất mát mẻ, quán sạch sẽ, chủ quán vui vẻ, món ăn ở đây rất ngon không chỉ hợp với gia đình mình mà rất hợp với bọn trẻ. Ăn món nào cũng ngon, cua ghẹ rất chắc con nào con ấy rất đầy thịt, quán có bể hải sản nuôi tôm hùm cá mú bơi tại quán tha hồ chọn, và đặc biệt là cách chế biến không cay xè rất hợp với người miền Bắc. Như mình, và đặc biệt món mực tươi và mực một nắng rất tươi và rất ngọt, nên mình muốn chia sẻ cho mọi người biết, chuyến trải nghiệm đúng là quá tuyệt vời.', 4, 5, 'phamquanghuy', '2024-01-05'),
 ('Chất lượng ok. Nhà hàng có vị trí đẹp 10 điểm, món ăn ngon 10 điểm, phục vụ nhiệt tình 10 điểm, nói chung là Ok giá cả phải chăng.', 5, 6, 'hoangngoclan', '2024-01-06'),
@@ -515,7 +515,7 @@ CREATE TABLE danh_gia (
     chat_luong DECIMAL(3,1) NOT NULL, 
     gia_ca DECIMAL(3,1) NOT NULL, 
     diem_trung_binh DECIMAL(3,1) DEFAULT 0, 
-    FOREIGN KEY (id_dia_diem) REFERENCES dia_diem(id)
+    FOREIGN KEY (id_dia_diem) REFERENCES dia_diem(id) ON DELETE CASCADE
 );
 INSERT INTO danh_gia (id_dia_diem, phuc_vu, khong_gian, chat_luong, gia_ca, diem_trung_binh)
 VALUES 
@@ -719,8 +719,8 @@ CREATE TABLE bao_cao (
     id_tai_khoan int NOT NULL,
     ngay_bao_cao DATE NOT NULL,
     trang_thai VARCHAR(50) NOT NULL,
-    FOREIGN KEY (id_dia_diem) REFERENCES dia_diem(id),
-    FOREIGN KEY (id_tai_khoan) REFERENCES tai_khoan(id)
+    FOREIGN KEY (id_dia_diem) REFERENCES dia_diem(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_tai_khoan) REFERENCES tai_khoan(id) ON DELETE CASCADE
 );
 
 INSERT INTO bao_cao (id_dia_diem, noi_dung_bao_cao, id_tai_khoan, ngay_bao_cao, trang_thai)
@@ -741,7 +741,7 @@ VALUES
 CREATE TABLE ls_tk (
     ten_dang_nhap VARCHAR(50) NOT NULL,
     tim_kiem TEXT NOT NULL,
-    FOREIGN KEY (ten_dang_nhap) REFERENCES tai_khoan(ten_dang_nhap)  
+    FOREIGN KEY (ten_dang_nhap) REFERENCES tai_khoan(ten_dang_nhap) ON DELETE CASCADE
 );
 
 INSERT INTO ls_tk (ten_dang_nhap, tim_kiem)
@@ -760,13 +760,15 @@ CREATE TABLE yeu_thich (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     dia_diem_id INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES tai_khoan(id),
-    FOREIGN KEY (dia_diem_id) REFERENCES dia_diem(id),
+    FOREIGN KEY (user_id) REFERENCES tai_khoan(id) ON DELETE CASCADE,
+    FOREIGN KEY (dia_diem_id) REFERENCES dia_diem(id) ON DELETE CASCADE,
     UNIQUE (user_id, dia_diem_id) -- Đảm bảo mỗi người dùng chỉ có một bản ghi cho một địa điểm
 );
 
 ALTER TABLE dia_diem
 ADD COLUMN so_luot_tk INT DEFAULT 0;
+
+
 
 -- Cập nhật một vài địa điểm nổi bật với so_luot_tk từ 1000 đến 2000
 UPDATE dia_diem
@@ -804,11 +806,15 @@ UPDATE dia_diem
 SET ngay_dang = DATE_ADD('2016-01-01', INTERVAL FLOOR(RAND() * DATEDIFF('2024-11-02', '2016-01-01')) DAY)
 WHERE id BETWEEN 1 AND 191;
 
-ALTER TABLE tai_khoan 
-MODIFY COLUMN mat_khau VARCHAR(255) NOT NULL;
 
-ALTER TABLE dia_diem 
-MODIFY COLUMN hinh_anh1 LONGTEXT,
-MODIFY COLUMN hinh_anh2 LONGTEXT,
-MODIFY COLUMN hinh_anh3 LONGTEXT;
+DELIMITER $$
+
+CREATE TRIGGER before_danh_gia_update
+BEFORE UPDATE ON danh_gia
+FOR EACH ROW
+BEGIN
+    SET NEW.diem_trung_binh = (NEW.phuc_vu + NEW.khong_gian + NEW.chat_luong + NEW.gia_ca) / 4;
+END $$
+
+DELIMITER ;
 

@@ -1,17 +1,7 @@
 <?php
 session_start();
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sgtravel";
-$port = '3306';
-
-$conn = new mysqli($servername, $username, $password, $dbname, $port);
-
-if ($conn->connect_error) {
-    die("Kết nối thất bại: " . $conn->connect_error);
-}
+include '../connect.php';
 
 if (isset($_POST['dia_diem_id']) && isset($_SESSION['user_id'])) {
     $diaDiemId = $conn->real_escape_string($_POST['dia_diem_id']);

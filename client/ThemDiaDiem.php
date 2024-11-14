@@ -32,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dia_chi = $_POST['dia_chi'];
     $so_dien_thoai = $_POST['so_dien_thoai'];
     $mo_ta = $_POST['mo_ta'];
+    $link_dia_diem = $_POST['link_dia_diem'];
     $gia_nho_nhat = $_POST['gia_nho_nhat'];
     $gia_lon_nhat = $_POST['gia_lon_nhat'];
     $gio_mo_cua = $_POST['gio_mo_cua'];
@@ -45,8 +46,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     move_uploaded_file($_FILES['hinh_anh2']['tmp_name'], "../images/locations/" . $hinh_anh2);
     move_uploaded_file($_FILES['hinh_anh3']['tmp_name'], "../images/locations/" . $hinh_anh3);
 
-    $sql = "INSERT INTO dia_diem (ten_dia_diem, dia_chi, so_dien_thoai, mo_ta, gio_mo_cua, gio_dong_cua, gia_ca_giao_dong, hinh_anh1, hinh_anh2, hinh_anh3)
-            VALUES ('$ten_dia_diem', '$dia_chi', '$so_dien_thoai', '$mo_ta', '$gio_mo_cua', '$gio_dong_cua', '$gia_nho_nhat - $gia_lon_nhat', '$hinh_anh1', '$hinh_anh2', '$hinh_anh3')";
+    $sql = "INSERT INTO dia_diem (ten_dia_diem, dia_chi, so_dien_thoai, mo_ta, gio_mo_cua, gio_dong_cua, gia_ca_giao_dong, hinh_anh1, hinh_anh2, hinh_anh3, link_dia_diem)
+            VALUES ('$ten_dia_diem', '$dia_chi', '$so_dien_thoai', '$mo_ta', '$gio_mo_cua', '$gio_dong_cua', '$gia_nho_nhat - $gia_lon_nhat', '$hinh_anh1', '$hinh_anh2', '$hinh_anh3', '$link_dia_diem')";
 
     if ($conn->query($sql) === TRUE) {
         echo "Địa điểm mới đã được tạo thành công!";
@@ -63,7 +64,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style/client/ThemSp.css">
+    <link rel="stylesheet" href="../style/client/ThemDiaDiem.css">
     <title>Thêm Địa Điểm</title>
 </head>
 <body>
@@ -103,6 +104,8 @@ $conn->close();
                 <input type="text" name="dia_chi" placeholder="Địa chỉ">
                 <input type="text" name="so_dien_thoai" placeholder="Số điện thoại">
                 <input type="text" name="mo_ta" placeholder="Mô tả">
+                <input type="text" name="link_dia_diem" placeholder="Link địa điểm">
+                <span style="color: blue">Lưu ý: Cách lấy link địa điểm trên Google Map, Nhập địa chỉ trên Google Map, Chuyển đổi sang link dạng embed</span>
             </div>
 
             <div class="body-right">

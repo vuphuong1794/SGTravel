@@ -9,6 +9,41 @@
     <link rel="stylesheet" href="../style/provinces.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <title>SGTravel - Trang chủ</title>
+    <style>
+        .trang{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 8px; /* Khoảng cách giữa các nút */
+        }
+
+        .trang a {
+            color: #007bff;
+            padding: 8px 12px; /* Kích thước padding đều nhau */
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .trang a:hover {
+            background-color: #007bff;
+            color: white;
+            border-color: #0056b3;
+        }
+
+        .trang a.active {
+            background-color: #007bff;
+            color: white;
+            pointer-events: none; /* Vô hiệu hoá khi trang hiện tại đang được chọn */
+        }
+
+        .trang a:first-child, .trang a:last-child {
+            font-weight: bold;
+        }
+</style>
 </head>
 
 <body class="light-theme">
@@ -61,7 +96,7 @@
             <div class="filter-group-left">
                 <button>Mới nhất</button>
                 <button>Gần tôi</button>
-                <button onclick="showFavorites()">Đã lưu</button>
+                <button  onclick="showFavorites()">Đã lưu</button>
             </div>
             <div class="filter-group-right">
                 <select class="filter-bar select">
@@ -108,17 +143,7 @@
 
             <div class="grid-container" id=locationGrid>
                 <?php
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $dbname = "sgtravel";
-                $port = '3306';
-
-                $conn = new mysqli($servername, $username, $password, $dbname, $port);
-
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
+                include '../connect.php';
 
                 $sql = "SELECT id, ten_dia_diem, dia_chi, hinh_anh1 FROM dia_diem";
                 $conditions = []; // Mảng để lưu các điều kiện lọc
@@ -128,7 +153,7 @@
 
                     // Làm sạch tham số để tránh SQL injection
                     $district = $conn->real_escape_string($_GET['district']);
-
+                    
                     // Tách chuỗi district thành các từ, chỉ giữ lại các từ có độ dài lớn hơn 1
                     $district_conditions = array_filter(explode(' ', $district), function ($word) {
                         return strlen($word) > 1;
@@ -140,7 +165,7 @@
                         }, $district_conditions)) . ")";
                     }
                 }
-
+                
                 // Kiểm tra xem có tham số 'province' trong URL hay không
                 if (isset($_GET['province']) && !empty($_GET['province'])) {
                     $province = $conn->real_escape_string($_GET['province']);
@@ -149,7 +174,7 @@
                     $conditions[] = "LOWER(dia_chi) LIKE LOWER('%" . strtolower($province) . "%')";
                 }
 
-
+                
                 // Kiểm tra xem có tham số 'category' trong URL hay không
                 if (isset($_GET['category']) && !empty($_GET['category'])) {
                     $category = $conn->real_escape_string($_GET['category']);
@@ -169,13 +194,31 @@
                 if (!empty($conditions)) {
                     $sql .= " WHERE " . implode(" AND ", $conditions); // Kết hợp các điều kiện với nhau
                 }
+                // Phân trang
+                // Tổng số dòng dựa vào các điều kiện đã lọc
+                $sql_count = "SELECT COUNT(*) AS total FROM dia_diem";
+                if (!empty($conditions)) {
+                    $sql_count .= " WHERE " . implode(" AND ", $conditions);
+                }
+                $result_count = $conn->query($sql_count);
+                $tdd = $result_count->fetch_assoc()['total'];
+
+                $sd = 20;
+                $tst = ceil($tdd / $sd);
+                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                $vt = ($page - 1) * $sd;
+
+          
+                // Truy vấn chính với phân trang
+                $sql = "SELECT * FROM dia_diem";
+                $sql .= " LIMIT $vt, $sd";
 
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<div class='card'>";
-                        $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+                        $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]); 
                         echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
                         echo "<div class='card-info'>";
                         echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
@@ -189,8 +232,6 @@
 
                 $conn->close();
                 ?>
-                <box-icon id="scrollToTopBtn" name='up-arrow-alt' onclick="scrollToTop()"></box-icon>
-                <button id="loadMoreBtn" onclick="loadMoreLocations()">Xem Thêm</button>
             </div>
         </section>
     </div>
@@ -261,88 +302,51 @@
             }
 
             fetch('yeuthich.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: `dia_diem_id=${diaDiemId}`
-                })
-                .then(response => response.text())
-                .then(data => {
-                    alert(data); // Hiển thị kết quả
-                })
-                .catch(error => console.error('Lỗi:', error));
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `dia_diem_id=${diaDiemId}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data); // Hiển thị kết quả
+            })
+            .catch(error => console.error('Lỗi:', error));
         }
 
         function showFavorites() {
-            // Kiểm tra xem người dùng đã đăng nhập hay chưa
-            const isLoggedIn = "<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>";
+    // Kiểm tra xem người dùng đã đăng nhập hay chưa
+    const isLoggedIn = "<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>";
 
-            if (isLoggedIn === 'false') {
-                alert("Bạn cần đăng nhập để xem địa điểm yêu thích.");
-                return; // Ngừng thực hiện hàm nếu chưa đăng nhập
-            }
+    if (isLoggedIn === 'false') {
+        alert("Bạn cần đăng nhập để xem địa điểm yêu thích.");
+        return; // Ngừng thực hiện hàm nếu chưa đăng nhập
+    }
 
-            fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
-                .then(response => response.text())
-                .then(data => {
-                    document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
-                })
-                .catch(error => console.error('Lỗi:', error));
-        }
+    fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
+        .then(response => response.text())
+        .then(data => {
+            document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
+        })
+        .catch(error => console.error('Lỗi:', error));
+    }
     </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const scrollToTopBtn = document.getElementById("scrollToTopBtn");
-
-            window.onscroll = function() {
-                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-                    scrollToTopBtn.style.display = "block";
-                } else {
-                    scrollToTopBtn.style.display = "none";
-                }
-            };
-
-            window.scrollToTop = function() {
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth"
-                });
-            };
-        });
-    </script>
-
-<script>
-        let offset = 20; // Bắt đầu từ sau 30 địa điểm đầu tiên
-        const limit = 20;
-
-        function loadMoreLocations() {
-
-            document.getElementById('loadMoreBtn').style.display = 'none';
-            // Tạo URL với offset mới
-            const url = `Trangchu.php?offset=${offset}`;
-            fetch(url)
-                .then(response => response.text())
-                .then(data => {
-                    // Thêm kết quả vào cuối danh sách
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(data, 'text/html');
-                    const newLocations = doc.querySelectorAll('#locationGrid .card');
-
-                    if (newLocations.length > 0) {
-                        newLocations.forEach(location => {
-                            document.getElementById('locationGrid').appendChild(location);
-                        });
-                        offset += limit; // Cập nhật offset cho lần tải tiếp theo
-                    } else {
-                        // Ẩn nút nếu không còn địa điểm nào để tải
-                        document.getElementById('loadMoreBtn').style.display = 'none';
-                    }
-                })
-                .catch(error => console.error('Lỗi tải thêm địa điểm:', error));
-        }
-    </script>
+    <div class="trang">
+            <?php if ($page > 1) { ?>
+                <a href="Trangchu1.php?page=<?php echo $page - 1; ?>">Trang trước</a>
+            <?php } ?>
+            
+            <?php for ($i = 1; $i <= $tst; $i++) { ?>
+                <a href="Trangchu1.php?page=<?php echo $i; ?>" <?php if ($page == $i) echo 'class="active"'; ?>>
+                    <?php echo $i; ?>
+                </a>
+            <?php } ?>
+            
+            <?php if ($page < $tst) { ?>
+                <a href="Trangchu1.php?page=<?php echo $page + 1; ?>">Trang sau</a>
+            <?php } ?>
+    </div>
 </body>
 
 </html>

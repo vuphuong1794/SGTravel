@@ -1,25 +1,13 @@
 <?php
-// Kết nối cơ sở dữ liệu
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sgtravel";
-$port = '3306';
-
-$conn = new mysqli($servername, $username, $password, $dbname, $port);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include '../connect.php';
 
 session_start();
 
-// Xử lý đăng nhập
+// xử lý login
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $conn->real_escape_string($_POST['username']);
-    $password = $_POST['password'];
+    $password = md5($_POST['password']); // Mã hóa mật khẩu người dùng nhập bằng MD5
 
-    // Tìm người dùng trong cơ sở dữ liệu
     $sql = "SELECT * FROM tai_khoan WHERE (ten_dang_nhap = ? OR email = ?) AND trang_thai = 'hoạt động'";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ss", $username, $username);
@@ -27,13 +15,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $stmt->get_result();
 
     if ($user = $result->fetch_assoc()) {
-        $storedPassword = $user['mat_khau'];
-
-        // Kiểm tra mật khẩu
-        if (password_verify($password, $storedPassword)) {
-            // Mật khẩu hợp lệ, khởi tạo phiên đăng nhập
+        if ($password == $user['mat_khau']) {
             initializeSession($user);
-            setLoginCookie($user);
+
+            // nếu ấn lưu đăng nhập thì mới lưu cookie
+            if (isset($_POST['remember']) && $_POST['remember'] == 'on') {
+                setLoginCookie($user);
+            }
+
             redirectBasedOnRole($user['phan_quyen']);
         } else {
             $error = "Mật khẩu không đúng";
@@ -41,12 +30,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $error = "Tên đăng nhập hoặc mật khẩu không đúng";
     }
-
     $stmt->close();
     $conn->close();
 }
 
-// Hàm hỗ trợ
+
 function initializeSession($user)
 {
     $_SESSION['user_id'] = $user['id'];
@@ -102,6 +90,7 @@ function logout()
     header("Location: Login.php");
     exit();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -147,7 +136,7 @@ function logout()
                     <a href="forgot-password.php" class="forgot-password">Quên mật khẩu</a>
                 </div>
                 <button type="submit" class="login-btn">Đăng nhập</button>
-                <p class="register">Chưa có tài khoản SGTravel? <a href="Signup.html">Đăng kí tại đây</a></p>
+                <p class="register">Chưa có tài khoản SGTravel? <a href="Signup.php">Đăng kí tại đây</a></p>
             </form>
         </div>
 

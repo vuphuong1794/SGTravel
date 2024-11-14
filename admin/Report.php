@@ -1,34 +1,10 @@
-<?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sgtravel";
-$port = '3306';
-
-// Tạo kết nối
-$conn = new mysqli($servername, $username, $password, $dbname, $port);
-
-// Kiểm tra kết nối
-if ($conn->connect_error) {
-  die("Kết nối thất bại: " . $conn->connect_error);
-}
-
-// Truy vấn SQL để lấy dữ liệu từ bảng bao_cao và tên đăng nhập từ bảng tai_khoan
-$sql = "SELECT bc.id, bc.id_dia_diem, bc.noi_dung_bao_cao, bc.id_tai_khoan, tk.ten_dang_nhap AS nguoi_bao_cao, bc.ngay_bao_cao, bc.trang_thai
-        FROM bao_cao bc
-        JOIN tai_khoan tk ON bc.id_tai_khoan = tk.id";
-$result = $conn->query($sql);
-?>
-
 <!DOCTYPE html>
 <html lang="vi">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
   <title>Bảng quản lý báo cáo bài viết</title>
   <style>
     body {
@@ -112,17 +88,47 @@ $result = $conn->query($sql);
       background-color: #4caf50;
       color: white;
     }
-
-    tr:nth-child(even) {
-      background-color: #f2f2f2;
+    .Trang {
+    text-align: center;
+    margin-top: 20px;
+    }
+    .Trang a.page-link {
+        color: #007bff;
+        padding: 8px 16px;
+        margin: 0 5px;
+        border: 1px solid #007bff;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s, color 0.3s;
     }
 
-    .xem:hover {
-      background-color: aquamarine;
+    .Trang a.page-link:hover {
+        background-color: #007bff;
+        color: white;
+        border-color: #0056b3;
     }
 
-    .xoa:hover {
-      background-color: red;
+    .Trang a.page-link.active {
+        background-color: #007bff;
+        color: white;
+        border-color: #0056b3;
+        font-weight: bold;
+    }
+
+    .Trang .pnow {
+        color: white;
+        background-color: #007bff;
+        padding: 8px 16px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .Trang p {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
     }
   </style>
 </head>
@@ -130,7 +136,7 @@ $result = $conn->query($sql);
 <body>
   <!-- Sidebar -->
   <div class="sidebar">
-  <a href="./Dashboard.php"><h2>SGTravel</h2></a>
+    <a href="./Dashboard.php"><h2>SGTravel</h2></a>
     <div class="menu-section">
       <a href="../admin/Dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
     </div>
@@ -157,6 +163,40 @@ $result = $conn->query($sql);
   </div>
   <div class="container">
     <h2>Bảng quản lý báo cáo bài viết</h2>
+    <?php
+    include '../connect.php';
+
+    // Lấy từ khóa tìm kiếm
+    $search = isset($_GET['search']) ? $_GET['search'] : '';
+
+    // Phân trang
+    $sd = 5;
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $vt = ($page - 1) * $sd;
+
+    // Truy vấn báo cáo
+    $sql = "SELECT bc.id, bc.id_dia_diem, bc.noi_dung_bao_cao, bc.id_tai_khoan, tk.ten_dang_nhap AS nguoi_bao_cao, bc.ngay_bao_cao, bc.trang_thai
+            FROM bao_cao bc
+            JOIN tai_khoan tk ON bc.id_tai_khoan = tk.id
+            WHERE bc.noi_dung_bao_cao LIKE '%$search%' OR tk.ten_dang_nhap LIKE '%$search%' OR bc.id_dia_diem LIKE '%$search%'
+            LIMIT $sd OFFSET $vt";
+
+    // Truy vấn tổng số báo cáo để tính toán phân trang
+    $tong_sql = "SELECT COUNT(*) AS total FROM bao_cao bc
+                  JOIN tai_khoan tk ON bc.id_tai_khoan = tk.id
+                  WHERE bc.noi_dung_bao_cao LIKE '%$search%' OR tk.ten_dang_nhap LIKE '%$search%' OR bc.id_dia_diem LIKE '%$search%'";
+    $tong_result = $conn->query($tong_sql);
+    $tong_row = $tong_result->fetch_assoc();
+    $tong_records = $tong_row['total'];
+    $tong_pages = ceil($tong_records / $sd);
+
+    $result = $conn->query($sql);
+    ?>
+
+    <form method="GET" action="">
+      <input type="text" name="search" placeholder="Tìm kiếm báo cáo..." value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>" />
+      <button type="submit">Tìm kiếm</button>
+    </form>
     <table>
       <thead>
         <tr>
@@ -166,28 +206,24 @@ $result = $conn->query($sql);
           <th>ID người dùng</th>
           <th>Người báo cáo</th>
           <th>Ngày báo cáo</th>
-          <th>Trạng thái</th>
           <th>Hành động</th>
         </tr>
       </thead>
       <tbody>
         <?php
-        // Kiểm tra và hiển thị dữ liệu từ truy vấn
         if ($result->num_rows > 0) {
           while ($row = $result->fetch_assoc()) {
             echo "<tr>
-                          <td>{$row['id']}</td>
-                          <td>{$row['id_dia_diem']}</td>
-                          <td>{$row['noi_dung_bao_cao']}</td>
-                          <td>{$row['id_tai_khoan']}</td>
-                          <td>{$row['nguoi_bao_cao']}</td>
-                          <td>{$row['ngay_bao_cao']}</td>
-                          <td>{$row['trang_thai']}</td>
-                          <td>
-                              <button class='xem'>Xem chi tiết</button>
-                              <button class='xoa'>Xóa báo cáo</button>
-                          </td>
-                        </tr>";
+              <td>{$row['id']}</td>
+              <td>{$row['id_dia_diem']}</td>
+              <td>{$row['noi_dung_bao_cao']}</td>
+              <td>{$row['id_tai_khoan']}</td>
+              <td>{$row['nguoi_bao_cao']}</td>
+              <td>{$row['ngay_bao_cao']}</td>
+              <td>
+                <button onclick=\"if(confirm('Bạn có chắc chắn muốn xóa báo cáo này?')) { window.location.href='xoa_report.php?id=" . urlencode($row["id"]) . "'; }\">Xóa báo cáo</button>
+              </td>
+            </tr>";
           }
         } else {
           echo "<tr><td colspan='8'>Không có dữ liệu báo cáo</td></tr>";
@@ -195,7 +231,18 @@ $result = $conn->query($sql);
         ?>
       </tbody>
     </table>
+    <p>Trang</p>
+    <div class="Trang">
+        <?php
+        for ($i = 1; $i <= $tong_pages; $i++) {
+            if ($page == $i) {
+                echo "<span class='pnow'>$i</span> ";  // Trang hiện tại
+            } else {
+                echo "<a href='?page=$i&search=$search' class='page-link'>$i</a> ";  // Các trang còn lại
+            }
+        }
+        ?>
+    </div>
   </div>
 </body>
-
 </html>

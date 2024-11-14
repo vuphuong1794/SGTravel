@@ -1,17 +1,7 @@
 <?php
 session_start();
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sgtravel";
-$port = '3306';
-
-$conn = new mysqli($servername, $username, $password, $dbname, $port);
-
-if ($conn->connect_error) {
-    die("Kết nối thất bại: " . $conn->connect_error);
-}
+include '../connect.php';
 // Khởi tạo tên người dùng mặc định
 $userNameFromDB = 'Khách';
 $userLoggedIn = false;
@@ -28,6 +18,7 @@ if (isset($_SESSION['user_id'])) {
         $userLoggedIn = true; // Cập nhật trạng thái đăng nhập
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -41,79 +32,112 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="../style/provinces.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <title>SGTravel - Trang chủ</title>
+    <style>
+        .trang {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 8px; /* Khoảng cách giữa các nút */
+        }
+
+        .trang a {
+            color: #007bff;
+            padding: 8px 12px; /* Kích thước padding đều nhau */
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .trang a:hover {
+            background-color: #007bff;
+            color: white;
+            border-color: #0056b3;
+        }
+
+        .trang a.active {
+            background-color: #007bff;
+            color: white;
+            pointer-events: none; /* Vô hiệu hoá khi trang hiện tại đang được chọn */
+        }
+
+        .trang a:first-child, .trang a:last-child {
+            font-weight: bold;
+        }
+        .swiper-container {
+            width: 100%;
+            height: 500px;
+            margin-bottom: 30px;
+        }
+
+        .swiper-slide {
+            position: relative;
+        }
+
+        .slide-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px;
+        }
+
+        .slide-info h3 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        .slide-info p {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            max-height: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .explore-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .explore-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: white;
+        }
+
+        .swiper-pagination-bullet {
+            background: white;
+        }
+    </style>
 </head>
-<style>
-    .swiper-container {
-        width: 100%;
-        height: 500px;
-        margin-bottom: 30px;
-    }
-
-    .swiper-slide {
-        position: relative;
-    }
-
-    .slide-content {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
-
-    .slide-content img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .slide-info {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 20px;
-    }
-
-    .slide-info h3 {
-        margin: 0 0 10px 0;
-        font-size: 24px;
-    }
-
-    .slide-info p {
-        margin: 0 0 15px 0;
-        font-size: 16px;
-        max-height: 60px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-    }
-
-    .explore-btn {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white !important;
-        text-decoration: none;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-    }
-
-    .explore-btn:hover {
-        background-color: #0056b3;
-    }
-
-    .swiper-button-next,
-    .swiper-button-prev {
-        color: white;
-    }
-
-    .swiper-pagination-bullet {
-        background: white;
-    }
-</style>
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
         const navbarCSS = document.createElement('link');
@@ -253,18 +277,7 @@ if (isset($_SESSION['user_id'])) {
 
             <div class="grid-container" id=locationGrid>
                 <?php
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $dbname = "sgtravel";
-                $port = '3306';
-
-                $conn = new mysqli($servername, $username, $password, $dbname, $port);
-
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
-
+                include '../connect.php';
                 $sql = "SELECT id, ten_dia_diem, dia_chi, hinh_anh1 FROM dia_diem";
                 $conditions = []; // Mảng để lưu các điều kiện lọc
 
@@ -293,11 +306,9 @@ if (isset($_SESSION['user_id'])) {
                     $conditions[] = "LOWER(dia_chi) LIKE LOWER('%" . strtolower($province) . "%')";
                 }
 
-
                 // Kiểm tra xem có tham số 'category' trong URL hay không
                 if (isset($_GET['category']) && !empty($_GET['category'])) {
                     $category = $conn->real_escape_string($_GET['category']);
-                    // Làm sạch tham số
                     // Tách chuỗi category thành các từ, chỉ giữ lại các từ có độ dài lớn hơn 1
                     $category_conditions = array_filter(explode(' ', $category), function ($word) {
                         return strlen($word) > 1;
@@ -313,7 +324,24 @@ if (isset($_SESSION['user_id'])) {
                 if (!empty($conditions)) {
                     $sql .= " WHERE " . implode(" AND ", $conditions); // Kết hợp các điều kiện với nhau
                 }
+                // Phân trang
+                // Tổng số dòng dựa vào các điều kiện đã lọc
+                $sql_count = "SELECT COUNT(*) AS total FROM dia_diem";
+                if (!empty($conditions)) {
+                    $sql_count .= " WHERE " . implode(" AND ", $conditions);
+                }
+                $result_count = $conn->query($sql_count);
+                $tdd = $result_count->fetch_assoc()['total'];
 
+                $sd = 20;
+                $tst = ceil($tdd / $sd);
+                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                $vt = ($page - 1) * $sd;
+
+
+                // Truy vấn chính với phân trang
+                $sql = "SELECT * FROM dia_diem";
+                $sql .= " LIMIT $vt, $sd";
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
@@ -328,7 +356,6 @@ if (isset($_SESSION['user_id'])) {
                         }
 
                         echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
-
                         echo "<div class='card-info'>";
                         echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
                         echo "<p>" . htmlspecialchars($row["dia_chi"]) . "</p>";
@@ -345,7 +372,6 @@ if (isset($_SESSION['user_id'])) {
             </div>
         </section>
     </div>
-
 
     <!-- Footer -->
     <script src="../javascript/footer.js"></script>
@@ -403,15 +429,8 @@ if (isset($_SESSION['user_id'])) {
             });
         });
 
+
         function saveFavorite(diaDiemId) {
-            // Kiểm tra xem người dùng đã đăng nhập hay chưa
-            const isLoggedIn = Boolean(localStorage.getItem('userLoggedIn')); // Giả sử bạn lưu trạng thái đăng nhập
-
-            if (!isLoggedIn) {
-                alert("Bạn cần đăng nhập để lưu địa điểm vào yêu thích.");
-                return;
-            }
-
             fetch('yeuthich.php', {
                     method: 'POST',
                     headers: {
@@ -426,6 +445,8 @@ if (isset($_SESSION['user_id'])) {
                 .catch(error => console.error('Lỗi:', error));
         }
 
+
+        // Function to show favorite locations
         function showFavorites() {
             // Kiểm tra xem người dùng đã đăng nhập hay chưa
             const isLoggedIn = "<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>";
@@ -435,12 +456,30 @@ if (isset($_SESSION['user_id'])) {
                 return; // Ngừng thực hiện hàm nếu chưa đăng nhập
             }
 
-            fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
+            fetch('favorite.php') // favorite.php hiển thị địa điểm yêu thích
                 .then(response => response.text())
                 .then(data => {
                     document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
                 })
                 .catch(error => console.error('Lỗi:', error));
+        }
+        // Xóa địa điểm đã lưu
+        function removeFavorite(diaDiemId) {
+            if (confirm('Bạn có chắc chắn muốn xóa địa điểm này khỏi yêu thích không?')) {
+                fetch('remove_favorite.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `dia_diem_id=${diaDiemId}`
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        alert(data); // Hiển thị kết quả
+                        showFavorites(); // Cập nhật danh sách địa điểm yêu thích
+                    })
+                    .catch(error => console.error('Lỗi:', error));
+            }
         }
     </script>
 
@@ -467,38 +506,21 @@ if (isset($_SESSION['user_id'])) {
             });
         }
     </script>
+    <div class="trang">
+        <?php if ($page > 1) { ?>
+            <a href="Trangchu1.php?page=<?php echo $page - 1; ?>">Trang trước</a>
+        <?php } ?>
 
-    <script>
-        let offset = 20; // Bắt đầu từ sau 30 địa điểm đầu tiên
-        const limit = 20;
+        <?php for ($i = 1; $i <= $tst; $i++) { ?>
+            <a href="Trangchu1.php?page=<?php echo $i; ?>" <?php if ($page == $i) echo 'class="active"'; ?>>
+                <?php echo $i; ?>
+            </a>
+        <?php } ?>
 
-        function loadMoreLocations() {
-
-            document.getElementById('loadMoreBtn').style.display = 'none';
-            // Tạo URL với offset mới
-            const url = `Trangchu.php?offset=${offset}`;
-            fetch(url)
-                .then(response => response.text())
-                .then(data => {
-                    // Thêm kết quả vào cuối danh sách
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(data, 'text/html');
-                    const newLocations = doc.querySelectorAll('#locationGrid .card');
-
-                    if (newLocations.length > 0) {
-                        newLocations.forEach(location => {
-                            document.getElementById('locationGrid').appendChild(location);
-                        });
-                        offset += limit; // Cập nhật offset cho lần tải tiếp theo
-                    } else {
-                        // Ẩn nút nếu không còn địa điểm nào để tải
-                        document.getElementById('loadMoreBtn').style.display = 'none';
-                    }
-                })
-                .catch(error => console.error('Lỗi tải thêm địa điểm:', error));
-        }
-    </script>
-
+        <?php if ($page < $tst) { ?>
+            <a href="Trangchu1.php?page=<?php echo $page + 1; ?>">Trang sau</a>
+        <?php } ?>
+    </div>
 </body>
 
 </html>

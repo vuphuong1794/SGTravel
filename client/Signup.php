@@ -1,31 +1,21 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sgtravel";
-$port = '3306';
-
-$conn = new mysqli($servername, $username, $password, $dbname, $port);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include '../connect.php';
 
 $error = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    //kiem tra thong tin
+    // Validate and sanitize input
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $phoneNumber = filter_input(INPUT_POST, 'phoneNumber', FILTER_SANITIZE_STRING);
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
     
-    // dat gia tri mac dinh
+    // Set default values
     $phanQuyen = 2;
     $trangThai = 'hoạt động';
 
-    // kiem tra input
+    // Validation
     if (empty($username) || empty($email) || empty($phoneNumber) || empty($password) || empty($confirmPassword)) {
         $error = "Vui lòng điền đầy đủ thông tin";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -39,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (!preg_match('/^[0-9]{10,15}$/', $phoneNumber)) {
         $error = "Số điện thoại không hợp lệ";
     } else {
-        // neu user ton tai
+        // Check if username already exists
         $stmt = $conn->prepare("SELECT ten_dang_nhap FROM tai_khoan WHERE ten_dang_nhap = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
@@ -47,22 +37,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         if ($result->num_rows > 0) {
             $error = "Tên đăng nhập đã tồn tại";
-        } else {
-            // Hash password
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        
-            $stmt = $conn->prepare("INSERT INTO tai_khoan (ten_dang_nhap, mat_khau, phan_quyen, email, so_dien_thoai, trang_thai) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssisss", $username, $hashedPassword, $phanQuyen, $email, $phoneNumber, $trangThai);
+        }else {
+            // Check if username already exists
+            $stmt = $conn->prepare("SELECT ten_dang_nhap FROM tai_khoan WHERE ten_dang_nhap = ?");
+            $stmt->bind_param("s", $username);
+            $stmt->execute();
+            $result = $stmt->get_result();
             
-            if ($stmt->execute()) {
-                header("Location: Login.php");
-                exit();
+            if ($result->num_rows > 0) {
+                $error = "Tên đăng nhập đã tồn tại";
             } else {
-                $error = "Đăng ký thất bại: " . $stmt->error;
+                //MD5
+                $Password = md5($password);
+                
+                $stmt = $conn->prepare("INSERT INTO tai_khoan (ten_dang_nhap, mat_khau, phan_quyen, email, so_dien_thoai, trang_thai) VALUES (?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("ssisss", $username, $Password, $phanQuyen, $email, $phoneNumber, $trangThai);
+                
+                if ($stmt->execute()) {
+                    header("Location: Login.php");
+                    exit();
+                } else {
+                    $error = "Đăng ký thất bại: " . $stmt->error;
+                }
             }
         }
     }
-}
+}    
 ?>
 
 <!DOCTYPE html>
