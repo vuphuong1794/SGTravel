@@ -1,15 +1,18 @@
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const navbarCSS = document.createElement('link');
     navbarCSS.rel = 'stylesheet';
     navbarCSS.href = '../style/navbar.css';
     document.head.appendChild(navbarCSS);
+
     const navbar = `
         <div class="navbar" id="navbar">
             <div class="nav-container">
-                <h2 class="nav-logo" onclick="window.location.href='Trangchu.php'"><b>SGTravel</b></h2></a>
+                <h2 class="nav-logo" onclick="window.location.href='Trangchu.php'"><b>SGTravel</b></h2>
                 <div class="searchbox-container">
                     <input type="text" id="searchbox" placeholder="Tìm kiếm" />
-                    <box-icon name='search-alt-2' class="icon"></box-icon>
+                    <box-icon name='search-alt-2' class="icon" id="search-icon"></box-icon>
                 </div>
                 <label class="switch">
                     <input type="checkbox" id="theme-toggle">
@@ -25,4 +28,14 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
 
     document.body.insertAdjacentHTML('afterbegin', navbar);
+
+    // Thêm sự kiện click vào biểu tượng tìm kiếm
+    document.getElementById('search-icon').addEventListener('click', function() {
+        const searchQuery = document.getElementById('searchbox').value.trim();
+        if (searchQuery) {
+            window.location.href = `Trangchu.php?tendiadiem=${encodeURIComponent(searchQuery)}`;
+        } else {
+            alert('Vui lòng nhập từ khóa để tìm kiếm!');
+        }
+    });
 });
