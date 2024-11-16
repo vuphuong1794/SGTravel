@@ -9,6 +9,40 @@
     <link rel="stylesheet" href="../style/provinces.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <title>SGTravel - Trang chủ</title>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("Trình duyệt của bạn không hỗ trợ định vị.");
+            }
+        }
+
+        function showPosition(position) {
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+
+            // Gửi yêu cầu tới trang GanToi.php để lấy địa điểm gần tôi
+            window.location.href = `GanToi.php?lat=${lat}&lon=${lon}`;
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("Bạn đã từ chối quyền truy cập vị trí.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Không thể lấy vị trí của bạn.");
+                    break;
+                case error.TIMEOUT:
+                    alert("Yêu cầu lấy vị trí hết thời gian.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("Lỗi không xác định.");
+                    break;
+            }
+        }
+    </script>
     <style>
         .trang {
             display: flex;
@@ -99,7 +133,7 @@
         <div class="filter-bar">
             <div class="filter-group-left">
                 <button>Mới nhất</button>
-                <button>Gần tôi</button>
+                <button onclick="getLocation()">Gần tôi</button>
                 <button onclick="showFavorites()">Đã lưu</button>
             </div>
             <div class="filter-group-right">
@@ -330,6 +364,23 @@
             }
 
             fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
+                })
+                .catch(error => console.error('Lỗi:', error));
+        }
+
+        function getLocation() {
+            // Kiểm tra xem người dùng đã đăng nhập hay chưa
+            const isLoggedIn = "<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>";
+
+            if (isLoggedIn === 'false') {
+                alert("Bạn cần đăng nhập để xem địa điểm yêu thích.");
+                return; // Ngừng thực hiện hàm nếu chưa đăng nhập
+            }
+
+            fetch('GanToi.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm gần tôi
                 .then(response => response.text())
                 .then(data => {
                     document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
