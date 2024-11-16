@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+include '../connect.php';
+?>
 
 <head>
     <meta charset="UTF-8">
@@ -122,12 +125,13 @@
 </head>
 
 <body class="light-theme">
+    
     <!-- Navbar -->
     <script src="../javascript/navbar.js"></script>
-
     <!-- Swiper for advertisement images -->
     <div class="swiper-container">
         <div class="swiper-wrapper">
+<<<<<<< HEAD
             <?php
             include '../connect.php';
             // Truy vấn để lấy các địa điểm nổi bật
@@ -149,6 +153,32 @@
                 }
             }
             ?>
+=======
+        <?php
+        // Truy vấn để lấy các địa điểm nổi bật
+        $sql = "SELECT id, ten_dia_diem, hinh_anh1, mo_ta FROM dia_diem ORDER BY RAND() LIMIT 5";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                // Encode 'ten_dia_diem' for safe use in the URL
+                $idLocation = urlencode($row["id"]);
+
+                // Wrap the entire div in an anchor tag
+                echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration: none">';
+                echo '<div class="slide-content">';
+                echo '<img src="../' . htmlspecialchars($row["hinh_anh1"]) . '" alt="' . htmlspecialchars($row["ten_dia_diem"]) . '">';
+                echo '<div class="slide-info">';
+                echo '<h3>' .$row["ten_dia_diem"] . '</h3>';
+                echo '<p>' . $row["mo_ta"] . '</p>';
+                echo '</div>'; // .slide-info
+                echo '</div>'; // .slide-content
+                echo '</a>'; // Close the anchor tag
+            }
+        }
+        ?>
+
+>>>>>>> c60d3f34ee60e7871066dde1d10c9880ae38e642
         </div>
         <!-- Slider buttons -->
         <div class="swiper-button-next"></div>
@@ -229,6 +259,7 @@
                 // Khởi tạo mảng conditions
                 $conditions = [];
 
+<<<<<<< HEAD
                 // Kiểm tra và thêm điều kiện cho district
                 if (isset($_GET['district']) && !empty($_GET['district'])) {
                     $district = $conn->real_escape_string($_GET['district']);
@@ -239,9 +270,22 @@
                         $conditions[] = "(" . implode(" AND ", array_map(function ($word) {
                             return "LOWER(dia_chi) LIKE LOWER('%$word%')";
                         }, $district_conditions)) . ")";
+=======
+                    // Kiểm tra và thêm điều kiện cho district
+                    if (isset($_GET['district']) && !empty($_GET['district'])) {
+                        $district = $conn->real_escape_string($_GET['district']);
+                        $district_conditions = array_filter(explode(' ', $district), function ($word) {
+                            return strlen($word) > 1;
+                        });
+                        if (!empty($district_conditions)) {
+                            $conditions[] = "(" . implode(" AND ", array_map(function ($word) {
+                                return "LOWER(dia_chi) LIKE LOWER('%$word%')";
+                            }, $district_conditions)) . ")";
+                        }
+>>>>>>> c60d3f34ee60e7871066dde1d10c9880ae38e642
                     }
-                }
 
+<<<<<<< HEAD
                 // Kiểm tra và thêm điều kiện cho province
                 if (isset($_GET['province']) && !empty($_GET['province'])) {
                     $province = $conn->real_escape_string($_GET['province']);
@@ -258,8 +302,46 @@
                         $conditions[] = "(" . implode(" AND ", array_map(function ($word) {
                             return "LOWER(loai_hinh) LIKE LOWER('%$word%')";
                         }, $category_conditions)) . ")";
+=======
+                    // Kiểm tra và thêm điều kiện cho province
+                    if (isset($_GET['province']) && !empty($_GET['province'])) {
+                        $province = $conn->real_escape_string($_GET['province']);
+                        $conditions[] = "LOWER(dia_chi) LIKE LOWER('%" . strtolower($province) . "%')";
+>>>>>>> c60d3f34ee60e7871066dde1d10c9880ae38e642
                     }
+
+                    // Kiểm tra và thêm điều kiện cho category
+                    if (isset($_GET['category']) && !empty($_GET['category'])) {
+                        $category = $conn->real_escape_string($_GET['category']);
+                        $category_conditions = array_filter(explode(' ', $category), function ($word) {
+                            return strlen($word) > 1;
+                        });
+                        if (!empty($category_conditions)) {
+                            $conditions[] = "(" . implode(" AND ", array_map(function ($word) {
+                                return "LOWER(loai_hinh) LIKE LOWER('%$word%')";
+                            }, $category_conditions)) . ")";
+                        }
+                    }
+
+                    // Xây dựng phần WHERE của câu truy vấn
+                    $where_clause = !empty($conditions) ? " WHERE " . implode(" AND ", $conditions) : "";
+
+                    // Đếm tổng số bản ghi phù hợp với điều kiện
+                    $sql_count = "SELECT COUNT(*) AS total FROM dia_diem" . $where_clause;
+                    $result_count = $conn->query($sql_count);
+                    $tdd = $result_count->fetch_assoc()['total'];
+
+                    // Thiết lập phân trang
+                    $sd = 20; // Số dòng mỗi trang
+                    $tst = ceil($tdd / $sd); // Tổng số trang
+                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                    $vt = ($page - 1) * $sd;
+                if (isset($_GET["tendiadiem"])){
+                    $LocationByName = $_GET["tendiadiem"];
+                    // Truy vấn để lấy các địa điểm nổi bật
+                    $sql = "SELECT * FROM dia_diem WHERE ten_dia_diem LIKE '%$LocationByName%' or dia_chi LIKE '%$LocationByName%' or so_dien_thoai LIKE '%$LocationByName%' or mo_ta LIKE '%$LocationByName%' or loai_hinh LIKE '%$LocationByName%'  or gia_ca_giao_dong LIKE '%$LocationByName%' ";
                 }
+<<<<<<< HEAD
 
                 // Xây dựng phần WHERE của câu truy vấn
                 $where_clause = !empty($conditions) ? " WHERE " . implode(" AND ", $conditions) : "";
@@ -277,10 +359,18 @@
 
                 // Truy vấn chính với điều kiện lọc và phân trang
                 $sql = "SELECT * FROM dia_diem" . $where_clause . " LIMIT $vt, $sd";
+=======
+                else{
+                    // Truy vấn chính với điều kiện lọc và phân trang
+                    $sql = "SELECT * FROM dia_diem" . $where_clause . " LIMIT $vt, $sd";
+                }
+>>>>>>> c60d3f34ee60e7871066dde1d10c9880ae38e642
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
+                        $idLocation = urlencode($row["id"]);
+                        echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
                         echo "<div class='card'>";
                         $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
                         echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
@@ -289,12 +379,13 @@
                         echo "<p>" . htmlspecialchars($row["dia_chi"]) . "</p>";
                         echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
                         echo "</div></div>";
+                        echo '</a>'; // Close the anchor tag
                     }
                 } else {
                     echo "<p>Không có kết quả nào để hiển thị</p>";
                 }
 
-                $conn->close();
+                $conn->close();z
                 ?>
                 <button id="scrollToTopBtn" onclick="scrollToTop()">↑</button>
             </div>
