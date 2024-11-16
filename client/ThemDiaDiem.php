@@ -1,17 +1,7 @@
 <?php
 session_start();
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sgtravel";
-$port = '3306';
-
-$conn = new mysqli($servername, $username, $password, $dbname, $port);
-
-if ($conn->connect_error) {
-    die("Kết nối thất bại: " . $conn->connect_error);
-}
+include '../connect.php';
 
 // Set default username
 $userNameFromDB = 'Khách';
@@ -114,7 +104,6 @@ $conn->close();
                 <input type="time" name="gio_mo_cua" placeholder="Giờ mở cửa">
                 <input type="time" name="gio_dong_cua" placeholder="Giờ đóng cửa">
             </div>
-
             <button type="submit">Tạo địa điểm</button>
         </form>
     </div>
