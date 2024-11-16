@@ -38,12 +38,14 @@ if (isset($_SESSION['user_id'])) {
             justify-content: center;
             align-items: center;
             margin-top: 20px;
-            gap: 8px; /* Khoảng cách giữa các nút */
+            gap: 8px;
+            /* Khoảng cách giữa các nút */
         }
 
         .trang a {
             color: #007bff;
-            padding: 8px 12px; /* Kích thước padding đều nhau */
+            padding: 8px 12px;
+            /* Kích thước padding đều nhau */
             border: 1px solid #007bff;
             border-radius: 4px;
             text-decoration: none;
@@ -60,12 +62,15 @@ if (isset($_SESSION['user_id'])) {
         .trang a.active {
             background-color: #007bff;
             color: white;
-            pointer-events: none; /* Vô hiệu hoá khi trang hiện tại đang được chọn */
+            pointer-events: none;
+            /* Vô hiệu hoá khi trang hiện tại đang được chọn */
         }
 
-        .trang a:first-child, .trang a:last-child {
+        .trang a:first-child,
+        .trang a:last-child {
             font-weight: bold;
         }
+
         .swiper-container {
             width: 100%;
             height: 500px;
@@ -229,7 +234,7 @@ if (isset($_SESSION['user_id'])) {
         <div class="filter-bar">
             <div class="filter-group-left">
                 <button>Mới nhất</button>
-                <button>Gần tôi</button>
+                <button onclick="getLocation()">Gần tôi</button>
                 <button onclick="showFavorites()">Đã lưu</button>
             </div>
             <div class="filter-group-right">
@@ -278,20 +283,16 @@ if (isset($_SESSION['user_id'])) {
             <div class="grid-container" id=locationGrid>
                 <?php
                 include '../connect.php';
-                $sql = "SELECT id, ten_dia_diem, dia_chi, hinh_anh1 FROM dia_diem";
-                $conditions = []; // Mảng để lưu các điều kiện lọc
 
-                // Kiểm tra xem có tham số 'district' trong URL hay không
+                // Khởi tạo mảng conditions
+                $conditions = [];
+
+                // Kiểm tra và thêm điều kiện cho district
                 if (isset($_GET['district']) && !empty($_GET['district'])) {
-
-                    // Làm sạch tham số để tránh SQL injection
                     $district = $conn->real_escape_string($_GET['district']);
-
-                    // Tách chuỗi district thành các từ, chỉ giữ lại các từ có độ dài lớn hơn 1
                     $district_conditions = array_filter(explode(' ', $district), function ($word) {
                         return strlen($word) > 1;
                     });
-                    // Nếu có từ hợp lệ, tạo điều kiện cho câu truy vấn
                     if (!empty($district_conditions)) {
                         $conditions[] = "(" . implode(" AND ", array_map(function ($word) {
                             return "LOWER(dia_chi) LIKE LOWER('%$word%')";
@@ -299,17 +300,15 @@ if (isset($_SESSION['user_id'])) {
                     }
                 }
 
-                // Kiểm tra xem có tham số 'province' trong URL hay không
+                // Kiểm tra và thêm điều kiện cho province
                 if (isset($_GET['province']) && !empty($_GET['province'])) {
                     $province = $conn->real_escape_string($_GET['province']);
-                    // Thêm điều kiện kiểm tra cho province
                     $conditions[] = "LOWER(dia_chi) LIKE LOWER('%" . strtolower($province) . "%')";
                 }
 
-                // Kiểm tra xem có tham số 'category' trong URL hay không
+                // Kiểm tra và thêm điều kiện cho category
                 if (isset($_GET['category']) && !empty($_GET['category'])) {
                     $category = $conn->real_escape_string($_GET['category']);
-                    // Tách chuỗi category thành các từ, chỉ giữ lại các từ có độ dài lớn hơn 1
                     $category_conditions = array_filter(explode(' ', $category), function ($word) {
                         return strlen($word) > 1;
                     });
@@ -320,46 +319,33 @@ if (isset($_SESSION['user_id'])) {
                     }
                 }
 
-                // Nếu có bất kỳ điều kiện nào được tạo, thêm chúng vào câu truy vấn
-                if (!empty($conditions)) {
-                    $sql .= " WHERE " . implode(" AND ", $conditions); // Kết hợp các điều kiện với nhau
-                }
-                // Phân trang
-                // Tổng số dòng dựa vào các điều kiện đã lọc
-                $sql_count = "SELECT COUNT(*) AS total FROM dia_diem";
-                if (!empty($conditions)) {
-                    $sql_count .= " WHERE " . implode(" AND ", $conditions);
-                }
+                // Xây dựng phần WHERE của câu truy vấn
+                $where_clause = !empty($conditions) ? " WHERE " . implode(" AND ", $conditions) : "";
+
+                // Đếm tổng số bản ghi phù hợp với điều kiện
+                $sql_count = "SELECT COUNT(*) AS total FROM dia_diem" . $where_clause;
                 $result_count = $conn->query($sql_count);
                 $tdd = $result_count->fetch_assoc()['total'];
 
-                $sd = 20;
-                $tst = ceil($tdd / $sd);
+                // Thiết lập phân trang
+                $sd = 20; // Số dòng mỗi trang
+                $tst = ceil($tdd / $sd); // Tổng số trang
                 $page = isset($_GET['page']) ? $_GET['page'] : 1;
                 $vt = ($page - 1) * $sd;
 
-
-                // Truy vấn chính với phân trang
-                $sql = "SELECT * FROM dia_diem";
-                $sql .= " LIMIT $vt, $sd";
+                // Truy vấn chính với điều kiện lọc và phân trang
+                $sql = "SELECT * FROM dia_diem" . $where_clause . " LIMIT $vt, $sd";
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<div class='card'>";
                         $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
-                        $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
-
-                        // Check if the image exists
-                        if (!file_exists($imagePath)) {
-                            $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
-                        }
-
                         echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
                         echo "<div class='card-info'>";
                         echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
                         echo "<p>" . htmlspecialchars($row["dia_chi"]) . "</p>";
-                        echo "<button  onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
+                        echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
                         echo "</div></div>";
                     }
                 } else {
@@ -506,6 +492,7 @@ if (isset($_SESSION['user_id'])) {
             });
         }
     </script>
+    
     <div class="trang">
         <?php if ($page > 1) { ?>
             <a href="Trangchu1.php?page=<?php echo $page - 1; ?>">Trang trước</a>

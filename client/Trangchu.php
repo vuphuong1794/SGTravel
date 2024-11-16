@@ -47,6 +47,77 @@
         .trang a:last-child {
             font-weight: bold;
         }
+
+        .swiper-container {
+            width: 100%;
+            height: 500px;
+            margin-bottom: 30px;
+        }
+
+        .swiper-slide {
+            position: relative;
+        }
+
+        .slide-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px;
+        }
+
+        .slide-info h3 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        .slide-info p {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            max-height: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .explore-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .explore-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: white;
+        }
+
+        .swiper-pagination-bullet {
+            background: white;
+        }
     </style>
 </head>
 
@@ -57,21 +128,27 @@
     <!-- Swiper for advertisement images -->
     <div class="swiper-container">
         <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <img src="../images/background1.png" alt="Quảng cáo 1">
-            </div>
-            <div class="swiper-slide">
-                <img src="../images/background2.png" alt="Quảng cáo 2">
-            </div>
-            <div class="swiper-slide">
-                <img src="../images/background3.png" alt="Quảng cáo 3">
-            </div>
-            <div class="swiper-slide">
-                <img src="../images/background4.png" alt="Quảng cáo 4">
-            </div>
-            <div class="swiper-slide">
-                <img src="../images/background5.png" alt="Quảng cáo 5">
-            </div>
+            <?php
+            include '../connect.php';
+            // Truy vấn để lấy các địa điểm nổi bật
+            $sql = "SELECT ten_dia_diem, hinh_anh1, mo_ta FROM dia_diem ORDER BY RAND() LIMIT 5";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="swiper-slide">';
+                    echo '<div class="slide-content">';
+                    echo '<img src="../' . htmlspecialchars($row["hinh_anh1"]) . '" alt="' . htmlspecialchars($row["ten_dia_diem"]) . '">';
+                    echo '<div class="slide-info">';
+                    echo '<h3>' . htmlspecialchars($row["ten_dia_diem"]) . '</h3>';
+                    echo '<p>' . htmlspecialchars($row["mo_ta"]) . '</p>';
+                    echo '<a href="ProductDeatail.html" class="explore-btn">Khám phá ngay</a>';
+                    echo '</div>'; // .slide-info
+                    echo '</div>'; // .slide-content
+                    echo '</div>'; // .swiper-slide
+                }
+            }
+            ?>
         </div>
         <!-- Slider buttons -->
         <div class="swiper-button-next"></div>
@@ -149,20 +226,15 @@
                 <?php
                 include '../connect.php';
 
-                $sql = "SELECT id, ten_dia_diem, dia_chi, hinh_anh1 FROM dia_diem";
-                $conditions = []; // Mảng để lưu các điều kiện lọc
+                // Khởi tạo mảng conditions
+                $conditions = [];
 
-                // Kiểm tra xem có tham số 'district' trong URL hay không
+                // Kiểm tra và thêm điều kiện cho district
                 if (isset($_GET['district']) && !empty($_GET['district'])) {
-
-                    // Làm sạch tham số để tránh SQL injection
                     $district = $conn->real_escape_string($_GET['district']);
-
-                    // Tách chuỗi district thành các từ, chỉ giữ lại các từ có độ dài lớn hơn 1
                     $district_conditions = array_filter(explode(' ', $district), function ($word) {
                         return strlen($word) > 1;
                     });
-                    // Nếu có từ hợp lệ, tạo điều kiện cho câu truy vấn
                     if (!empty($district_conditions)) {
                         $conditions[] = "(" . implode(" AND ", array_map(function ($word) {
                             return "LOWER(dia_chi) LIKE LOWER('%$word%')";
@@ -170,20 +242,15 @@
                     }
                 }
 
-                // Kiểm tra xem có tham số 'province' trong URL hay không
+                // Kiểm tra và thêm điều kiện cho province
                 if (isset($_GET['province']) && !empty($_GET['province'])) {
                     $province = $conn->real_escape_string($_GET['province']);
-                    // Làm sạch tham số
-                    // Thêm điều kiện kiểm tra cho province
                     $conditions[] = "LOWER(dia_chi) LIKE LOWER('%" . strtolower($province) . "%')";
                 }
 
-
-                // Kiểm tra xem có tham số 'category' trong URL hay không
+                // Kiểm tra và thêm điều kiện cho category
                 if (isset($_GET['category']) && !empty($_GET['category'])) {
                     $category = $conn->real_escape_string($_GET['category']);
-                    // Làm sạch tham số
-                    // Tách chuỗi category thành các từ, chỉ giữ lại các từ có độ dài lớn hơn 1
                     $category_conditions = array_filter(explode(' ', $category), function ($word) {
                         return strlen($word) > 1;
                     });
@@ -194,29 +261,22 @@
                     }
                 }
 
-                // Nếu có bất kỳ điều kiện nào được tạo, thêm chúng vào câu truy vấn
-                if (!empty($conditions)) {
-                    $sql .= " WHERE " . implode(" AND ", $conditions); // Kết hợp các điều kiện với nhau
-                }
-                // Phân trang
-                // Tổng số dòng dựa vào các điều kiện đã lọc
-                $sql_count = "SELECT COUNT(*) AS total FROM dia_diem";
-                if (!empty($conditions)) {
-                    $sql_count .= " WHERE " . implode(" AND ", $conditions);
-                }
+                // Xây dựng phần WHERE của câu truy vấn
+                $where_clause = !empty($conditions) ? " WHERE " . implode(" AND ", $conditions) : "";
+
+                // Đếm tổng số bản ghi phù hợp với điều kiện
+                $sql_count = "SELECT COUNT(*) AS total FROM dia_diem" . $where_clause;
                 $result_count = $conn->query($sql_count);
                 $tdd = $result_count->fetch_assoc()['total'];
 
-                $sd = 20;
-                $tst = ceil($tdd / $sd);
+                // Thiết lập phân trang
+                $sd = 20; // Số dòng mỗi trang
+                $tst = ceil($tdd / $sd); // Tổng số trang
                 $page = isset($_GET['page']) ? $_GET['page'] : 1;
                 $vt = ($page - 1) * $sd;
 
-
-                // Truy vấn chính với phân trang
-                $sql = "SELECT * FROM dia_diem";
-                $sql .= " LIMIT $vt, $sd";
-
+                // Truy vấn chính với điều kiện lọc và phân trang
+                $sql = "SELECT * FROM dia_diem" . $where_clause . " LIMIT $vt, $sd";
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
@@ -227,7 +287,7 @@
                         echo "<div class='card-info'>";
                         echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
                         echo "<p>" . htmlspecialchars($row["dia_chi"]) . "</p>";
-                        echo "<button  onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
+                        echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
                         echo "</div></div>";
                     }
                 } else {
