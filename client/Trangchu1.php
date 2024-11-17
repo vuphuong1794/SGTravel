@@ -1,8 +1,28 @@
+<?php
+session_start();
+
+include '../connect.php';
+// Khởi tạo tên người dùng mặc định
+$userNameFromDB = 'Khách';
+$userLoggedIn = false;
+
+if (isset($_SESSION['user_id'])) {
+    // Lấy tên người dùng từ cơ sở dữ liệu
+    $userId = $_SESSION['user_id'];
+    $query = "SELECT ten_dang_nhap FROM tai_khoan WHERE id = '$userId'";
+    $result = mysqli_query($conn, $query);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $user = mysqli_fetch_assoc($result);
+        $userNameFromDB = $user['ten_dang_nhap'];
+        $userLoggedIn = true; // Cập nhật trạng thái đăng nhập
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
-<?php
-include '../connect.php';
-?>
 
 <head>
     <meta charset="UTF-8">
@@ -123,11 +143,47 @@ include '../connect.php';
         }
     </style>
 </head>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const navbarCSS = document.createElement('link');
+        navbarCSS.rel = 'stylesheet';
+        navbarCSS.href = '../style/navbar.css';
+        document.head.appendChild(navbarCSS);
+
+        // Đưa tên người dùng vào JavaScript từ PHP
+        const username = "<?php echo $userNameFromDB; ?>"; // Lấy tên người dùng từ PHP
+        const userLoggedIn = "<?php echo $userLoggedIn ? 'true' : 'false'; ?>";
+
+        const navbar = `
+            <div class="navbar" id="navbar">
+                <div class="nav-container">
+                    <h2 class="nav-logo" onclick="window.location.href='Trangchu1.php'"><b>SGTravel</b></h2>
+                    <div class="searchbox-container">
+                        <input type="text" id="searchbox" placeholder="Tìm kiếm" />
+                        <box-icon name='search-alt-2' class="icon"></box-icon>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider-navbar" for="theme-toggle"></span>
+                    </label>
+                    
+                    <div class="user-container">
+                        <a href="ChiTietNguoiDung.php" style="text-decoration: none; color: black"><span class="hello-message">Hello, ${username}!</span></a>
+                        ${userLoggedIn === 'true' ? `<button class="create-btn"><a href="ThemDiaDiem.php" style="text-decoration: none; color: black">Tạo địa điểm</a></button>` : ''}
+                        <button class="login-btn"><a href="Logout.php" style="text-decoration: none; color: black">Đăng Xuất</a></button>
+                        <box-icon name='bell'></box-icon>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML('afterbegin', navbar);
+    });
+</script>
+
 
 <body class="light-theme">
 
-    <!-- Navbar -->
-    <script src="../javascript/navbar.js"></script>
     <!-- Swiper for advertisement images -->
     <div class="swiper-container">
         <div class="swiper-wrapper">
@@ -383,16 +439,9 @@ include '../connect.php';
                 updateURLParams();
             });
         });
-        // Function to save favorite location
+
+
         function saveFavorite(diaDiemId) {
-            // Kiểm tra xem người dùng đã đăng nhập hay chưa
-            const isLoggedIn = Boolean(localStorage.getItem('userLoggedIn')); // Giả sử bạn lưu trạng thái đăng nhập
-
-            if (!isLoggedIn) {
-                alert("Bạn cần đăng nhập để lưu địa điểm vào yêu thích.");
-                return;
-            }
-
             fetch('yeuthich.php', {
                     method: 'POST',
                     headers: {
@@ -407,6 +456,8 @@ include '../connect.php';
                 .catch(error => console.error('Lỗi:', error));
         }
 
+
+        // Function to show favorite locations
         function showFavorites() {
             // Kiểm tra xem người dùng đã đăng nhập hay chưa
             const isLoggedIn = "<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>";
@@ -416,12 +467,30 @@ include '../connect.php';
                 return; // Ngừng thực hiện hàm nếu chưa đăng nhập
             }
 
-            fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
+            fetch('favorite.php') // favorite.php hiển thị địa điểm yêu thích
                 .then(response => response.text())
                 .then(data => {
                     document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
                 })
                 .catch(error => console.error('Lỗi:', error));
+        }
+        // Xóa địa điểm đã lưu
+        function removeFavorite(diaDiemId) {
+            if (confirm('Bạn có chắc chắn muốn xóa địa điểm này khỏi yêu thích không?')) {
+                fetch('remove_favorite.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `dia_diem_id=${diaDiemId}`
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        alert(data); // Hiển thị kết quả
+                        showFavorites(); // Cập nhật danh sách địa điểm yêu thích
+                    })
+                    .catch(error => console.error('Lỗi:', error));
+            }
         }
     </script>
 

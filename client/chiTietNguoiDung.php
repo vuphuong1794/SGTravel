@@ -237,7 +237,7 @@ $result = $conn->query($sql);
 <body>
     <div class="container">
         <div class="header">
-            <a href="Trangchu.php"><box-icon name='arrow-back'></box-icon></a>
+            <a href="Trangchu1.php"><box-icon name='arrow-back'></box-icon></a>
             <h1>Địa điểm của bạn</h1>
             <p>Quản lý các địa điểm bạn đã tạo</p>
         </div>
@@ -253,9 +253,17 @@ $result = $conn->query($sql);
                 while ($row = $result->fetch_assoc()):
             ?>
                     <div class="place-card" id="place-<?php echo $row['id']; ?>">
-                        <img src="<?php echo !empty($row['hinh_anh1']) ? $row['hinh_anh1'] : 'placeholder.jpg'; ?>"
-                            alt="<?php echo $row['ten_dia_diem']; ?>"
-                            class="place-image">
+                        <?php
+                        $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+                        $defaultImagePath = "../images/locations/" .htmlspecialchars($row["hinh_anh1"]); // Đường dẫn ảnh mặc định
+
+                        // Kiểm tra xem ảnh có tồn tại hay không
+                        if (!file_exists($imagePath) || empty($row["hinh_anh1"])) {
+                            $imagePath = $defaultImagePath; // Sử dụng ảnh mặc định nếu ảnh không tồn tại
+                        }
+                        ?>
+                        <img src="<?php echo $imagePath; ?>" alt="<?php echo htmlspecialchars($row["ten_dia_diem"]); ?>" class="place-image">
+
                         <div class="place-info">
                             <h3><?php echo $row['ten_dia_diem']; ?></h3>
                             <div class="place-details">
@@ -289,79 +297,79 @@ $result = $conn->query($sql);
         </div>
 
 
-        </div>
+    </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-        <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-        <script>
-            function openEditModal(id) {
-                document.getElementById('modalTitle').textContent = 'Chỉnh sửa địa điểm';
-                // Lấy thông tin địa điểm
-                fetch('get_place.php?id=' + id)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('place_id').value = data.id;
-                        document.getElementById('ten_dia_diem').value = data.ten_dia_diem;
-                        document.getElementById('dia_chi').value = data.dia_chi;
-                        document.getElementById('so_dien_thoai').value = data.so_dien_thoai;
-                        document.getElementById('mo_ta').value = data.mo_ta;
-                        document.getElementById('gio_mo_cua').value = data.gio_mo_cua;
-                        document.getElementById('gio_dong_cua').value = data.gio_dong_cua;
-                        document.getElementById('loai_hinh').value = data.loai_hinh;
-                        document.getElementById('gia_ca_giao_dong').value = data.gia_ca_giao_dong;
-                        document.getElementById('placeModal').style.display = 'block';
-                    });
-            }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    <script>
+        function openEditModal(id) {
+            document.getElementById('modalTitle').textContent = 'Chỉnh sửa địa điểm';
+            // Lấy thông tin địa điểm
+            fetch('get_place.php?id=' + id)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('place_id').value = data.id;
+                    document.getElementById('ten_dia_diem').value = data.ten_dia_diem;
+                    document.getElementById('dia_chi').value = data.dia_chi;
+                    document.getElementById('so_dien_thoai').value = data.so_dien_thoai;
+                    document.getElementById('mo_ta').value = data.mo_ta;
+                    document.getElementById('gio_mo_cua').value = data.gio_mo_cua;
+                    document.getElementById('gio_dong_cua').value = data.gio_dong_cua;
+                    document.getElementById('loai_hinh').value = data.loai_hinh;
+                    document.getElementById('gia_ca_giao_dong').value = data.gia_ca_giao_dong;
+                    document.getElementById('placeModal').style.display = 'block';
+                });
+        }
 
-            function closeModal() {
-                document.getElementById('placeModal').style.display = 'none';
-            }
+        function closeModal() {
+            document.getElementById('placeModal').style.display = 'none';
+        }
 
-            function confirmDelete(id) {
-                if (confirm('Bạn có chắc chắn muốn xóa địa điểm này?')) {
-                    fetch('delete_place.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                id: id
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                document.getElementById('place-' + id).remove();
-                                toastr.success('Xóa địa điểm thành công');
-                            } else {
-                                toastr.error('Có lỗi xảy ra');
-                            }
-                        });
-                }
-            }
-
-            document.getElementById('placeForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                let formData = new FormData(this);
-
-                fetch('save_place.php', {
+        function confirmDelete(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa địa điểm này?')) {
+                fetch('delete_place.php', {
                         method: 'POST',
-                        body: formData
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            id: id
+                        })
                     })
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            closeModal();
-                            location.reload(); // Reload để hiển thị changes
-                            toastr.success('Lưu địa điểm thành công');
+                            document.getElementById('place-' + id).remove();
+                            toastr.success('Xóa địa điểm thành công');
                         } else {
                             toastr.error('Có lỗi xảy ra');
                         }
                     });
-            });
-        </script>
+            }
+        }
+
+        document.getElementById('placeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            let formData = new FormData(this);
+
+            fetch('save_place.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        closeModal();
+                        location.reload(); // Reload để hiển thị changes
+                        toastr.success('Lưu địa điểm thành công');
+                    } else {
+                        toastr.error('Có lỗi xảy ra');
+                    }
+                });
+        });
+    </script>
 </body>
 
 </html>

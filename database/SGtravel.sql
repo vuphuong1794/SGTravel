@@ -818,3 +818,6 @@ END $$
 
 DELIMITER ;
 
+ALTER TABLE dia_diem
+ADD COLUMN nguoi_tao_id INT,
+ADD FOREIGN KEY (nguoi_tao_id) REFERENCES tai_khoan(id);
