@@ -10,6 +10,7 @@ include '../connect.php'
     <title>SGTravel</title>
     <link rel="stylesheet" href="../style/client/ProductDetail.css">
     <link rel="stylesheet" href="../style/client/Trangchu.css">
+    
 </head>
 <body>
             <?php
@@ -19,8 +20,10 @@ include '../connect.php'
                 // Truy vấn để lấy các địa điểm nổi bật
                 $sql1 = "SELECT * FROM dia_diem WHERE id= $IDLocation";
                 $sql2 = "SELECT * FROM danh_gia WHERE id_dia_diem= $IDLocation";
+                $sql3 = "SELECT * FROM binh_luan WHERE id_dia_diem= $IDLocation";
                 $result1 = $conn->query($sql1); 
-                $result2 = $conn->query($sql2);           
+                $result2 = $conn->query($sql2);      
+                $result3= $conn->query($sql3);       
                 $rowDiaDiem = $result1->fetch_assoc();
             ?>
         <!-- Navbar -->
@@ -125,7 +128,12 @@ include '../connect.php'
                     <img src="..<?php echo $rowDiaDiem['hinh_anh1']; ?>">
                     <img src="..<?php echo $rowDiaDiem['hinh_anh2']; ?>">
                     <img src="..<?php echo $rowDiaDiem['hinh_anh3']; ?>">
-                    <div class="more-images">+4</div>
+                    <?php 
+                        if (isset($rowDiaDiem['hinh_anh4']) && !empty($rowDiaDiem['hinh_anh4'])) {
+                            echo "<img src='../" . $rowDiaDiem['hinh_anh4'] . "'>+4";
+                        }
+                    ?>
+                    <!-- <div class="more-images">+4</div> -->
                 </div>
             </div>
         </div>
@@ -133,67 +141,56 @@ include '../connect.php'
     <section class="review-place">
         <h3>Đánh giá</h3>
         <br/>
-        <div class="review-input-container">
+        <form action="ProductDetail.php" method="POST">
             <div class="review-input">
-                <input type="text" placeholder="Hãy nhận xét về địa điểm này">
-                <button>
-                    <div class="icon_send">
+                <input type="text" name="comment" id="Comment" placeholder="Hãy nhận xét về địa điểm này" required>
+                <input type="hidden" name="id_dia_diem" value="<?php echo $rowDiaDiem['id']; ?>">
+                <button type="submit" id="SendComment" style="cursor: pointer;">
+                    <div class="icon_send" onclick="submit">
                         <img width="30px" height="30px" src="../images/send_icon.png">
                     </div>
                 </button>
             </div>
-
             <div class="rating-container"> 
                 <div class="ratings">
                     <div class="rating-item">
                         <p>Chất lượng</p>
-                        <P>3</P>
+                        <input id="textCL" require placeholder="5"></input>
                     </div>
                     <div class="rating-item">
                         <p>Giá cả</p>
-                        <p>3</p>
+                        <input id="textGC" require placeholder="5"></input>
                     </div>
                     <div class="rating-item">
                         <p>Không gian</p>
-                        <p>2</p>
+                        <input id="textKG" require placeholder="5"></input>
                     </div>
                     <div class="rating-item">
                         <p>Phục vụ</p>
-                        <p>4</p>
+                        <input id="textPV" require placeholder="5"></input>
                     </div>
                 </div>
             </div>
         </div>
+    </form>
+
     </section>    
     <div class="reviews-and-ratings">
         <section class="place-details-1">
-            <div class="review-list">
-                <div class="review-item">
-                    <img src="user1.jpg" alt="User 1">
-                    <p>Huyền Lương - Trái cây tươi</p>
-                </div>
-                <div class="review-item">
-                    <img src="user2.jpg" alt="User 2">
-                    <p>Yến Nhi - Trái cây tươi</p>
-                </div>
-                <div class="review-item">
-                    <img src="user3.jpg" alt="User 3">
-                    <p>Thiên Ý - Tuyệt vời</p>
-                </div>
+            <div class="review-list">             
+                <?php 
+                while ($rowBinhLuan = $result3->fetch_assoc()) {
+                    echo '<div class="review-item" style="background-color:lightgray ; padding:20px; border-radius: 30px; ">';
+                    echo '<p> '.$rowBinhLuan[''].'</p>';
+                    echo '  <img src="../images/userPicture_def.png" alt="User 1">';
+                    echo '    <p> '.$rowBinhLuan['noi_dung'].'</p>';
+                    echo '</div>';
+                }
+                ?>
                 <button class="load-more">Xem thêm</button>
             </div>
         </section>    
-        <section class="place-details-2">
-            <div class="total-ratings">
-                <h3>Total:</h3>
-                <p>4 bình luận</p>
-                <p>0 tuyệt vời</p>
-                <p>1 khá tốt</p>
-                <p>1 trung bình</p>
-                <p>1 kém</p>
-                <div class="rating-circle">2.5</div>
-            </div>
-        </section>
+
     </div>
     <?php
     }

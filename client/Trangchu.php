@@ -438,17 +438,17 @@ include '../connect.php';
     </script>
     <div class="trang">
         <?php if ($page > 1) { ?>
-            <a href="Trangchu1.php?page=<?php echo $page - 1; ?>">Trang trước</a>
+            <a href="Trangchu.php?page=<?php echo $page - 1; ?>">Trang trước</a>
         <?php } ?>
 
         <?php for ($i = 1; $i <= $tst; $i++) { ?>
-            <a href="Trangchu1.php?page=<?php echo $i; ?>" <?php if ($page == $i) echo 'class="active"'; ?>>
+            <a href="Trangchu.php?page=<?php echo $i; ?>" <?php if ($page == $i) echo 'class="active"'; ?>>
                 <?php echo $i; ?>
             </a>
         <?php } ?>
 
         <?php if ($page < $tst) { ?>
-            <a href="Trangchu1.php?page=<?php echo $page + 1; ?>">Trang sau</a>
+            <a href="Trangchu.php?page=<?php echo $page + 1; ?>">Trang sau</a>
         <?php } ?>
     </div>
 </body>
