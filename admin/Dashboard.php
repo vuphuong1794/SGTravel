@@ -259,6 +259,26 @@ body {
   padding-left: 30px;
 }
    </style>
+  <script>
+    function showPostsToday() {
+        window.location.href = "baidanghomnay.php"; 
+    }
+    function showCommentToday() {
+        window.location.href = "binhluanhomnay.php"; 
+    }
+    function showReportToday() {
+        window.location.href = "reporthomnay.php"; 
+    }
+    function showPortsMonth() {
+        window.location.href = "baidangthangnay.php"; 
+    }
+    function showCommentMonth() {
+        window.location.href = "binhluanthangnay.php"; 
+    }
+    function showReportMonth() {
+        window.location.href = "reportthangnay.php"; 
+    }
+ </script>
   </head>
   <body>
     <div class="sidebar">
@@ -321,7 +341,7 @@ body {
         <h1>Dashboard</h1>
         <p>Welcome to dashboard !</p>
         <div class="cards">
-          <div class="card">
+        <div class="card" onclick="showPostsToday()">
             <i class="fas fa-arrow-up"> </i>
             <p>Bài đăng</p>
               <h3><?php echo $tong_so_luong_bai_dang_d; ?></h3>
@@ -330,7 +350,7 @@ body {
               <i class="fas fa-arrow-right"> </i>
             </p>
           </div>
-          <div class="card">
+          <div class="card" onclick="showCommentToday()">
             <i class="fas fa-comments"> </i>
             <p>Bình luận</p>
             <h3><?php echo $so_luong_binh_luan_d; ?></h3>
@@ -339,7 +359,7 @@ body {
               <i class="fas fa-arrow-right"> </i>
             </p>
           </div>
-          <div class="card">
+          <div class="card" onclick="showReportToday()">
             <i class="fas fa-file-alt"> </i>
             <p>Report</p>
             <h3><?php echo $so_luong_bao_cao_d; ?></h3>
@@ -352,7 +372,7 @@ body {
       
         <!-- Hàng ô "Tháng này" -->
         <div class="cards">
-          <div class="card">
+          <div class="card" onclick="showPortsMonth()">
             <i class="fas fa-arrow-up"> </i>
             <p>Bài đăng</p>
             <h3><?php echo $so_luong_bai_dang_m; ?></h3>
@@ -361,7 +381,7 @@ body {
               <i class="fas fa-arrow-right"> </i>
             </p>
           </div>
-          <div class="card">
+          <div class="card" onclick="showCommentMonth()">
             <i class="fas fa-comments"> </i>
             <p>Bình luận</p>
             <h3><?php echo $so_luong_binh_luan_m; ?></h3>
@@ -370,7 +390,7 @@ body {
               <i class="fas fa-arrow-right"> </i>
             </p>
           </div>
-          <div class="card">
+          <div class="card" onclick="showReportMonth()">
             <i class="fas fa-file-alt"> </i>
             <p>Report</p>
             <h3><?php echo $so_luong_bao_cao_m; ?></h3>
@@ -399,8 +419,6 @@ body {
               <canvas id="reportChart_n"></canvas>
           </div>
       </div>
-
-     
         <script>
           // Lấy dữ liệu từ PHP
               const soLuongBaiDang = <?php echo $so_luong_bai_dang; ?>;

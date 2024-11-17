@@ -212,7 +212,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="time" name="gio_mo_cua" required>
                 <input type="time" name="gio_dong_cua" required>
             </div>
-
             <button type="submit">Tạo địa điểm</button>
         </form>
     </div>
