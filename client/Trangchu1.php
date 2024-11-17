@@ -160,7 +160,7 @@ if (isset($_SESSION['user_id'])) {
                     <h2 class="nav-logo" onclick="window.location.href='Trangchu1.php'"><b>SGTravel</b></h2>
                     <div class="searchbox-container">
                         <input type="text" id="searchbox" placeholder="Tìm kiếm" />
-                        <box-icon name='search-alt-2' class="icon"></box-icon>
+                        <box-icon name='search-alt-2' class="icon" id="search-icon"></box-icon>
                     </div>
                     <label class="switch">
                         <input type="checkbox" id="theme-toggle">
@@ -178,6 +178,16 @@ if (isset($_SESSION['user_id'])) {
         `;
 
         document.body.insertAdjacentHTML('afterbegin', navbar);
+
+        // Thêm sự kiện click vào biểu tượng tìm kiếm
+        document.getElementById('search-icon').addEventListener('click', function() {
+            const searchQuery = document.getElementById('searchbox').value.trim();
+            if (searchQuery) {
+                window.location.href = `Trangchu1.php?tendiadiem=${encodeURIComponent(searchQuery)}`;
+            } else {
+                alert('Vui lòng nhập từ khóa để tìm kiếm!');
+            }
+        });
     });
 </script>
 
@@ -201,13 +211,13 @@ if (isset($_SESSION['user_id'])) {
                     echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration: none">';
                     echo '<div class="slide-content">';
                     $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
-                        $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+                    $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
 
-                        // Check if the image exists
-                        if (!file_exists($imagePath)) {
-                            $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
-                        }
-                        echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
+                    // Check if the image exists
+                    if (!file_exists($imagePath)) {
+                        $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                    }
+                    echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
                     echo '<div class="slide-info">';
                     echo '<h3>' . $row["ten_dia_diem"] . '</h3>';
                     echo '<p>' . $row["mo_ta"] . '</p>';
