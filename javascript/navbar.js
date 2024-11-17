@@ -11,7 +11,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="nav-container">
                 <h2 class="nav-logo" onclick="window.location.href='Trangchu.php'"><b>SGTravel</b></h2>
                 <div class="searchbox-container">
-                    <input type="text" id="searchbox" placeholder="Tìm kiếm" />
+                    <input type="text" id="searchboxDiaDiem" placeholder="Địa điểm" />
+                    <input type="text" id="searchboxGiaCa" placeholder="Phân khúc giá" />
+                    <input type="text" id="searchboxChatLuong" placeholder="Chất lượng dịch vụ" />
                     <box-icon name='search-alt-2' class="icon" id="search-icon"></box-icon>
                 </div>
                 <label class="switch">
@@ -31,9 +33,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Thêm sự kiện click vào biểu tượng tìm kiếm
     document.getElementById('search-icon').addEventListener('click', function() {
-        const searchQuery = document.getElementById('searchbox').value.trim();
-        if (searchQuery) {
-            window.location.href = `Trangchu.php?tendiadiem=${encodeURIComponent(searchQuery)}`;
+        const searchQueryDD = document.getElementById('searchboxDiaDiem').value.trim();
+        const searchQueryGC = document.getElementById('searchboxGiaCa').value.trim();
+        const searchQueryCL = document.getElementById('searchboxChatLuong').value.trim();
+        if (searchQueryDD||searchQueryGC||searchQueryCL) {
+            if (!searchQueryDD){
+                searchQueryDD="null";
+            }
+            if (!searchQueryGC){
+                searchQueryGC="null";
+            }
+            if (!searchQueryCL){
+                searchQueryCL="null";
+            }
+            window.location.href = `Trangchu.php?tendiadiem=${encodeURIComponent(searchQueryDD)} gc=${encodeURIComponent(searchQueryGC)} cl=${encodeURIComponent(searchQueryCL)}`;
         } else {
             alert('Vui lòng nhập từ khóa để tìm kiếm!');
         }

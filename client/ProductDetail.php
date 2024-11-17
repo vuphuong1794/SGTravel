@@ -151,6 +151,7 @@ include '../connect.php'
                     </div>
                 </button>
             </div>
+            <form>
             <div class="rating-container"> 
                 <div class="ratings">
                     <div class="rating-item">
@@ -181,9 +182,9 @@ include '../connect.php'
                 <?php 
                 while ($rowBinhLuan = $result3->fetch_assoc()) {
                     echo '<div class="review-item" style="background-color:lightgray ; padding:20px; border-radius: 30px; ">';
-                    echo '<p> '.$rowBinhLuan[''].'</p>';
                     echo '  <img src="../images/userPicture_def.png" alt="User 1">';
-                    echo '    <p> '.$rowBinhLuan['noi_dung'].'</p>';
+                    echo '<div> <p><b> '.$rowBinhLuan['ten_dang_nhap'].' </b></p>';
+                    echo '    <p> '.$rowBinhLuan['noi_dung'].'</p></div>';
                     echo '</div>';
                 }
                 ?>
