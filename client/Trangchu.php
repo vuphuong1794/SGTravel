@@ -294,47 +294,156 @@ include '../connect.php';
 
                 // Nếu không có điều kiện nào được thêm, đặt điều kiện mặc định
                 $condition = count($conditionParts) > 0 ? implode(' AND ', $conditionParts) : "1=1";
-
-                // Truy vấn để lấy 5 địa điểm có điểm trung bình cao nhất
-                $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
-                        FROM dia_diem dd
-                        JOIN danh_gia dg ON dd.id = dg.id_dia_diem
-                        WHERE $condition
-                        GROUP BY dd.id
-                        ORDER BY diem_trung_binh_cong DESC
-                        LIMIT 5";
-
-                // Thực thi truy vấn (giả sử kết nối với cơ sở dữ liệu đã được thiết lập)
-                $result = mysqli_query($conn, $sql);
-
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        $idLocation = urlencode($row["id"]);
-                        echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
-                        echo "<div class='card'>";
-                        $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
-                        $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
-
-                        // Check if the image exists
-                        if (!file_exists($imagePath)) {
-                            $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
-                        }
-                        echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
-                        echo "<div class='card-info'>";
-                        echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
-                        echo "<p>" . htmlspecialchars(ucwords(strtolower($row["dia_chi"]))) . "</p>";
-
-                        echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
-                        echo "</div></div>";
-                        echo '</a>'; // Close the anchor tag
-                    }
-                } 
-                else {
-                    echo $condition;
-                }
-            ?>
-
                 
+                if (!isset($_GET["lh"])) {
+                    $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, dd.loai_hinh, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
+                            FROM dia_diem dd
+                            JOIN danh_gia dg ON dd.id = dg.id_dia_diem
+                            WHERE dd.loai_hinh = 'Ăn uống' AND $condition
+                            GROUP BY dd.id
+                            ORDER BY diem_trung_binh_cong DESC
+                            LIMIT 5";
+
+                    // Thực thi truy vấn (giả sử kết nối với cơ sở dữ liệu đã được thiết lập)
+                    $result = mysqli_query($conn, $sql);
+                    echo '<h2>Ăn uống</h2>';
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $idLocation = urlencode($row["id"]);
+                            echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
+                            echo "<div class='card'>";
+                            $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+                            $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                            // Check if the image exists
+                            if (!file_exists($imagePath)) {
+                                $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                            }
+                            echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
+                            echo "<div class='card-info'>";
+                            echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
+                            echo "<p>" . htmlspecialchars(ucwords(strtolower($row["dia_chi"]))) . "</p>";
+
+                            echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
+                            echo "</div></div>";
+                            echo '</a>'; // Close the anchor tag
+                        }
+                    } 
+                    else {
+                        echo "Không tìm thấy";
+                        echo $condition;
+                    }
+                    $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, dd.loai_hinh, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
+                            FROM dia_diem dd
+                            JOIN danh_gia dg ON dd.id = dg.id_dia_diem
+                            WHERE dd.loai_hinh = 'ngủ nghỉ' AND $condition
+                            GROUP BY dd.id
+                            ORDER BY diem_trung_binh_cong DESC
+                            LIMIT 5";
+
+                    // Thực thi truy vấn (giả sử kết nối với cơ sở dữ liệu đã được thiết lập)
+                    $result = mysqli_query($conn, $sql);
+                    echo '<h2>Ngủ nghỉ</h2>';
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $idLocation = urlencode($row["id"]);
+                            echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
+                            echo "<div class='card'>";
+                            $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+                            $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                            // Check if the image exists
+                            if (!file_exists($imagePath)) {
+                                $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                            }
+                            echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
+                            echo "<div class='card-info'>";
+                            echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
+                            echo "<p>" . htmlspecialchars(ucwords(strtolower($row["dia_chi"]))) . "</p>";
+
+                            echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
+                            echo "</div></div>";
+                            echo '</a>'; // Close the anchor tag
+                        }
+                    } 
+                    else {
+                        echo "Không tìm thấy";
+                        echo $condition;
+                    }$sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, dd.loai_hinh, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
+                    FROM dia_diem dd
+                    JOIN danh_gia dg ON dd.id = dg.id_dia_diem
+                    WHERE dd.loai_hinh = 'Du lịch' AND $condition
+                    GROUP BY dd.id
+                    ORDER BY diem_trung_binh_cong DESC
+                    LIMIT 5";
+
+                    // Thực thi truy vấn (giả sử kết nối với cơ sở dữ liệu đã được thiết lập)
+                    $result = mysqli_query($conn, $sql);
+                    echo '<h2>Vui chơi</h2>';
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $idLocation = urlencode($row["id"]);
+                            echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
+                            echo "<div class='card'>";
+                            $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+                            $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                            // Check if the image exists
+                            if (!file_exists($imagePath)) {
+                                $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                            }
+                            echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
+                            echo "<div class='card-info'>";
+                            echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
+                            echo "<p>" . htmlspecialchars(ucwords(strtolower($row["dia_chi"]))) . "</p>";
+
+                            echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
+                            echo "</div></div>";
+                            echo '</a>'; // Close the anchor tag
+                        }
+                    } 
+                    else {
+                        echo "Không tìm thấy";
+                        echo $condition;
+                    }
+                }
+                else{                
+                    // Truy vấn để lấy 5 địa điểm có điểm trung bình cao nhất
+                    $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
+                            FROM dia_diem dd
+                            JOIN danh_gia dg ON dd.id = dg.id_dia_diem
+                            WHERE $condition
+                            GROUP BY dd.id
+                            ORDER BY diem_trung_binh_cong DESC
+                            LIMIT 5";
+                    $result = mysqli_query($conn, $sql);
+                    echo '<h2>Gợi ý cho bạn</h2>';
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $idLocation = urlencode($row["id"]);
+                            echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
+                            echo "<div class='card'>";
+                            $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+                            $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                            // Check if the image exists
+                            if (!file_exists($imagePath)) {
+                                $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                            }
+                            echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
+                            echo "<div class='card-info'>";
+                            echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
+                            echo "<p>" . htmlspecialchars(ucwords(strtolower($row["dia_chi"]))) . "</p>";
+
+                            echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
+                            echo "</div></div>";
+                            echo '</a>'; // Close the anchor tag
+                        }
+                }
+            }
+
+
+            ?> 
             <?php
                 // Khởi tạo mảng conditions
                 $conditions = [];
