@@ -1,7 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
+session_start();
 include '../connect.php';
+
+$userNameFromDB = 'Khách';
+$userLoggedIn = false;
+
+if (isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+
+    // Truy vấn tên người dùng từ cơ sở dữ liệu
+    $stmt = $conn->prepare("SELECT ten_dang_nhap FROM tai_khoan WHERE id = ?");
+    $stmt->bind_param('i', $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result && $result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        $userNameFromDB = htmlspecialchars($user['ten_dang_nhap']);
+        $userLoggedIn = true;
+    } else {
+        // Xóa session nếu không tìm thấy user
+        session_unset();
+        session_destroy();
+    }
+
+    $stmt->close();
+}
 ?>
 
 <head>
@@ -10,6 +36,7 @@ include '../connect.php';
     <link rel="stylesheet" href="../style/client/Trangchu.css">
     <link rel="stylesheet" href="../style/ThemeColor.css">
     <link rel="stylesheet" href="../style/provinces.css">
+    <link rel="stylesheet" href="../style/navbar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <title>SGTravel - Trang chủ</title>
     <style>
@@ -125,35 +152,83 @@ include '../connect.php';
 </head>
 
 <body class="light-theme">
-    
     <!-- Navbar -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbarCSS = document.createElement('link');
+            navbarCSS.rel = 'stylesheet';
+            navbarCSS.href = '../style/navbar.css';
+            document.head.appendChild(navbarCSS);
+
+            // Đưa tên người dùng vào JavaScript từ PHP
+            const username = "<?php echo $userNameFromDB; ?>"; // Lấy tên người dùng từ PHP
+            const userLoggedIn = "<?php echo $userLoggedIn ? 'true' : 'false'; ?>";
+
+            const navbar1 = `
+<div class="navbar" id="navbar">
+    <div class="nav-container">
+        <a style="text-decoration: none;" href="Trangchu.php"><h2 class="nav-logo"><b>SGTravel</b></h2></a>
+        <div class="searchbox-container">
+            <input type="text" id="searchbox" placeholder="Tìm kiếm" />
+            <box-icon name='search-alt-2' class="icon"></box-icon>
+        </div>
+        <label class="switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider-navbar"></span>
+        </label>
+        <div class="user-container">
+            <?php if ($userLoggedIn): ?>
+                <a href="ChiTietNguoiDung.php" style="text-decoration: none; color: black"><span class="hello-message">Hello, <?php echo $userNameFromDB; ?>!</span></a>
+                <button class="create-btn"><a href="ThemDiaDiem.php" style="text-decoration: none; color: black">Tạo địa điểm</a></button>
+                <button class="login-btn"><a href="Logout.php" style="text-decoration: none; color: black">Đăng Xuất</a></button>
+            <?php else: ?>
+                <button class="signUp-btn"><a href="Signup.php" style="text-decoration: none; color: black">Đăng ký</a></button>
+                <button class="login-btn"><a href="Login.php" style="text-decoration: none; color: black">Đăng nhập</a></button>
+            <?php endif; ?>
+            <box-icon name='bell'></box-icon>
+        </div>
+    </div>
+</div>`;
+            document.body.insertAdjacentHTML('afterbegin', navbar1);
+        });
+    </script>
+
+
     <script src="../javascript/navbar.js"></script>
+
+
     <!-- Swiper for advertisement images -->
     <div class="swiper-container">
         <div class="swiper-wrapper">
-        <?php
-        // Truy vấn để lấy các địa điểm nổi bật
-        $sql = "SELECT id, ten_dia_diem, hinh_anh1, mo_ta FROM dia_diem ORDER BY RAND() LIMIT 5";
-        $result = $conn->query($sql);
+            <?php
+            // Truy vấn để lấy các địa điểm nổi bật
+            $sql = "SELECT id, ten_dia_diem, hinh_anh1, mo_ta FROM dia_diem ORDER BY RAND() LIMIT 5";
+            $result = $conn->query($sql);
 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                // Encode 'ten_dia_diem' for safe use in the URL
-                $idLocation = urlencode($row["id"]);
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    // Encode 'ten_dia_diem' for safe use in the URL
+                    $idLocation = urlencode($row["id"]);
 
-                // Wrap the entire div in an anchor tag
-                echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration: none">';
-                echo '<div class="slide-content">';
-                echo '<img src="../' . htmlspecialchars($row["hinh_anh1"]) . '" alt="' . htmlspecialchars($row["ten_dia_diem"]) . '">';
-                echo '<div class="slide-info">';
-                echo '<h3>' .$row["ten_dia_diem"] . '</h3>';
-                echo '<p>' . $row["mo_ta"] . '</p>';
-                echo '</div>'; // .slide-info
-                echo '</div>'; // .slide-content
-                echo '</a>'; // Close the anchor tag
+                    // Wrap the entire div in an anchor tag
+                    echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration: none">';
+                    echo '<div class="slide-content">';
+                    $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+                    $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+                    // Check if the image exists
+                    if (!file_exists($imagePath)) {
+                        $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                    }
+                    echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
+                    echo '<div class="slide-info">';
+                    echo '<h3>' . $row["ten_dia_diem"] . '</h3>';
+                    echo '<p>' . $row["mo_ta"] . '</p>';
+                    echo '</div>'; // .slide-info
+                    echo '</div>'; // .slide-content
+                    echo '</a>'; // Close the anchor tag
+                }
             }
-        }
-        ?>
+            ?>
 
         </div>
         <!-- Slider buttons -->
@@ -235,57 +310,56 @@ include '../connect.php';
                 // Khởi tạo mảng conditions
                 $conditions = [];
 
-                    // Kiểm tra và thêm điều kiện cho district
-                    if (isset($_GET['district']) && !empty($_GET['district'])) {
-                        $district = $conn->real_escape_string($_GET['district']);
-                        $district_conditions = array_filter(explode(' ', $district), function ($word) {
-                            return strlen($word) > 1;
-                        });
-                        if (!empty($district_conditions)) {
-                            $conditions[] = "(" . implode(" AND ", array_map(function ($word) {
-                                return "LOWER(dia_chi) LIKE LOWER('%$word%')";
-                            }, $district_conditions)) . ")";
-                        }
+                // Kiểm tra và thêm điều kiện cho district
+                if (isset($_GET['district']) && !empty($_GET['district'])) {
+                    $district = $conn->real_escape_string($_GET['district']);
+                    $district_conditions = array_filter(explode(' ', $district), function ($word) {
+                        return strlen($word) > 1;
+                    });
+                    if (!empty($district_conditions)) {
+                        $conditions[] = "(" . implode(" AND ", array_map(function ($word) {
+                            return "LOWER(dia_chi) LIKE LOWER('%$word%')";
+                        }, $district_conditions)) . ")";
                     }
+                }
 
-                    // Kiểm tra và thêm điều kiện cho province
-                    if (isset($_GET['province']) && !empty($_GET['province'])) {
-                        $province = $conn->real_escape_string($_GET['province']);
-                        $conditions[] = "LOWER(dia_chi) LIKE LOWER('%" . strtolower($province) . "%')";
+                // Kiểm tra và thêm điều kiện cho province
+                if (isset($_GET['province']) && !empty($_GET['province'])) {
+                    $province = $conn->real_escape_string($_GET['province']);
+                    $conditions[] = "LOWER(dia_chi) LIKE LOWER('%" . strtolower($province) . "%')";
+                }
+
+                // Kiểm tra và thêm điều kiện cho category
+                if (isset($_GET['category']) && !empty($_GET['category'])) {
+                    $category = $conn->real_escape_string($_GET['category']);
+                    $category_conditions = array_filter(explode(' ', $category), function ($word) {
+                        return strlen($word) > 1;
+                    });
+                    if (!empty($category_conditions)) {
+                        $conditions[] = "(" . implode(" AND ", array_map(function ($word) {
+                            return "LOWER(loai_hinh) LIKE LOWER('%$word%')";
+                        }, $category_conditions)) . ")";
                     }
+                }
 
-                    // Kiểm tra và thêm điều kiện cho category
-                    if (isset($_GET['category']) && !empty($_GET['category'])) {
-                        $category = $conn->real_escape_string($_GET['category']);
-                        $category_conditions = array_filter(explode(' ', $category), function ($word) {
-                            return strlen($word) > 1;
-                        });
-                        if (!empty($category_conditions)) {
-                            $conditions[] = "(" . implode(" AND ", array_map(function ($word) {
-                                return "LOWER(loai_hinh) LIKE LOWER('%$word%')";
-                            }, $category_conditions)) . ")";
-                        }
-                    }
+                // Xây dựng phần WHERE của câu truy vấn
+                $where_clause = !empty($conditions) ? " WHERE " . implode(" AND ", $conditions) : "";
 
-                    // Xây dựng phần WHERE của câu truy vấn
-                    $where_clause = !empty($conditions) ? " WHERE " . implode(" AND ", $conditions) : "";
+                // Đếm tổng số bản ghi phù hợp với điều kiện
+                $sql_count = "SELECT COUNT(*) AS total FROM dia_diem" . $where_clause;
+                $result_count = $conn->query($sql_count);
+                $tdd = $result_count->fetch_assoc()['total'];
 
-                    // Đếm tổng số bản ghi phù hợp với điều kiện
-                    $sql_count = "SELECT COUNT(*) AS total FROM dia_diem" . $where_clause;
-                    $result_count = $conn->query($sql_count);
-                    $tdd = $result_count->fetch_assoc()['total'];
-
-                    // Thiết lập phân trang
-                    $sd = 20; // Số dòng mỗi trang
-                    $tst = ceil($tdd / $sd); // Tổng số trang
-                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                    $vt = ($page - 1) * $sd;
-                if (isset($_GET["tendiadiem"])){
+                // Thiết lập phân trang
+                $sd = 20; // Số dòng mỗi trang
+                $tst = ceil($tdd / $sd); // Tổng số trang
+                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                $vt = ($page - 1) * $sd;
+                if (isset($_GET["tendiadiem"])) {
                     $LocationByName = $_GET["tendiadiem"];
                     // Truy vấn để lấy các địa điểm nổi bật
                     $sql = "SELECT * FROM dia_diem WHERE ten_dia_diem LIKE '%$LocationByName%' or dia_chi LIKE '%$LocationByName%' or so_dien_thoai LIKE '%$LocationByName%' or mo_ta LIKE '%$LocationByName%' or loai_hinh LIKE '%$LocationByName%'  or gia_ca_giao_dong LIKE '%$LocationByName%' ";
-                }
-                else{
+                } else {
                     // Truy vấn chính với điều kiện lọc và phân trang
                     $sql = "SELECT * FROM dia_diem" . $where_clause . " LIMIT $vt, $sd";
                 }
@@ -297,7 +371,12 @@ include '../connect.php';
                         echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
                         echo "<div class='card'>";
                         $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
-                        echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
+                        $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+                        // Check if the image exists
+                        if (!file_exists($imagePath)) {
+                            $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                        }
+                        echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
                         echo "<div class='card-info'>";
                         echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
                         echo "<p>" . htmlspecialchars($row["dia_chi"]) . "</p>";
@@ -438,17 +517,17 @@ include '../connect.php';
     </script>
     <div class="trang">
         <?php if ($page > 1) { ?>
-            <a href="Trangchu1.php?page=<?php echo $page - 1; ?>">Trang trước</a>
+            <a href="Trangchu.php?page=<?php echo $page - 1; ?>">Trang trước</a>
         <?php } ?>
 
         <?php for ($i = 1; $i <= $tst; $i++) { ?>
-            <a href="Trangchu1.php?page=<?php echo $i; ?>" <?php if ($page == $i) echo 'class="active"'; ?>>
+            <a href="Trangchu.php?page=<?php echo $i; ?>" <?php if ($page == $i) echo 'class="active"'; ?>>
                 <?php echo $i; ?>
             </a>
         <?php } ?>
 
         <?php if ($page < $tst) { ?>
-            <a href="Trangchu1.php?page=<?php echo $page + 1; ?>">Trang sau</a>
+            <a href="Trangchu.php?page=<?php echo $page + 1; ?>">Trang sau</a>
         <?php } ?>
     </div>
 </body>
