@@ -27,11 +27,18 @@ include '../connect.php'
                 $rowDiaDiem = $result1->fetch_assoc();
             ?>
         <!-- Navbar -->
-        <script src="../javascript/navbar.js"></script>
+        <?php require '../javascript/navbar.php'; ?>  
             <section class="place-details">
                 <div class="place-header">
                 <?php
-                echo '<img src="../' . htmlspecialchars($rowDiaDiem["hinh_anh1"]) . '" alt="' . htmlspecialchars($rowDiaDiem["ten_dia_diem"]) . '" class="main-image">';
+                $imagePath = "../" . htmlspecialchars($rowDiaDiem["hinh_anh1"]);
+                $defaultImagePath = "../images/locations/" . htmlspecialchars($rowDiaDiem["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                // Check if the image exists
+                if (!file_exists($imagePath)) {
+                    $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                }
+                echo "<img src='$imagePath' alt='" . htmlspecialchars($rowDiaDiem["ten_dia_diem"]) . "'><br>";
                 ?>
                 <div class="place-info">
                     <?php
@@ -68,16 +75,16 @@ include '../connect.php'
                                 $tongdiem += $diemtrungbinh;
                                 $i++;
                             }
-                            $diemtrungbinhPV/=$i;
-                            $diemtrungbinhKG/=$i;
-                            $diemtrungbinhCL/=$i;
-                            $diemtrungbinhGC/=$i;
                             // Avoid division by zero
                             if ($i > 0) {
+                                $diemtrungbinhPV/=$i;
+                                $diemtrungbinhKG/=$i;
+                                $diemtrungbinhCL/=$i;
+                                $diemtrungbinhGC/=$i;
                                 $tongdiem /= $i; // Calculate the overall average score
                                 echo "$tongdiem";
                             } else {
-                                echo "No infor";
+                                echo "?";
                             }
                             ?>
 
@@ -124,6 +131,7 @@ include '../connect.php'
             </div>
             <div class="image-gallery">
                 <h3>Hình ảnh của quán</h3>
+
                 <div class="images">
                     <img src="..<?php echo $rowDiaDiem['hinh_anh1']; ?>">
                     <img src="..<?php echo $rowDiaDiem['hinh_anh2']; ?>">

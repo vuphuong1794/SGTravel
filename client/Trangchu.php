@@ -122,13 +122,14 @@ include '../connect.php';
             background: white;
         }
     </style>
-</head>
+</head>`
 
 <body class="light-theme">
     
     <!-- Navbar -->
-    <script src="../javascript/navbar.js"></script>
-    <!-- -----------------------------------------------------------------SWIPE SLIDE------------------------------------------------------------------->
+
+    <?php require '../javascript/navbar.php'; ?>  
+        <!-- -----------------------------------------------------------------SWIPE SLIDE------------------------------------------------------------------->
     <div class="swiper-container">
         <div class="swiper-wrapper">
         <?php
@@ -312,7 +313,13 @@ include '../connect.php';
                         echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
                         echo "<div class='card'>";
                         $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
-                        echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
+                        $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                        // Check if the image exists
+                        if (!file_exists($imagePath)) {
+                            $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                        }
+                        echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
                         echo "<div class='card-info'>";
                         echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
                         echo "<p>" . htmlspecialchars(ucwords(strtolower($row["dia_chi"]))) . "</p>";
@@ -396,7 +403,13 @@ include '../connect.php';
                         echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
                         echo "<div class='card'>";
                         $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
-                        echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
+                        $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                        // Check if the image exists
+                        if (!file_exists($imagePath)) {
+                            $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                        }
+                        echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
                         echo "<div class='card-info'>";
                         echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
                         echo "<p>" . htmlspecialchars($row["dia_chi"]) . "</p>";
