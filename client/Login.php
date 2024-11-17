@@ -66,7 +66,7 @@ function redirectBasedOnRole($role)
 {
     switch ($role) {
         case 2: // Người dùng
-            header("Location: Trangchu1.php");
+            header("Location: Trangchu.php");
             break;
         case 1: // Quản trị viên
             header("Location: ../admin/Dashboard.php");

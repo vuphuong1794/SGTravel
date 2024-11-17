@@ -144,7 +144,7 @@ if (isset($_SESSION['user_id'])) {
     </style>
 </head>
 <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function() {
+        ydocument.addEventListener('DOMContentLoaded', function() {
         const navbarCSS = document.createElement('link');
         navbarCSS.rel = 'stylesheet';
         navbarCSS.href = '../style/navbar.css';
@@ -168,10 +168,7 @@ if (isset($_SESSION['user_id'])) {
                     </label>
                     
                     <div class="user-container">
-                        <span class="hello-message">Hello, ${username}!</span>
-                        ${userLoggedIn === 'true' ? `<button class="create-btn"><a href="ThemDiaDiem.php" style="text-decoration: none; color: black">Tạo địa điểm</a></button>` : ''}
-                        <button class="login-btn"><a href="Logout.php" style="text-decoration: none; color: black">Đăng Xuất</a></button>
-                        <box-icon name='bell'></box-icon>
+
                     </div>
                 </div>
             </div>
@@ -196,7 +193,14 @@ if (isset($_SESSION['user_id'])) {
                 while ($row = $result->fetch_assoc()) {
                     echo '<div class="swiper-slide">';
                     echo '<div class="slide-content">';
-                    echo '<img src="../' . htmlspecialchars($row["hinh_anh1"]) . '" alt="' . htmlspecialchars($row["ten_dia_diem"]) . '">';
+                    $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+                        $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                        // Check if the image exists
+                        if (!file_exists($imagePath)) {
+                            $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                        }
+                        echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
                     echo '<div class="slide-info">';
                     echo '<h3>' . htmlspecialchars($row["ten_dia_diem"]) . '</h3>';
                     echo '<p>' . htmlspecialchars($row["mo_ta"]) . '</p>';
@@ -340,7 +344,13 @@ if (isset($_SESSION['user_id'])) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<div class='card'>";
                         $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
-                        echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'>";
+                        $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                        // Check if the image exists
+                        if (!file_exists($imagePath)) {
+                            $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                        }
+                        echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
                         echo "<div class='card-info'>";
                         echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
                         echo "<p>" . htmlspecialchars($row["dia_chi"]) . "</p>";
