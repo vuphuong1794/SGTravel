@@ -1,0 +1,97 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.profile-container {
+    margin: 20px auto;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    display: flex;
+    padding: 20px;
+
+}
+
+.profile-block-1 {
+    width: 30%;
+    padding-right: 50px ;
+}
+
+.profile-block-2{
+    width: 70%;
+}
+.profile-sidebar {
+    width: 25%;
+    background-color: #fafafa;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+}
+
+.profile-sidebar h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.profile-sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.profile-sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.profile-sidebar ul li a {
+    text-decoration: none;
+    color: #666;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.profile-sidebar ul li a.active, 
+.profile-sidebar ul li a:hover {
+    background-color: #f56c6c;
+    color: #fff;
+}
+
+.profile-content h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.profile-details p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.profile-details .edit-button, 
+.profile-details .delete-button {
+    display: inline-block;
+    margin-right: 10px;
+    margin-top: 10px;
+    padding: 8px 15px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #4de275;
+    border-radius: 5px;
+}
+
+.profile-details .edit-button:hover, 
+.profile-details .delete-button:hover {
+    background-color: #68ff90;
+}
+
+.places-list {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fafafa;
+}
