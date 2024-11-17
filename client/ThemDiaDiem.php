@@ -201,7 +201,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <div class="nav-container">
-        <a href="Trangchu1.php" style="text-decoration: none; color: black">
+        <a href="Trangchu.php" style="text-decoration: none; color: black">
             <h2 class="nav-logo"><b>SGTravel</b></h2>
         </a>
         <div class="nav-right">

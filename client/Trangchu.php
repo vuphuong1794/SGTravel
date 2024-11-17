@@ -122,7 +122,7 @@ include '../connect.php';
             background: white;
         }
     </style>
-</head>`
+</head>
 
 <body class="light-theme">
     
@@ -222,7 +222,7 @@ include '../connect.php';
                     <ul><input type="text" id="searchboxDiaDiem" placeholder="Địa điểm" /></ul>
                     <ul><input type="text" id="searchboxGiaCa" placeholder="Phân khúc giá" /></ul>
                     <ul><input type="text" id="searchboxLoaiHinh" placeholder="Loại hình" /></ul>
-                    <ul><box-icon name='search-alt-2' class="icon" id="suggest" onclick="Trangchu.php"></box-icon></ul>  
+                    <div style="margin:10px"><box-icon name='search-alt-2' class="icon" id="suggest" onclick="Trangchu.php"></box-icon></div>  
                 </div>
             </div>
             <script>
@@ -236,7 +236,7 @@ include '../connect.php';
                         const params = new URLSearchParams();
                         if (searchQueryDD){params.append('diachi', searchQueryDD);}
                         if (searchQueryGC){params.append('gc', searchQueryGC);}
-                        if (searchQueryLH){params.append('lh', searchQueryCL);}
+                        if (searchQueryLH){params.append('lh', searchQueryLH);}
 
                         window.location.href = `Trangchu.php?${params.toString()}`;
                     } else {

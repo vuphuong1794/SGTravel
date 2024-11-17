@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <h2 class="nav-logo" onclick="window.location.href='Trangchu.php'"><b>SGTravel</b></h2>  
                 <div class="searchbox-container">  
                     <input type="text" id="searchbox" placeholder="Tìm kiếm" />  
-                    <box-icon name='search-alt-2' class="icon" id="search-icon"></box-icon>  
+                    <box-icon name='search-alt-2' class="icon" id="search-icon" style="margin:8px"></box-icon>  
                 </div>  
                 <label class="switch">  
                     <input type="checkbox" id="theme-toggle">  
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <button class="signUp-btn"><a href="Signup.php" style="text-decoration: none; color: black">Đăng ký</a></button>  
                         <button class="login-btn"><a href="Login.php" style="text-decoration: none; color: black">Đăng nhập</a></button>  
                     `}  
-                    <a href="UserProfile.php" style="text-decoration: none"><box-icon type='solid' name='user'></box-icon></a>
+                    <a href="UserProfile.php" style="text-decoration: none; margin-left:30px; margin-right:10px   "><box-icon type='solid' name='user'></box-icon></a>
                 </div>  
             </div>  
         </div>  

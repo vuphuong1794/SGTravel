@@ -51,7 +51,6 @@ if ($user_result && $user_result->num_rows > 0) {
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            padding: 30px;
             background-color: #f8f9fa;
             color: #333;
         }
@@ -269,11 +268,11 @@ if ($user_result && $user_result->num_rows > 0) {
 </head>
 
 <body>
+<?php require '../javascript/navbar.php'; ?>  
     <div class="container">
         <div class="header">
-            <a href="Trangchu1.php"><box-icon name='arrow-back'></box-icon></a>
-            <h1>Địa điểm của bạn</h1>
-            <p>Quản lý các địa điểm bạn đã tạo</p>
+            <a href="Trangchu.php"><box-icon name='arrow-back'></box-icon></a>
+            <h1>Thông tin tài khoản của bạn</h1>
         </div>
 
         <a href="ThemDiaDiem.php">
