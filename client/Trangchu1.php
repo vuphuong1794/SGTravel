@@ -237,8 +237,7 @@ if (isset($_SESSION['user_id'])) {
     <div class="content">
         <div class="filter-bar">
             <div class="filter-group-left">
-                <button>Mới nhất</button>
-                <button>Gần tôi</button>
+                <button onclick="showNews()">Mới nhất</button>
                 <button onclick="showFavorites()">Đã lưu</button>
             </div>
             <div class="filter-group-right">
@@ -477,6 +476,15 @@ if (isset($_SESSION['user_id'])) {
                     .catch(error => console.error('Lỗi:', error));
             }
         }
+        // hàm hiển thich mới nhất
+        function showNews() {
+            fetch('show_news.php') // favorite.php hiển thị địa điểm yêu thích
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
+                })
+                .catch(error => console.error('Lỗi:', error));
+        }
     </script>
 
     <script>
@@ -502,6 +510,7 @@ if (isset($_SESSION['user_id'])) {
             });
         }
     </script>
+    
     <div class="trang">
         <?php if ($page > 1) { ?>
             <a href="Trangchu1.php?page=<?php echo $page - 1; ?>">Trang trước</a>
@@ -518,5 +527,4 @@ if (isset($_SESSION['user_id'])) {
         <?php } ?>
     </div>
 </body>
-
 </html>

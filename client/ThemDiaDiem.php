@@ -2,6 +2,21 @@
 session_start();
 include '../connect.php';
 
+<<<<<<< HEAD
+include '../connect.php';
+
+// Set default username
+$userNameFromDB = 'Khách';
+
+if (isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+    $query = "SELECT ten_dang_nhap FROM tai_khoan WHERE id = '$userId'";
+    $result = mysqli_query($conn, $query);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $user = mysqli_fetch_assoc($result);
+        $userNameFromDB = $user['ten_dang_nhap'];
+=======
 $userNameFromDB = isset($_SESSION['user_id']) ? 
     ($conn->query("SELECT ten_dang_nhap FROM tai_khoan WHERE id = '{$_SESSION['user_id']}'")->fetch_assoc()['ten_dang_nhap'] ?? 'Khách') 
     : 'Khách';
@@ -13,6 +28,7 @@ function checkAndCreateImageColumns($conn)
     $existing_columns = [];
     while ($row = $result->fetch_assoc()) {
         $existing_columns[] = $row['Field'];
+>>>>>>> 7d274339fb8c57466f3e9ee168671ada618f81ad
     }
 
     $highest_number = 0;

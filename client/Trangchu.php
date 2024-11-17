@@ -182,8 +182,7 @@ include '../connect.php';
     <div class="content">
         <div class="filter-bar">
             <div class="filter-group-left">
-                <button>Mới nhất</button>
-                <button>Gần tôi</button>
+                <button onclick="showNews()">Mới nhất</button>
                 <button onclick="showFavorites()">Đã lưu</button>
             </div>
             <div class="filter-group-right">
@@ -615,6 +614,15 @@ $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, d
             }
 
             fetch('favorite.php') // Tạo một tệp PHP để truy vấn và hiển thị địa điểm yêu thích
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
+                })
+                .catch(error => console.error('Lỗi:', error));
+        }
+        // hàm hiển thich mới nhất
+        function showNews() {
+            fetch('show_news.php') // favorite.php hiển thị địa điểm yêu thích
                 .then(response => response.text())
                 .then(data => {
                     document.querySelector('#locationGrid').innerHTML = data; // Cập nhật danh sách địa điểm
