@@ -244,8 +244,7 @@ include '../connect.php';
                     }
                 });
             </script>
-
-            
+           
             
             <div class="grid-container" id=locationGrid>
             <?php
@@ -302,11 +301,11 @@ include '../connect.php';
                             WHERE dd.loai_hinh = 'Ăn uống' AND $condition
                             GROUP BY dd.id
                             ORDER BY diem_trung_binh_cong DESC
-                            LIMIT 5";
+                            LIMIT 4";
 
                     // Thực thi truy vấn (giả sử kết nối với cơ sở dữ liệu đã được thiết lập)
                     $result = mysqli_query($conn, $sql);
-                    echo '<h2>Ăn uống</h2>';
+                    //echo '<h2>Ăn uống</h2>';
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
                             $idLocation = urlencode($row["id"]);
@@ -329,21 +328,18 @@ include '../connect.php';
                             echo '</a>'; // Close the anchor tag
                         }
                     } 
-                    else {
-                        echo "Không tìm thấy";
-                        echo $condition;
-                    }
+
                     $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, dd.loai_hinh, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
                             FROM dia_diem dd
                             JOIN danh_gia dg ON dd.id = dg.id_dia_diem
                             WHERE dd.loai_hinh = 'ngủ nghỉ' AND $condition
                             GROUP BY dd.id
                             ORDER BY diem_trung_binh_cong DESC
-                            LIMIT 5";
+                            LIMIT 4";
 
                     // Thực thi truy vấn (giả sử kết nối với cơ sở dữ liệu đã được thiết lập)
                     $result = mysqli_query($conn, $sql);
-                    echo '<h2>Ngủ nghỉ</h2>';
+                    //echo '<h2>Ngủ nghỉ</h2>';
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
                             $idLocation = urlencode($row["id"]);
@@ -366,20 +362,17 @@ include '../connect.php';
                             echo '</a>'; // Close the anchor tag
                         }
                     } 
-                    else {
-                        echo "Không tìm thấy";
-                        echo $condition;
-                    }$sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, dd.loai_hinh, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
+$sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, dd.loai_hinh, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
                     FROM dia_diem dd
                     JOIN danh_gia dg ON dd.id = dg.id_dia_diem
                     WHERE dd.loai_hinh = 'Du lịch' AND $condition
                     GROUP BY dd.id
                     ORDER BY diem_trung_binh_cong DESC
-                    LIMIT 5";
+                    LIMIT 4";
 
                     // Thực thi truy vấn (giả sử kết nối với cơ sở dữ liệu đã được thiết lập)
                     $result = mysqli_query($conn, $sql);
-                    echo '<h2>Vui chơi</h2>';
+                    //echo '<h2>Vui chơi</h2>';
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
                             $idLocation = urlencode($row["id"]);
@@ -402,10 +395,6 @@ include '../connect.php';
                             echo '</a>'; // Close the anchor tag
                         }
                     } 
-                    else {
-                        echo "Không tìm thấy";
-                        echo $condition;
-                    }
                 }
                 else{                
                     // Truy vấn để lấy 5 địa điểm có điểm trung bình cao nhất
@@ -415,9 +404,9 @@ include '../connect.php';
                             WHERE $condition
                             GROUP BY dd.id
                             ORDER BY diem_trung_binh_cong DESC
-                            LIMIT 5";
+                            LIMIT 4";
                     $result = mysqli_query($conn, $sql);
-                    echo '<h2>Gợi ý cho bạn</h2>';
+                    //echo '<h2>Gợi ý cho bạn</h2>';
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
                             $idLocation = urlencode($row["id"]);
