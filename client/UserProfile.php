@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Lấy danh sách địa điểm của người dùng
-$sql = "SELECT * FROM dia_diem WHERE nguoi_tao_id = $user_id";
+$sql = "SELECT * FROM dia_diem WHERE id_nguoi_dang = $user_id";
 $result = $conn->query($sql);
 
 // Lấy thông tin người dùng
@@ -51,6 +51,7 @@ if ($user_result && $user_result->num_rows > 0) {
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
+            padding: 30px;
             background-color: #f8f9fa;
             color: #333;
         }
@@ -268,11 +269,11 @@ if ($user_result && $user_result->num_rows > 0) {
 </head>
 
 <body>
-<?php require '../javascript/navbar.php'; ?>  
     <div class="container">
         <div class="header">
             <a href="Trangchu.php"><box-icon name='arrow-back'></box-icon></a>
-            <h1>Thông tin tài khoản của bạn</h1>
+            <h1>Địa điểm của bạn</h1>
+            <p>Quản lý các địa điểm bạn đã tạo</p>
         </div>
 
         <a href="ThemDiaDiem.php">
@@ -280,10 +281,10 @@ if ($user_result && $user_result->num_rows > 0) {
                 <i class="fas fa-plus"></i> Thêm địa điểm mới
             </button>
         </a>
-        <div class="user-info">     
+        <div class="user-info">
             <p>Chào, <strong><?php echo htmlspecialchars($user_name); ?></strong></p>
             <p>Email: <strong><?php echo htmlspecialchars($user_email); ?></strong></p>
-            <p>SĐT: <strong><?php echo htmlspecialchars($user_sdt);?></strong></p>
+            <p>SĐT: <strong><?php echo htmlspecialchars($user_sdt); ?></strong></p>
             <a href="EditUser.php?id=<?php echo $user_id; ?>" class="edit-button">Sửa thông tin</a>
             <a href="DeleteUser.php?id=<?php echo $user_id; ?>" class="delete-button" onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản không?')">Xóa tài khoản</>
         </div>
@@ -369,24 +370,33 @@ if ($user_result && $user_result->num_rows > 0) {
 
         function confirmDelete(id) {
             if (confirm('Bạn có chắc chắn muốn xóa địa điểm này?')) {
-                fetch('delete_place.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            id: id
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            document.getElementById('place-' + id).remove();
-                            toastr.success('Xóa địa điểm thành công');
-                        } else {
-                            toastr.error('Có lỗi xảy ra');
-                        }
-                    });
+                // Kiểm tra nếu có `id` được truyền vào qua URL
+                <?php
+                include "../connect.php";
+                if (isset($_GET['id'])) {
+                    $id = intval($_GET['id']);
+
+                    // Thực hiện câu lệnh DELETE để xóa địa điểm
+                    $sql = "DELETE FROM dia_diem WHERE id = ?";
+                    $stmt = $conn -> prepare($sql);
+                    $stmt -> bind_param("i", $id);
+
+                    if ($stmt -> execute()) {
+                        echo "Xóa địa điểm thành công.";
+                    } else {
+                        echo "Lỗi khi xóa địa điểm: ".$conn -> error;
+                    }
+
+                    $stmt -> close();
+                    $conn -> close();
+
+                    // Chuyển hướng về trang quản lý địa điểm sau khi xóa
+                    header("Location: UserProfile.php");
+                    exit;
+                } else {
+                    echo "ID địa điểm không hợp lệ.";
+                }
+                ?>
             }
         }
 

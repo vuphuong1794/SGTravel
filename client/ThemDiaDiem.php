@@ -2,25 +2,9 @@
 session_start();
 include '../connect.php';
 
-<<<<<<< HEAD
-include '../connect.php';
-
-// Set default username
-$userNameFromDB = 'Khách';
-
-if (isset($_SESSION['user_id'])) {
-    $userId = $_SESSION['user_id'];
-    $query = "SELECT ten_dang_nhap FROM tai_khoan WHERE id = '$userId'";
-    $result = mysqli_query($conn, $query);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        $user = mysqli_fetch_assoc($result);
-        $userNameFromDB = $user['ten_dang_nhap'];
-=======
 $userNameFromDB = isset($_SESSION['user_id']) ? 
     ($conn->query("SELECT ten_dang_nhap FROM tai_khoan WHERE id = '{$_SESSION['user_id']}'")->fetch_assoc()['ten_dang_nhap'] ?? 'Khách') 
     : 'Khách';
-
 // Kiểm tra và tạo các cột ảnh mới nếu cần
 function checkAndCreateImageColumns($conn)
 {
@@ -28,7 +12,6 @@ function checkAndCreateImageColumns($conn)
     $existing_columns = [];
     while ($row = $result->fetch_assoc()) {
         $existing_columns[] = $row['Field'];
->>>>>>> 7d274339fb8c57466f3e9ee168671ada618f81ad
     }
 
     $highest_number = 0;
@@ -62,7 +45,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $gio_mo_cua = $_POST['gio_mo_cua'];
     $gio_dong_cua = $_POST['gio_dong_cua'];
     $loai_hinh = $_POST['loai_hinh'];
-    $nguoi_tao_id = $_SESSION['user_id'] ?? null;
+    $nguoi_tao_id = $_SESSION['user_id']; // Check if this value is correct
+    echo "User ID being inserted: " . $nguoi_tao_id;
+
+    $sqlCheckUser = "SELECT id FROM tai_khoan WHERE id = '$nguoi_tao_id'";
+    $result = $conn->query($sqlCheckUser);
+    if ($result->num_rows === 0) {
+        echo "Error: User ID does not exist in tai_khoan table.";
+        exit;
+    }
+
 
     // Xử lý upload ảnh
     $image_columns = "";
@@ -126,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         link_dia_diem,
         diem_trung_binh,
         so_luot_danh_gia,
-        nguoi_tao_id
+        id_nguoi_dang
         $image_columns
     ) VALUES (
         '$ten_dia_diem',

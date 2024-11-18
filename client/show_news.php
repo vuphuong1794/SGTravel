@@ -4,7 +4,7 @@ include '../connect.php';
 // Lọc theo ngày gần nhất
 $sql = "SELECT id, ten_dia_diem, dia_chi, hinh_anh1 
         FROM dia_diem 
-        ORDER BY ngay_tao DESC 
+        ORDER BY ngay_dang DESC 
         LIMIT 20";
 $result = $conn->query($sql);
 

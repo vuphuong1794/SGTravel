@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         UPDATE tai_khoan 
         SET ten_dang_nhap = '$ten_dang_nhap', email = '$email', so_dien_thoai = '$so_dien_thoai' 
         WHERE id = '$user_id'";
-    
+
     if (mysqli_query($conn, $update_query)) {
         echo "Cập nhật thông tin thành công!";
         header('Location: UserProfile.php'); // Quay về trang thông tin cá nhân
@@ -40,15 +40,98 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chỉnh Sửa Thông Tin</title>
-    <link rel="stylesheet" href="../style/client/editUser.css">
+    <style>
+        /* General reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Profile container styling */
+        .profile-container-edit {
+            width: 50%;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Heading styling */
+        h2 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-spacing: 15px;
+        }
+
+        table td {
+            padding: 8px;
+        }
+
+        table label {
+            font-size: 16px;
+            color: #555;
+        }
+
+        table input {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Button styling */
+        .button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .profile-container-edit {
+                width: 90%;
+            }
+        }
+    </style>
 </head>
+
 <body>
     <!-- Navbar -->
-    <script src="../javascript/navbar.js"></script> 
+    <script src="../javascript/navbar.js"></script>
     <div class="profile-container-edit">
         <h2>Chỉnh Sửa Thông Tin</h2>
         <form action="EditUser.php" method="POST">
@@ -65,10 +148,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <td><label for="so_dien_thoai">Số điện thoại:</label></td>
                     <td><input type="text" id="so_dien_thoai" name="so_dien_thoai" value="<?php echo htmlspecialchars($user_info['so_dien_thoai']); ?>"></td>
                 </tr>
-                
+
             </table>
             <button type="submit" class="button">Cập nhật</button>
         </form>
     </div>
 </body>
+
 </html>

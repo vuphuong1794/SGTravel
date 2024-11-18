@@ -249,193 +249,11 @@ include '../connect.php';
             <?php
                 // Kiểm tra và tạo điều kiện tìm kiếm dựa trên tham số GET
                 $conditionParts = [];
-
-                // Check for 'diachi' parameter
-                if (isset($_GET["diachi"])) {
-                    $searchbyDD = mysqli_real_escape_string($conn, $_GET["diachi"]);
-                    $conditionParts[] = "(dia_chi LIKE '%$searchbyDD%')";
-                }
-                // Check for 'gc' parameter
-                if (isset($_GET["gc"])) {
-                    $searchbyGC = mysqli_real_escape_string($conn, $_GET["gc"]);
-                    
-                    // Split search string into words
-                    $searchWordsGC = explode(' ', $searchbyGC);
-                    
-                    // Initialize conditions for each word in 'gc'
-                    $wordConditionsGC = [];
-                    foreach ($searchWordsGC as $word) {
-                        $wordConditionsGC[] = "gia_ca_giao_dong LIKE '%$word%'";
-                    }
-                    
-                    // Combine conditions for 'gc' with OR
-                    $conditionParts[] = '(' . implode(' OR ', $wordConditionsGC) . ')';
-                }
-
-                // Check for 'lh' parameter
-                if (isset($_GET["lh"])) {
-                    $searchbyLH = mysqli_real_escape_string($conn, $_GET["lh"]);
-                    
-                    // Split search string into words
-                    $searchWordsLH = explode(' ', $searchbyLH);
-                    
-                    // Initialize conditions for each word in 'lh'
-                    $wordConditionsLH = [];
-                    foreach ($searchWordsLH as $word) {
-                        $wordConditionsLH[] = "loai_hinh LIKE '%$word%'";
-                    }
-                    
-                    // Combine conditions for 'lh' with OR
-                    $conditionParts[] = '(' . implode(' OR ', $wordConditionsLH) . ')';
-                }
-
-
-                // Nếu không có điều kiện nào được thêm, đặt điều kiện mặc định
-                $condition = count($conditionParts) > 0 ? implode(' AND ', $conditionParts) : "1=1";
-                
-                if (!isset($_GET["lh"])) {
-                    $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, dd.loai_hinh, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
-                            FROM dia_diem dd
-                            JOIN danh_gia dg ON dd.id = dg.id_dia_diem
-                            WHERE dd.loai_hinh = 'Ăn uống' AND $condition
-                            GROUP BY dd.id
-                            ORDER BY diem_trung_binh_cong DESC
-                            LIMIT 4";
-
-                    // Thực thi truy vấn (giả sử kết nối với cơ sở dữ liệu đã được thiết lập)
-                    $result = mysqli_query($conn, $sql);
-                    //echo '<h2>Ăn uống</h2>';
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $idLocation = urlencode($row["id"]);
-                            echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
-                            echo "<div class='card'>";
-                            $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
-                            $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
-
-                            // Check if the image exists
-                            if (!file_exists($imagePath)) {
-                                $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
-                            }
-                            echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
-                            echo "<div class='card-info'>";
-                            echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
-                            echo "<p>" . htmlspecialchars(ucwords(strtolower($row["dia_chi"]))) . "</p>";
-
-                            echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
-                            echo "</div></div>";
-                            echo '</a>'; // Close the anchor tag
-                        }
-                    } 
-
-                    $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, dd.loai_hinh, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
-                            FROM dia_diem dd
-                            JOIN danh_gia dg ON dd.id = dg.id_dia_diem
-                            WHERE dd.loai_hinh = 'ngủ nghỉ' AND $condition
-                            GROUP BY dd.id
-                            ORDER BY diem_trung_binh_cong DESC
-                            LIMIT 4";
-
-                    // Thực thi truy vấn (giả sử kết nối với cơ sở dữ liệu đã được thiết lập)
-                    $result = mysqli_query($conn, $sql);
-                    //echo '<h2>Ngủ nghỉ</h2>';
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $idLocation = urlencode($row["id"]);
-                            echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
-                            echo "<div class='card'>";
-                            $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
-                            $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
-
-                            // Check if the image exists
-                            if (!file_exists($imagePath)) {
-                                $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
-                            }
-                            echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
-                            echo "<div class='card-info'>";
-                            echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
-                            echo "<p>" . htmlspecialchars(ucwords(strtolower($row["dia_chi"]))) . "</p>";
-
-                            echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
-                            echo "</div></div>";
-                            echo '</a>'; // Close the anchor tag
-                        }
-                    } 
-$sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, dd.loai_hinh, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
-                    FROM dia_diem dd
-                    JOIN danh_gia dg ON dd.id = dg.id_dia_diem
-                    WHERE dd.loai_hinh = 'Du lịch' AND $condition
-                    GROUP BY dd.id
-                    ORDER BY diem_trung_binh_cong DESC
-                    LIMIT 4";
-
-                    // Thực thi truy vấn (giả sử kết nối với cơ sở dữ liệu đã được thiết lập)
-                    $result = mysqli_query($conn, $sql);
-                    //echo '<h2>Vui chơi</h2>';
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $idLocation = urlencode($row["id"]);
-                            echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
-                            echo "<div class='card'>";
-                            $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
-                            $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
-
-                            // Check if the image exists
-                            if (!file_exists($imagePath)) {
-                                $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
-                            }
-                            echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
-                            echo "<div class='card-info'>";
-                            echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
-                            echo "<p>" . htmlspecialchars(ucwords(strtolower($row["dia_chi"]))) . "</p>";
-
-                            echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
-                            echo "</div></div>";
-                            echo '</a>'; // Close the anchor tag
-                        }
-                    } 
-                }
-                else{                
-                    // Truy vấn để lấy 5 địa điểm có điểm trung bình cao nhất
-                    $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
-                            FROM dia_diem dd
-                            JOIN danh_gia dg ON dd.id = dg.id_dia_diem
-                            WHERE $condition
-                            GROUP BY dd.id
-                            ORDER BY diem_trung_binh_cong DESC
-                            LIMIT 4";
-                    $result = mysqli_query($conn, $sql);
-                    //echo '<h2>Gợi ý cho bạn</h2>';
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $idLocation = urlencode($row["id"]);
-                            echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
-                            echo "<div class='card'>";
-                            $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
-                            $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
-
-                            // Check if the image exists
-                            if (!file_exists($imagePath)) {
-                                $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
-                            }
-                            echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
-                            echo "<div class='card-info'>";
-                            echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
-                            echo "<p>" . htmlspecialchars(ucwords(strtolower($row["dia_chi"]))) . "</p>";
-
-                            echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
-                            echo "</div></div>";
-                            echo '</a>'; // Close the anchor tag
-                        }
-                }
-            }
-
-
-            ?> 
-            <?php
-                // Khởi tạo mảng conditions
-                $conditions = [];
-
+                $where_clause='true';
+                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                // Thiết lập phân trang
+                $sd = 20; // Số dòng mỗi trang
+                $vt = ($page - 1) * $sd;  
                 // Kiểm tra và thêm điều kiện cho district
                 if (isset($_GET['district']) && !empty($_GET['district'])) {
                     $district = $conn->real_escape_string($_GET['district']);
@@ -447,27 +265,266 @@ $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, d
                             return "LOWER(dia_chi) LIKE LOWER('%$word%')";
                         }, $district_conditions)) . ")";
                     }
-                }
+                
 
-                // Kiểm tra và thêm điều kiện cho province
-                if (isset($_GET['province']) && !empty($_GET['province'])) {
-                    $province = $conn->real_escape_string($_GET['province']);
-                    $conditions[] = "LOWER(dia_chi) LIKE LOWER('%" . strtolower($province) . "%')";
-                }
+                    // Kiểm tra và thêm điều kiện cho province
+                    if (isset($_GET['province']) && !empty($_GET['province'])) {
+                        $province = $conn->real_escape_string($_GET['province']);
+                        $conditions[] = "LOWER(dia_chi) LIKE LOWER('%" . strtolower($province) . "%')";
+                    }
 
-                // Kiểm tra và thêm điều kiện cho category
-                if (isset($_GET['category']) && !empty($_GET['category'])) {
-                    $category = $conn->real_escape_string($_GET['category']);
-                    $category_conditions = array_filter(explode(' ', $category), function ($word) {
-                        return strlen($word) > 1;
-                    });
-                    if (!empty($category_conditions)) {
-                        $conditions[] = "(" . implode(" AND ", array_map(function ($word) {
-                            return "LOWER(loai_hinh) LIKE LOWER('%$word%')";
-                        }, $category_conditions)) . ")";
+                    // Kiểm tra và thêm điều kiện cho category
+                    if (isset($_GET['category']) && !empty($_GET['category'])) {
+                        $category = $conn->real_escape_string($_GET['category']);
+                        $category_conditions = array_filter(explode(' ', $category), function ($word) {
+                            return strlen($word) > 1;
+                        });
+                        if (!empty($category_conditions)) {
+                            $conditions[] = "(" . implode(" AND ", array_map(function ($word) {
+                                return "LOWER(loai_hinh) LIKE LOWER('%$word%')";
+                            }, $category_conditions)) . ")";
+                        }
+                    }
+
+                    // Xây dựng phần WHERE của câu truy vấn
+                    $where_clause = !empty($conditions) ? " WHERE " . implode(" AND ", $conditions) : "";
+
+                     // Đếm tổng số bản ghi phù hợp với điều kiện
+                    $sql_count = "SELECT COUNT(*) AS total FROM dia_diem" . $where_clause;
+                    $result_count = $conn->query($sql_count);
+                    $tdd = $result_count->fetch_assoc()['total'];
+                    // Thiết lập phân trang
+                    $sd = 20; // Số dòng mỗi trang
+                    $tst = ceil($tdd / $sd); // Tổng số trang
+                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                    $vt = ($page - 1) * $sd;
+                    if (isset($_GET["tendiadiem"])) {
+                        $LocationByName = $_GET["tendiadiem"];
+                        // Truy vấn để lấy các địa điểm nổi bật
+                        $sql = "SELECT * FROM dia_diem WHERE ten_dia_diem LIKE '%$LocationByName%' or dia_chi LIKE '%$LocationByName%' or so_dien_thoai LIKE '%$LocationByName%' or mo_ta LIKE '%$LocationByName%' or loai_hinh LIKE '%$LocationByName%'  or gia_ca_giao_dong LIKE '%$LocationByName%' ";
+                    } else {
+                        // Truy vấn chính với điều kiện lọc và phân trang
+                        $sql = "SELECT * FROM dia_diem" . $where_clause . " LIMIT $vt, $sd";
+                    }
+                    $result = $conn->query($sql);
+
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $idLocation = urlencode($row["id"]);
+                            echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
+                            echo "<div class='card'>";
+                            $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+                            $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                            // Check if the image exists
+                            if (!file_exists($imagePath)) {
+                                $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                            }
+                            echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
+                            echo "<div class='card-info'>";
+                            echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
+                            echo "<p>" . htmlspecialchars($row["dia_chi"]) . "</p>";
+                            echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
+                            echo "</div></div>";
+                            echo '</a>'; // Close the anchor tag
+                        }
+                    } 
+                }
+                // Mục gợi ý            
+                else if (isset($_GET["diachi"])||isset($_GET["gc"])||isset($_GET["lh"])){
+                    if (isset($_GET["diachi"])) {
+                        $searchbyDD = mysqli_real_escape_string($conn, $_GET["diachi"]);
+                        $conditionParts[] = "(dia_chi LIKE '%$searchbyDD%')";
+                    }
+                    // Check for 'gc' parameter
+                    if (isset($_GET["gc"])) {
+                        $searchbyGC = mysqli_real_escape_string($conn, $_GET["gc"]);
+                        
+                        // Split search string into words
+                        $searchWordsGC = explode(' ', $searchbyGC);
+                        
+                        // Initialize conditions for each word in 'gc'
+                        $wordConditionsGC = [];
+                        foreach ($searchWordsGC as $word) {
+                            $wordConditionsGC[] = "gia_ca_giao_dong LIKE '%$word%'";
+                        }
+                        
+                        // Combine conditions for 'gc' with OR
+                        $conditionParts[] = '(' . implode(' OR ', $wordConditionsGC) . ')';
+                    }
+
+                    // Check for 'lh' parameter
+                    if (isset($_GET["lh"])) {
+                        $searchbyLH = mysqli_real_escape_string($conn, $_GET["lh"]);
+                        
+                        // Split search string into words
+                        $searchWordsLH = explode(' ', $searchbyLH);
+                        
+                        // Initialize conditions for each word in 'lh'
+                        $wordConditionsLH = [];
+                        foreach ($searchWordsLH as $word) {
+                            $wordConditionsLH[] = "loai_hinh LIKE '%$word%'";
+                        }
+                        
+                        // Combine conditions for 'lh' with OR
+                        $conditionParts[] = '(' . implode(' OR ', $wordConditionsLH) . ')';
+                    }
+
+
+                    // Nếu không có điều kiện nào được thêm, đặt điều kiện mặc định
+                    $condition = count($conditionParts) > 0 ? implode(' AND ', $conditionParts) : "1=1";
+                    
+                    if (!isset($_GET["lh"])) {
+                        $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, dd.loai_hinh, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
+                                FROM dia_diem dd
+                                JOIN danh_gia dg ON dd.id = dg.id_dia_diem
+                                WHERE dd.loai_hinh = 'Ăn uống' AND $condition
+                                GROUP BY dd.id
+                                ORDER BY diem_trung_binh_cong DESC
+                                LIMIT 4";
+
+                        // Thực thi truy vấn (giả sử kết nối với cơ sở dữ liệu đã được thiết lập)
+                        $result = mysqli_query($conn, $sql);
+                        //echo '<h2>Ăn uống</h2>';
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $idLocation = urlencode($row["id"]);
+                                echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
+                                echo "<div class='card'>";
+                                $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+                                $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                                // Check if the image exists
+                                if (!file_exists($imagePath)) {
+                                    $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                                }
+                                echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
+                                echo "<div class='card-info'>";
+                                echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
+                                echo "<p>" . htmlspecialchars(ucwords(strtolower($row["dia_chi"]))) . "</p>";
+
+                                echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
+                                echo "</div></div>";
+                                echo '</a>'; // Close the anchor tag
+                            }
+                        } 
+
+                        $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, dd.loai_hinh, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
+                                FROM dia_diem dd
+                                JOIN danh_gia dg ON dd.id = dg.id_dia_diem
+                                WHERE dd.loai_hinh = 'ngủ nghỉ' AND $condition
+                                GROUP BY dd.id
+                                ORDER BY diem_trung_binh_cong DESC
+                                LIMIT 4";
+
+                        // Thực thi truy vấn (giả sử kết nối với cơ sở dữ liệu đã được thiết lập)
+                        $result = mysqli_query($conn, $sql);
+                        //echo '<h2>Ngủ nghỉ</h2>';
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $idLocation = urlencode($row["id"]);
+                                echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
+                                echo "<div class='card'>";
+                                $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+                                $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                                // Check if the image exists
+                                if (!file_exists($imagePath)) {
+                                    $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                                }
+                                echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
+                                echo "<div class='card-info'>";
+                                echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
+                                echo "<p>" . htmlspecialchars(ucwords(strtolower($row["dia_chi"]))) . "</p>";
+
+                                echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
+                                echo "</div></div>";
+                                echo '</a>'; // Close the anchor tag
+                            }
+                        } 
+                        $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, dd.loai_hinh, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
+                        FROM dia_diem dd
+                        JOIN danh_gia dg ON dd.id = dg.id_dia_diem
+                        WHERE dd.loai_hinh = 'Du lịch' AND $condition
+                        GROUP BY dd.id
+                        ORDER BY diem_trung_binh_cong DESC
+                        LIMIT 4";
+
+                        // Thực thi truy vấn (giả sử kết nối với cơ sở dữ liệu đã được thiết lập)
+                        $result = mysqli_query($conn, $sql);
+                        //echo '<h2>Vui chơi</h2>';
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $idLocation = urlencode($row["id"]);
+                                echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
+                                echo "<div class='card'>";
+                                $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+                                $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                                // Check if the image exists
+                                if (!file_exists($imagePath)) {
+                                    $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                                }
+                                echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
+                                echo "<div class='card-info'>";
+                                echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
+                                echo "<p>" . htmlspecialchars(ucwords(strtolower($row["dia_chi"]))) . "</p>";
+
+                                echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
+                                echo "</div></div>";
+                                echo '</a>'; // Close the anchor tag
+                            }
+                        } 
+                    }
+                
+                    else{                
+                        // Truy vấn để lấy 5 địa điểm có điểm trung bình cao nhất
+                        $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, dd.dia_chi, AVG(dg.diem_trung_binh) AS diem_trung_binh_cong 
+                                FROM dia_diem dd
+                                JOIN danh_gia dg ON dd.id = dg.id_dia_diem
+                                WHERE $condition
+                                GROUP BY dd.id
+                                ORDER BY diem_trung_binh_cong DESC
+                                LIMIT 4";
+                        $result = mysqli_query($conn, $sql);
+                        //echo '<h2>Gợi ý cho bạn</h2>';
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $idLocation = urlencode($row["id"]);
+                                echo '<a href="ProductDetail.php?id=' . $idLocation . '" class="swiper-slide" style="text-decoration:none" >';
+                                echo "<div class='card'>";
+                                $imagePath = "../" . htmlspecialchars($row["hinh_anh1"]);
+                                $defaultImagePath = "../images/locations/" . htmlspecialchars($row["hinh_anh1"]); // Default image path if the image doesn't exist
+
+                                // Check if the image exists
+                                if (!file_exists($imagePath)) {
+                                    $imagePath = $defaultImagePath; // Use the default image if the file doesn't exist
+                                }
+                                echo "<img src='$imagePath' alt='" . htmlspecialchars($row["ten_dia_diem"]) . "'><br>";
+                                echo "<div class='card-info'>";
+                                echo "<h4>" . htmlspecialchars($row["ten_dia_diem"]) . "</h4>";
+                                echo "<p>" . htmlspecialchars(ucwords(strtolower($row["dia_chi"]))) . "</p>";
+
+                                echo "<button onclick='saveFavorite(" . $row["id"] . ")'>Lưu vào yêu thích</button>";
+                                echo "</div></div>";
+                                echo '</a>'; // Close the anchor tag
+                            }
+                        }
                     }
                 }
-
+                //Cái này là gì-------------------------------------------------------------------------------------------------                      
+                else if (isset($_GET["tendiadiem"])){
+                    $searchby = $_GET["tendiadiem"];
+                    // Truy vấn để lấy các địa điểm nổi bật
+                    $sql = "SELECT * FROM dia_diem WHERE ten_dia_diem LIKE '%$searchby%' or dia_chi LIKE '%$searchby%' or so_dien_thoai LIKE '%$searchby%' or mo_ta LIKE '%$searchby%' or loai_hinh LIKE '%$searchby%'  or gia_ca_giao_dong LIKE '%$searchby%' ";
+                }
+                else{
+                    // Truy vấn chính với điều kiện lọc và phân trang
+                    $sql = "SELECT * FROM dia_diem where" . $where_clause . " LIMIT $vt, $sd";
+                }   
+            
+                
+                
                 // Xây dựng phần WHERE của câu truy vấn
                 $where_clause = !empty($conditions) ? " WHERE " . implode(" AND ", $conditions) : "";
 
@@ -475,23 +532,10 @@ $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, d
                 $sql_count = "SELECT COUNT(*) AS total FROM dia_diem" . $where_clause;
                 $result_count = $conn->query($sql_count);
                 $tdd = $result_count->fetch_assoc()['total'];
-
-                // Thiết lập phân trang
-                $sd = 20; // Số dòng mỗi trang
                 $tst = ceil($tdd / $sd); // Tổng số trang
-                $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                $vt = ($page - 1) * $sd;
-                
-                
-                if (isset($_GET["tendiadiem"])){
-                    $searchby = $_GET["tendiadiem"];
-                    // Truy vấn để lấy các địa điểm nổi bật
-                    $sql = "SELECT * FROM dia_diem WHERE ten_dia_diem LIKE '%$searchby%' or dia_chi LIKE '%$searchby%' or so_dien_thoai LIKE '%$searchby%' or mo_ta LIKE '%$searchby%' or loai_hinh LIKE '%$searchby%'  or gia_ca_giao_dong LIKE '%$searchby%' ";
-                }
-                else{
-                    // Truy vấn chính với điều kiện lọc và phân trang
-                    $sql = "SELECT * FROM dia_diem" . $where_clause . " LIMIT $vt, $sd";
-                }
+
+
+                    
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
@@ -514,13 +558,19 @@ $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, d
                         echo "</div></div>";
                         echo '</a>'; // Close the anchor tag
                     }
-                } else {
+                } 
+                else {
                     echo "<p>Không có kết quả nào để hiển thị</p>";
                 }
+                
+                // Đếm tổng số bản ghi phù hợp với điều kiện
+                $sql_count = "SELECT COUNT(*) AS total FROM dia_diem" . $where_clause;
+                $result_count = $conn->query($sql_count);
+                $tdd = $result_count->fetch_assoc()['total'];
 
                 $conn->close();
             ?>
-                <button id="scrollToTopBtn" onclick="scrollToTop()">↑</button>
+            <button id="scrollToTopBtn" onclick="scrollToTop()">↑</button>
             </div>
         </section>
     </div>
@@ -582,14 +632,6 @@ $sql = "SELECT dg.id_dia_diem, dd.ten_dia_diem, dd.id, dd.hinh_anh1, dd.mo_ta, d
         });
         // Function to save favorite location
         function saveFavorite(diaDiemId) {
-            // Kiểm tra xem người dùng đã đăng nhập hay chưa
-            const isLoggedIn = Boolean(localStorage.getItem('userLoggedIn')); // Giả sử bạn lưu trạng thái đăng nhập
-
-            if (!isLoggedIn) {
-                alert("Bạn cần đăng nhập để lưu địa điểm vào yêu thích.");
-                return;
-            }
-
             fetch('yeuthich.php', {
                     method: 'POST',
                     headers: {
